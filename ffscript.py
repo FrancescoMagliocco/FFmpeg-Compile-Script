@@ -1,4 +1,6 @@
+import argparse
 import os
+import sys
 from enum import Enum
 from typing import NamedTuple
 
@@ -45,7 +47,7 @@ class Repo(NamedTuple):
     repo_url: str
     dest_path: str
 
-REPOS = tuple(Repo)
+REPOS = lambda Repo: tuple(Repo)
 
 # Do not use this
 ALSA = Repo(
@@ -1107,6 +1109,8 @@ TMPVAR = (CHROMAPRINT, FREI0R, LIBICONV, LADSPA, LIBAOM, LIBASS, LIBBLURAY, LIBB
         LIBWAVPACK, LIBWEBP, LIBX264, LIBX265, LIBXAVS, LIBXVID, LIBXML2, LIBZIMG, LIBZMQ, LIBZVBI, LV2, LZMA,
         LIBMYSOFA, OPENAL, OPENCL, OPENGL, SDL2, ZLIB, AMF)
 
+NO_DOWN: bool = False
+
 def download_repos(repo_tuple: REPOS) -> None:
     for repo in repo_tuple:
         print(repo.switch)
@@ -1121,8 +1125,21 @@ def download_repos(repo_tuple: REPOS) -> None:
                 + ' ' + repo.dest_path)
 
         print(tmpstr)
-        os.system(tmpstr)
-        print('done')
+        if not NO_DOWN:
+            os.system(tmpstr)
+            print('done')
+        else:
+            print('--no-download was specified.  Not downloading repo.')
 
-print('calling download_repos()')
-download_repos(TMPVAR)
+
+
+def main():
+    p = argparse.ArgumentParser(description='Does the dirty work so you don\'t have too')
+    p.add_argument(
+            '-no', '--no-download', dest='nodown', action='store_false', help='Repos won\'t actually be downloaded.')
+    args = p.parse_args()
+    if args.nodown:
+        NO_DOWN = True
+
+
+main()
