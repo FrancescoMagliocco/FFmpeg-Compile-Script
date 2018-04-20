@@ -66,14 +66,14 @@ APPKIT = Repo(
         repo_url=UNKNOWN,
         dest_path=NOT_DEFINED)
 
-AVFOUNDATION = Repo(
-        lib_type=LibType.UND,
-        swtich='--disable-avfoundation',
-        default=SwitchState.AUTO_DETECT,
-        repo_tool=RepoTool.UND,
-        repo_rev=UND,
-        repo_url=UNKNOWN,
-        dest_path=NOT_DEFINED)
+#AVFOUNDATION = Repo(
+#        lib_type=LibType.UND,
+#        swtich='--disable-avfoundation',
+#        default=SwitchState.AUTO_DETECT,
+#        repo_tool=RepoTool.UND,
+#        repo_rev=UND,
+#        repo_url=UNKNOWN,
+#        dest_path=NOT_DEFINED)
 
 # Avisynth source is included by default
 AVISYNTH = Repo(
@@ -85,14 +85,14 @@ AVISYNTH = Repo(
         repo_url='https://svn.code.sf.net/p/avisynth2/svn/',
         dest_path=NOT_DEFINED)
 
-BZLIB = Repo(
-        lib_type=LibType.UND,
-        swtich='--disable-bzlib',
-        default=SwitchState.AUTO_DETECT,
-        repo_tool=RepoTool.UND,
-        repo_rev=UND,
-        repo_url=UNKNOWN,
-        dest_path=NOT_DEFINED)
+#BZLIB = Repo(
+#        lib_type=LibType.UND,
+#        swtich='--disable-bzlib',
+#        default=SwitchState.AUTO_DETECT,
+#        repo_tool=RepoTool.UND,
+#        repo_rev=UND,
+#        repo_url=UNKNOWN,
+#        dest_path=NOT_DEFINED)
 
 COREIMAGE = Repo(
         lib_type=LibType.UND,
@@ -1099,6 +1099,7 @@ VIDEOTOOLBOX = Repo(
         repo_rev=UND,
         repo_url=UNKNOWN,
         dest_path=NOT_DEFINED)
+
 TMPVAR = (CHROMAPRINT, FREI0R, LIBICONV, LADSPA, LIBAOM, LIBASS, LIBBLURAY, LIBBS2B, LIBCACA, LIBCELT, LIBCDIO,
         LIBDC1394, LIBFDK_AAC, LIBFLITE, LIBFONTCONFIG, LIBFREETYPE, LIBFRIBIDI, LIBGME, LIBILBC, LIBKVAZAAR,
         LIBMODPLUG, LIBMP3LAME, LIBOPENCV, LIBOPENH264, LIBOPENJPEG, LIBOPUS, LIBRSVG, LIBRUBBERBAND, LIBSHINE,
