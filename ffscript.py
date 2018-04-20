@@ -1,7 +1,6 @@
-
 import os
 from enum import Enum
-from typeing import NamedTuple
+from typing import NamedTuple
 
 NA = -1
 UND = NA
@@ -23,15 +22,16 @@ class LibType(Enum):
     OUTDEV = 'output-devices'
     FILTER = 'filters'
     UND = 'undertermined'
- 
+
 class SwitchState(Enum):
     NO = 0
     YES = 1
     AUTO_DETECT = -1
 
 class RepoTool(Enum):
-    GIT_TOOL = 'git clone'
-    GIT_SVN_TOOL = 'git svn clone -r'
+    CURL_TOOL = 'curl '
+    GIT_TOOL = 'git clone '
+    GIT_SVN_TOOL = 'git svn clone -r '
     HG_TOOL = 'hg clone '
     SVN_TOOL = 'svn co -r '
     UND = 'echo RepoTool is inconclusive.'
@@ -45,8 +45,10 @@ class Repo(NamedTuple):
     repo_url: str
     dest_path: str
 
+REPOS = lambda Repo: tuple(Repo)
+
 # Do not use this
-Alsa = Repo(
+ALSA = Repo(
         lib_type=LibType.DEV,
         switch='--disable-alsa',
         default=SwitchState.AUTO_DETECT,
@@ -55,7 +57,7 @@ Alsa = Repo(
         repo_url='git://git.alsa-projects.org/',
         dest_path=NOT_DEFINED)
 
-AppKit = Repo(
+APPKIT = Repo(
         lib_type=LibType.UND,
         switch='--disable-appkit',
         default=SwitchState.AUTO_DETECT,
@@ -64,7 +66,7 @@ AppKit = Repo(
         repo_url=UNKNOWN,
         dest_path=NOT_DEFINED)
 
-AVFoundation = Repo(
+AVFOUNDATION = Repo(
         lib_type=LibType.UND,
         swtich='--disable-avfoundation',
         default=SwitchState.AUTO_DETECT,
@@ -74,7 +76,7 @@ AVFoundation = Repo(
         dest_path=NOT_DEFINED)
 
 # Avisynth source is included by default
-Avisynth = Repo(
+AVISYNTH = Repo(
         lib_type=LibType.UND,
         switch='--enable-avisynth',
         default=SwitchState.NO,
@@ -83,7 +85,7 @@ Avisynth = Repo(
         repo_url='https://svn.code.sf.net/p/avisynth2/svn/',
         dest_path=NOT_DEFINED)
 
-BZLib = Repo(
+BZLIB = Repo(
         lib_type=LibType.UND,
         swtich='--disable-bzlib',
         default=SwitchState.AUTO_DETECT,
@@ -92,7 +94,7 @@ BZLib = Repo(
         repo_url=UNKNOWN,
         dest_path=NOT_DEFINED)
 
-CoreImage = Repo(
+COREIMAGE = Repo(
         lib_type=LibType.UND,
         switch='--disable-coreimage',
         default=SwitchState.AUTO_DETECT,
@@ -101,18 +103,17 @@ CoreImage = Repo(
         repo_url=UNKNOWN,
         dest_path=NOT_DEFINED)
 
-Chromaprint = Repo(
+CHROMAPRINT = Repo(
         lib_type=LibType.UND,
         switch='--enable-chromaprint',
         default=SwitchState.NO,
-        repo_tool=GIT_TOOL,
+        repo_tool=RepoTool.GIT_TOOL,
         repo_rev=NA,
         repo_url='https://github.com/acoustid/chromaprint.git',
-        dest_path='chromaprint'
-)
+        dest_path='chromaprint')
 
-Frei0r = Repo(
-        repo_tool=RepoTool.GIT_TOOL,
+FREI0R = Repo(
+        lib_type=LibType.FILTER,
         switch='enable-frei0r',
         default=SwitchState.NO,
         repo_tool=RepoTool.GIT_TOOL,
@@ -120,7 +121,7 @@ Frei0r = Repo(
         repo_url='https://github.com/dyne/frei0r.git',
         dest_path='frei0r')
 
-GCrypt = Repo(
+GCRYPT = Repo(
         lib_type=LibType.PROTOCOL,
         switch='--enable-gcrypt',
         default=SwitchState.NO,
@@ -138,7 +139,7 @@ GMP = Repo(
         repo_url=UNKNOWN,
         dest_path=NOT_DEFINED)
 
-GNUtls = Repo(
+GNUTLS = Repo(
         lib_type=LibType.PROTOCOL,
         switch='--enable-gnutls',
         default=SwitchState.AUTO_DETECT,
@@ -147,7 +148,7 @@ GNUtls = Repo(
         repo_url=UNKNOWN,
         dest_path=NOT_DEFINED)
 
-LibIconv = Repo(
+LIBICONV = Repo(
         lib_type=LibType.UND,
         switch='--disable-iconv',
         default=SwitchState.AUTO_DETECT,
@@ -170,12 +171,12 @@ LADSPA = Repo(
         lib_type=LibType.FILTER,
         switch='--enable-ladspa',
         default=SwitchState.NO,
-        repo_tool=RepoTool.UND,
-        repo_rev='http://www.ladspa.org/ladspa_sdk/ladspa.h.txt',
+        repo_tool=RepoTool.CURL_TOOL,
+        repo_rev='http://www.ladspa.org/ladspa_sdk/ladspa.h.txt -L -o ',
         repo_url=UNKNOWN,
-        dest_path=NOT_DEFINED)
+        dest_path='ladspa.h')
 
-LibAOM = Repo(
+LIBAOM = Repo(
         lib_type=LibType.CODEC,
         switch='--enable-libaom',
         default=SwitchState.NO,
@@ -184,7 +185,7 @@ LibAOM = Repo(
         repo_url='https://aomedia.googlesource.com/aom.git',
         dest_path='libaom')
 
-LibASS = Repo(
+LIBASS = Repo(
         lib_type=LibType.UND,
         switch='--enable-libass',
         default=SwitchState.NO,
@@ -193,7 +194,7 @@ LibASS = Repo(
         repo_url='https://github.com/libass/libass.git',
         dest_path='libass')
 
-LibBluray = Repo(
+LIBBLURAY = Repo(
         lib_type=LibType.INDEV,
         switch='--enable-libbluray',
         default=SwitchState.NO,
@@ -202,7 +203,7 @@ LibBluray = Repo(
         repo_url='https://git.videolan.org/git/libbluray.git',
         dest_path='libbluray')
 
-LibBS2B = Repo(
+LIBBS2B = Repo(
         lib_type=LibType.UND,
         switch='--enable-libbs2b',
         default=SwitchState.NO,
@@ -211,7 +212,7 @@ LibBS2B = Repo(
         repo_url='https://svn.code.sf.net/p/bs2b/code/trunk',
         dest_path='libbs2b')
 
-LibCACA = Repo(
+LIBCACA = Repo(
         lib_type=LibType.UND,
         switch='--enable-libcaca',
         default=SwitchState.NO,
@@ -220,7 +221,7 @@ LibCACA = Repo(
         repo_url='https://github.comm/cacalibs/libcaca.git',
         dest_path='libcaca')
 
-LibCELT = Repo(
+LIBCELT = Repo(
         lib_type=LibType.DECODER,
         switch='--enable-libcelt',
         default=SwitchState.NO,
@@ -229,7 +230,7 @@ LibCELT = Repo(
         repo_url='git://git.xiph.org/celt.git',
         dest_path='libcelt')
 
-LibCDIO = Repo(
+LIBCDIO = Repo(
         lib_type=LibType.INDEV,
         switch='--enable-libcdio',
         default=SwitchState.NO,
@@ -239,7 +240,7 @@ LibCDIO = Repo(
         dest_path='libcdio')
 
 # The repo lists a few different projects
-LibCodec2 = Repo(
+LIBCODEC2 = Repo(
         lib_type=LibType.CODEC,
         switch='--enable-libcodec2',
         default=SwitchState.NO,
@@ -248,7 +249,7 @@ LibCodec2 = Repo(
         repo_url='https://svn.code.sf.net/p/freetel/code/freetel-code',
         dest_path=NOT_DEFINED)
 
-Libdc1394 = Repo(
+LIBDC1394 = Repo(
         lib_type=LibType.INDEV,
         switch='--enable-libdc1394',
         default=SwitchState.NO,
@@ -257,7 +258,7 @@ Libdc1394 = Repo(
         repo_url='https://git.code.sf.net/p/libdc1394/codec',
         dest_path='libdc1394')
 
-LibFDK_AAC = Repo(
+LIBFDK_AAC = Repo(
         lib_type=LibType.CODEC,
         switch='--enable-libfdk-aac',
         default=SwitchState.NO,
@@ -266,7 +267,7 @@ LibFDK_AAC = Repo(
         repo_url='https://git.code.sf.net/p/opencore-amr/fdk-aac',
         dest_path='libfdk-aac')
 
-Libflite = Repo(
+LIBFLITE = Repo(
         lib_type=LibType.UND,
         switch='--enable-libflite',
         default=SwitchState.NO,
@@ -275,7 +276,7 @@ Libflite = Repo(
         repo_url='https://freeswitch.org/stash/scm/sd/libflite.git',
         dest_path='libflite')
 
-Libfontconfig = Repo(
+LIBFONTCONFIG = Repo(
         lib_type=LibType.UND,
         switch='--enable-libfontconfig',
         default=SwitchState.NO,
@@ -284,7 +285,7 @@ Libfontconfig = Repo(
         repo_url='https://anongit.freedesktop.org/git/fontconfig.git',
         dest_path='libfontconfig')
 
-Libfreetype = Repo(
+LIBFREETYPE = Repo(
         lib_type=LibType.UND,
         switch='--enable-libfreetype',
         default=SwitchState.NO,
@@ -293,7 +294,7 @@ Libfreetype = Repo(
         repo_url='https://git.savannah.gnu.org/git/freetype/freetype2.git',
         dest_path='libfreetype')
 
-Libfribidi = Repo(
+LIBFRIBIDI = Repo(
         lib_type=LibType.UND,
         switch='--enable-libfribidi',
         default=SwitchState.NO,
@@ -302,7 +303,7 @@ Libfribidi = Repo(
         repo_url='https://github.com/fribidi/fribidi.git',
         dest_path='libfribidi')
 
-Libgme = Repo(
+LIBGME = Repo(
         lib_type=LibType.UND,
         switch='--enable-libgme',
         default=SwitchState.NO,
@@ -311,7 +312,7 @@ Libgme = Repo(
         repo_url='https://github.com/mcfiredrill/libgme.git',
         dest_path='libgme')
 
-Libgsm = Repo(
+LIBGSM = Repo(
         lib_type=LibType.CODEC,
         switch='--enable-libgsm',
         default=SwitchState.NO,
@@ -320,7 +321,7 @@ Libgsm = Repo(
         repo_url=UNKNOWN,
         dest_path=NOT_DEFINED)
 
-Libiec61883 = Repo(
+LIBIEC61883 = Repo(
         lib_type=LibType.UND,
         switch='--enable-libiec61883',
         default=SwitchState.NO,
@@ -329,7 +330,7 @@ Libiec61883 = Repo(
         repo_url='git://dennedy.org/libiec61883.git',
         dest_path='libiec61883')
 
-Libilbc = Repo(
+LIBILBC = Repo(
         lib_type=LibType.CODEC,
         switch='--enable-libilbc',
         default=SwitchState.NO,
@@ -338,7 +339,7 @@ Libilbc = Repo(
         repo_url='https://github.com/TimothyGu/libilbc.git',
         dest_path='libilbc')
 
-Libjack = Repo(
+LIBJACK = Repo(
         lib_type=LibType.UND,
         switch='--enable-libjack',
         default=SwitchState.NO,
@@ -347,7 +348,7 @@ Libjack = Repo(
         repo_url='https://github.com/jackaudio/jack2.git',
         dest_path='libjack')
 
-Libkvazaar = Repo(
+LIBKVAZAAR = Repo(
         lib_type=LibType.ENCODER,
         switch='--enable-libkvazaar',
         default=SwitchState.NO,
@@ -356,7 +357,7 @@ Libkvazaar = Repo(
         repo_url='https://github.com/ultravideo/kvazaar.git',
         dest_path='libkvazaar')
 
-Libmodplug = Repo(
+LIBMODPLUG = Repo(
         lib_type=LibType.UND,
         switch='--enable-libmodplug',
         default=SwitchState.NO,
@@ -365,7 +366,7 @@ Libmodplug = Repo(
         repo_url='https://github.com/Konstanty/libmodplug.git',
         dest_path='libmodplug')
 
-Libmp3lame = Repo(
+LIBMP3LAME = Repo(
         lib_type=LibType.ENCODER,
         switch='--enable-libmp3lame',
         default=SwitchState.NO,
@@ -374,7 +375,7 @@ Libmp3lame = Repo(
         repo_url='https://svn.code.sf.net/p/lame/svn/trunk',
         dest_path='libmp3lame')
 
-Libopencore_amrnb = Repo(
+LIBOPENCORE_AMRNB = Repo(
         lib_type=LibType.CODEC,
         switch='--enable-libopencore-amrnb',
         default=SwitchState.NO,
@@ -384,7 +385,7 @@ Libopencore_amrnb = Repo(
         dest_path='libopencore')
 
 # Same as libopencore-amrnb
-Libopencore_amrwb = Repo(
+LIBOPENCORE_AWRWB = Repo(
         lib_type=LibType.DECODER,
         switch='--enable-libopencore-amrwb',
         default=SwitchState.NO,
@@ -393,7 +394,7 @@ Libopencore_amrwb = Repo(
         repo_url=UNKNOWN,
         dest_path=NOT_DEFINED)
 
-Libopencv = Repo(
+LIBOPENCV = Repo(
         lib_type=LibType.FILTER,
         switch='--enable-libopenccv',
         default=SwitchState.NO,
@@ -402,7 +403,7 @@ Libopencv = Repo(
         repo_url='https://github.com/opencv/opencv.git',
         dest_path='libopencv')
 
-Libopenh264 = Repo(
+LIBOPENH264 = Repo(
         lib_type=LibType.ENCODER,
         switch='--enable-libopenh264',
         default=SwitchState.NO,
@@ -411,7 +412,7 @@ Libopenh264 = Repo(
         repo_url='https://github.com/cisco/openh264.git',
         dest_path='libopenh264')
 
-Libopenjpeg = Repo(
+LIBOPENJPEG = Repo(
         lib_type=LibType.CODEC,
         switch='--enable-libopenjpeg',
         default=SwitchState.NO,
@@ -421,7 +422,7 @@ Libopenjpeg = Repo(
         dest_path='libopenjpeg')
 
 # This may be broken..
-Libopenmpt = Repo(
+LIBOPENMPT = Repo(
         lib_type=LibType.UND,
         switch='--enable-libopenmpt',
         default=SwitchState.NO,
@@ -430,7 +431,7 @@ Libopenmpt = Repo(
         repo_url='https://source.openmpt.org/svn/openmpt/trunk',
         dest_path='libopenmpt')
 
-Libopus = Repo(
+LIBOPUS = Repo(
         lib_type=LibType.CODEC,
         switch='--enable-libopus',
         default=SwitchState.NO,
@@ -439,7 +440,7 @@ Libopus = Repo(
         repo_url='https://git.xiph.org/opus.git',
         dest_path='libopus')
 
-Libpulse = Repo(
+LIBPULSE = Repo(
         lib_type=LibType.INDEV,
         switch='--enable-libpulse',
         default=SwitchState.NO,
@@ -448,7 +449,7 @@ Libpulse = Repo(
         repo_url='git://anongit.freedesktop.org/pulseaudio/pulseaudio.git',
         dest_path='libpulse')
 
-Librsvg = Repo(
+LIBRSVG = Repo(
         lib_type=LibType.UND,
         switch='--enable-librsvg',
         default=SwitchState.NO,
@@ -457,7 +458,7 @@ Librsvg = Repo(
         repo_url='https://gitlab.gnome.org/GNOME/librsvg.git',
         dest_path='librsvg')
 
-Librubberband = Repo(
+LIBRUBBERBAND = Repo(
         lib_type=LibType.FILTER,
         switch='--enable-librubberband',
         default=SwitchState.NO,
@@ -466,7 +467,7 @@ Librubberband = Repo(
         repo_url='https://github.com/lachs0r/rubberband.git',
         dest_path='librubberband')
 
-Librtmp = Repo(
+LIBRTMP = Repo(
         lib_type=LibType.PROTOCOL,
         switch='--enable-librtmp',
         default=SwitchState.NO,
@@ -475,7 +476,7 @@ Librtmp = Repo(
         repo_url=UNKNOWN,
         dest_path=NOT_DEFINED)
 
-Libshine = Repo(
+LIBSHINE = Repo(
         lib_type=LibType.ENCODER,
         switch='--enable-libshine',
         default=SwitchState.NO,
@@ -484,7 +485,7 @@ Libshine = Repo(
         repo_url='https://github.com/toots/shine.git',
         dest_path='libshine')
 
-Libsmbclient = Repo(
+LIBSMBCLIENT = Repo(
         lib_type=LibType.PROTOCOL,
         switch='--enable-libsmbclient',
         default=SwitchState.NO,
@@ -493,7 +494,7 @@ Libsmbclient = Repo(
         repo_url='https://git.samba.org/samba.git',
         dest_path='libsmbclient')
 
-Libsnappy = Repo(
+LIBSNAPPY = Repo(
         lib_type=LibType.UND,
         switch='--enable-libsnappy',
         default=SwitchState.NO,
@@ -504,7 +505,7 @@ Libsnappy = Repo(
 
 # This may not work because of the .git at the end.  Plus I may have to specify the tree for every repo that is hosted
 # at SourceForge
-Libsoxr = Repo(
+LIBSOXR = Repo(
         lib_type=LibType.UND,
         switch='--enable-libsoxr',
         default=SwitchState.NO,
@@ -513,7 +514,7 @@ Libsoxr = Repo(
         repo_url='https://git.code.sf.net/p/soxr/code.git',
         dest_path='libsoxr')
 
-Libspeex = Repo(
+LIBSPEEX = Repo(
         lib_type=LibType.CODEC,
         switch='--enable-libxpeex',
         default=SwitchState.NO,
@@ -522,7 +523,7 @@ Libspeex = Repo(
         repo_url='https://github.com/xiph/speex.git',
         dest_path='libspeex')
 
-Libsrt = Repo(
+LIBSRT = Repo(
         lib_type=LibType.UND,
         switch='--enable-libsrt',
         default=SwitchState.NO,
@@ -531,7 +532,7 @@ Libsrt = Repo(
         repo_url='https://github.com/cisco/libsrtp.git',
         dest_path='libsrt')
 
-Libssh = Repo(
+LIBSSH = Repo(
         lib_type=LibType.PROTOCOL,
         switch='--enable-libssh',
         default=SwitchState.NO,
@@ -540,7 +541,7 @@ Libssh = Repo(
         repo_url='https://git.libssh.org/projects/libssh.git',
         dest_path='libssh')
 
-Libtesseract = Repo(
+LIBTESSERACT = Repo(
         lib_type=LibType.FILTER,
         switch='--enable-libtesseract',
         default=SwitchState.NO,
@@ -549,7 +550,7 @@ Libtesseract = Repo(
         repo_url='https://github.com/tesseract-ocr/tesseract.git',
         dest_path='libtesseract')
 
-Libtheora = Repo(
+LIBTHEORA = Repo(
         lib_type=LibType.ENCODER,
         switch='--enable-libtheora',
         default=SwitchState.NO,
@@ -559,7 +560,7 @@ Libtheora = Repo(
         dest_path='libtheora')
 
 # This repo contains the source for libc, libcrypto, libssl and libtls
-Libtls = Repo(
+LIBTLS = Repo(
         lib_type=LibType.PROTOCOL,
         switch='--enable-libtls',
         default=SwitchState.NO,
@@ -568,7 +569,7 @@ Libtls = Repo(
         repo_url='https://github.com/libressl-portable/openbsd.git',
         dest_path=NOT_DEFINED)
 
-Libtwolame = Repo(
+LIBTWOLAME = Repo(
         lib_type=LibType.ENCODER,
         switch='--enable-libtwolame',
         default=SwitchState.NO,
@@ -577,16 +578,16 @@ Libtwolame = Repo(
         repo_url='https://github.com/njh/twolame.git',
         dest_path='libtwolame')
 
-Libv4l2 = Repo(
+LIBV4L2 = Repo(
         lib_type=LibType.UND,
         switch='--enable-libv4l2',
         default=SwitchState.NO,
         repo_tool=RepoTool.GIT_TOOL,
         repo_rev=UND,
-        repo_url='https://github.com/philips/libv4l',
+        repo_url='https://github.com/philips/libv4l.git',
         dest_path='libv4l2')
 
-Libvidstab = Repo(
+LIBVIDSTAB = Repo(
         lib_type=LibType.UND,
         switch='--enable-libvidstab',
         default=SwitchState.NO,
@@ -595,7 +596,7 @@ Libvidstab = Repo(
         repo_url='https://github.com/georgmartius/vid.stab.git',
         dest_path='libvidstab')
 
-Libvmaf = Repo(
+LIBVMAF = Repo(
         lib_type=LibType.FILTER,
         switch='--enable-libvmaf',
         default=SwitchState.NO,
@@ -604,7 +605,7 @@ Libvmaf = Repo(
         repo_url=UNKNOWN,
         dest_path=NOT_DEFINED)
 
-Libvo_amrwbenc = Repo(
+LIBVO_AMRWBENC = Repo(
         lib_type=LibType.ENCODER,
         switch='--enable-libvo-amrwbenc',
         default=SwitchState.NO,
@@ -613,7 +614,7 @@ Libvo_amrwbenc = Repo(
         repo_url='https://github.com/Netflix/vmaf/git',
         dest_path='libvmaf')
 
-Libvorbis = Repo(
+LIBVORBIS = Repo(
         lib_type=LibType.CODEC,
         switch='--enable-libvorbis',
         default=SwitchState.NO,
@@ -622,7 +623,7 @@ Libvorbis = Repo(
         repo_url='https://git.xiph.org/vorbis.git',
         dest_path='libvorbis')
 
-Libvpx = Repo(
+LIBVPX = Repo(
         lib_type=LibType.CODEC,
         switch='--enable-libvpx',
         default=SwitchState.NO,
@@ -631,7 +632,7 @@ Libvpx = Repo(
         repo_url='https://chromium.googlesource.com/webm/libvpx.git',
         dest_path='libvpx')
 
-Libwavpack = Repo(
+LIBWAVPACK = Repo(
         lib_type=LibType.ENCODER,
         switch='--enable-libwavpack',
         default=SwitchState.NO,
@@ -640,7 +641,7 @@ Libwavpack = Repo(
         repo_url='https://github.com/dbry/WavPack.git',
         dest_path='libwavpack')
 
-Libwebp = Repo(
+LIBWEBP = Repo(
         lib_type=LibType.ENCODER,
         switch='--enable-libwebp',
         default=SwitchState.NO,
@@ -649,7 +650,7 @@ Libwebp = Repo(
         repo_url='https://chromium.googlesource.com/webm/libwebp.git',
         dest_path='libwebp')
 
-Libx264 = Repo(
+LIBX264 = Repo(
         lib_type=LibType.ENCODER,
         switch='--enable-libx264',
         default=SwitchState.NO,
@@ -658,7 +659,7 @@ Libx264 = Repo(
         repo_url='git://git.videolan.org/git/x264.git',
         dest_path='libx264')
 
-Libx265 = Repo(
+LIBX265 = Repo(
         lib_type=LibType.ENCODER,
         switch='--enable-libx265',
         default=SwitchState.NO,
@@ -667,7 +668,7 @@ Libx265 = Repo(
         repo_url='https://bitbucket.org/multicoreware/x265',
         dest_path='libx265')
 
-Libxavs = Repo(
+LIBXAVS = Repo(
         lib_type=LibType.ENCODER,
         switch='--enable-libxavs',
         default=SwitchState.NO,
@@ -676,16 +677,17 @@ Libxavs = Repo(
         repo_url='https://svn.code.sf.net/p/xavs/trunk',
         dest_path='libxavs')
 
-Libxcb = Repo(
+# Might be platform independent
+LIBXCB = Repo(
         lib_type=LibType.INDEV,
         switch='--enable-libxcb',
         default=SwitchState.AUTO_DETECT,
-        repo_tool=RepoTool.UND,
+        repo_tool=RepoTool.GIT_TOOL,
         repo_rev=UND,
-        repo_url=UNKNOWN,
-        dest_path=NOT_DEFINED)
+        repo_url='https://anongit.freedesktop.org/git/xcb/libxcb.git',
+        dest_path='libxcb')
 
-Libxcb_shm = Repo(
+LIBXCB_SHM = Repo(
         lib_type=LibType.INDEV,
         switch='--enable-libxcb-shm',
         default=SwitchState.AUTO_DETECT,
@@ -694,7 +696,7 @@ Libxcb_shm = Repo(
         repo_url=UNKNOWN,
         dest_path=NOT_DEFINED)
 
-Libxcb_xfixes = Repo(
+LIBXCB_FIXES = Repo(
         lib_type=LibType.INDEV,
         switch='--enable-libxcb-xfixes',
         default=SwitchState.AUTO_DETECT,
@@ -703,7 +705,7 @@ Libxcb_xfixes = Repo(
         repo_url=UNKNOWN,
         dest_path=NOT_DEFINED)
 
-Libxcb_shape = Repo(
+LIBXCB_SHAPE = Repo(
         lib_type=LibType.INDEV,
         switch='--enable-libxcb-shape',
         default=SwitchState.AUTO_DETECT,
@@ -712,70 +714,74 @@ Libxcb_shape = Repo(
         repo_url=UNKNOWN,
         dest_path=NOT_DEFINED)
 
-Libxvid = Repo(
+
+# xvid requires you to use the username anonymous with no password if not using your own...
+LIBXVID = Repo(
         lib_type=LibType.ENCODER,
         switch='--enable-libxvid',
         default=SwitchState.NO,
-        repo_tool=RepoTool.UND,
-        repo_rev=UND,
-        repo_url=UNKNOWN,
-        dest_path=NOT_DEFINED)
+        repo_tool=RepoTool.SVN_TOOL,
+        repo_rev=2163,
+        repo_url='svn://svn.xvid.org/trunk --username anonymous',
+        dest_path='libxvid')
 
-Libxml2 = Repo(
+LIBXML2 = Repo(
         lib_type=LibType.PARSER,
         switch='--enable-libxml2',
         default=SwitchState.NO,
-        repo_tool=RepoTool.UND,
+        repo_tool=RepoTool.GIT_TOOL,
         repo_rev=UND,
-        repo_url=UNKNOWN,
-        dest_path=NOT_DEFINED)
+        repo_url='git://git.gnome.org/libxml2.git',
+        dest_path='libxml2')
 
-Libzimg = Repo(
+LIBZIMG = Repo(
         lib_type=LibType.FILTER,
         switch='--enable-libzimg',
         default=SwitchState.NO,
-        repo_tool=RepoTool.UND,
+        repo_tool=RepoTool.GIT_TOOL,
         repo_rev=UND,
-        repo_url=UNKNOWN,
-        dest_path=NOT_DEFINED)
+        repo_url='https://github.com/sekrit-twc/zimg.git',
+        dest_path='libzimg')
 
-Libzmq = Repo(
+LIBZMQ = Repo(
         lib_type=LibType.UND,
         switch='--enable-libzmq',
         default=SwitchState.NO,
-        repo_tool=RepoTool.UND,
+        repo_tool=RepoTool.GIT_TOOL,
         repo_rev=UND,
-        repo_url=UNKNOWN,
-        dest_path=NOT_DEFINED)
+        repo_url='https://github.com/zeromq/libzmq.git',
+        dest_path='libzmq')
 
-Libzvbi = Repo(
+LIBZVBI = Repo(
         lib_type=LibType.UND,
         switch='--enable-libzvbi',
         default=SwitchState.NO,
-        repo_tool=RepoTool.UND,
-        repo_rev=UND,
-        repo_url=UNKNOWN,
-        dest_path=NOT_DEFINED)
+        repo_tool=RepoTool.SVN_TOOL,
+        repo_rev=4270,
+        repo_url='https://svn.code.sf.net/p/zapping/svn/trunk/vbi',
+        dest_path='libzzvbi')
 
-Lv2 = Repo(
+LV2 = Repo(
         lib_type=LibType.FILTER,
         switch='--enable-lv2',
         default=SwitchState.NO,
-        repo_tool=RepoTool.UND,
+        repo_tool=RepoTool.GIT_TOOL,
         repo_rev=UND,
-        repo_url=UNKNOWN,
-        dest_path=NOT_DEFINED)
+        repo_url='git://lv2plug.in/git/lv2.git',
+        dest_path='lv2')
 
-Lzma = Repo(
+# Use curl
+LZMA = Repo(
         lib_type=LibType.UND,
         switch='--disable-lzma',
         default=SwitchState.AUTO_DETECT,
-        repo_tool=RepoTool.UND,
+        repo_tool=RepoTool.CURL_TOOL,
         repo_rev=UND,
-        repo_url=UNKNOWN,
-        dest_path=NOT_DEFINED)
+        repo_url='https://sourceforge.net/projects/sevenzip/files/LZMA%20SDK/9.18/lzma918.tar.bz2/download -L -o ',
+        dest_path='lzma918.tar.bz2')
 
-Decklink = Repo(
+# You need to download the SDK
+DECKLINK = Repo(
         lib_type=LibType.DEV,
         switch='--enable-decklink',
         default=SwitchState.NO,
@@ -784,7 +790,8 @@ Decklink = Repo(
         repo_url=UNKNOWN,
         dest_path=NOT_DEFINED)
 
-Libndi_newtek = Repo(
+# You are sent an email with the download link.  It's free though.
+LIBNDI_NEWTEK = Repo(
         lib_type=LibType.DEV,
         switch='--enable-libndi_newtek',
         default=SwitchState.NO,
@@ -794,7 +801,8 @@ Libndi_newtek = Repo(
         dest_path=NOT_DEFINED)
 
 # Requires jni
-Mediacodec = Repo(
+# I don't know where to get jni
+MEDIACODEC = Repo(
         lib_type=LibType.UND,
         switch='--enable-mediacodec',
         default=SwitchState.NO,
@@ -803,61 +811,66 @@ Mediacodec = Repo(
         repo_url=UNKNOWN,
         dest_path=NOT_DEFINED)
 
-Libmysofa = Repo(
+LIBMYSOFA = Repo(
         lib_type=LibType.FILTER,
         switch='--enable-libmysofa',
         default=SwitchState.NO,
-        repo_tool=RepoTool.UND,
+        repo_tool=RepoTool.GIT_TOOL,
         repo_rev=UND,
-        repo_url=UNKNOWN,
-        dest_path=NOT_DEFINED)
+        repo_url='https://github.com/hoene/libmysofa.git',
+        dest_path='libmysofa')
 
-Openal = Repo(
+# I'm not sure if this is the samething..
+# If it's not, you can download the SDK at https://www.openal.org/downloads/
+# It's over 100MB
+OPENAL = Repo(
         lib_type=LibType.UND,
         switch='--enable-openal',
         default=SwitchState.NO,
-        repo_tool=RepoTool.UND,
+        repo_tool=RepoTool.GIT_TOOL,
         repo_rev=UND,
-        repo_url=UNKNOWN,
-        dest_path=NOT_DEFINED)
+        repo_url='https://github.com/kcat/openal-soft.git',
+        dest_path='openal')
 
-Opencl = Repo(
+OPENCL = Repo(
         lib_type=LibType.UND,
         switch='--enable-opencl',
         default=SwitchState.NO,
-        repo_tool=RepoTool.UND,
+        repo_tool=RepoTool.GIT_TOOL,
         repo_rev=UND,
-        repo_url=UNKNOWN,
-        dest_path=NOT_DEFINED)
+        repo_url='https://github.com/KhronosGroup/OpenCL-Headers.git',
+        dest_path='opencl')
 
-Opengl = Repo(
+# Not sure if this is the correct repo.  
+OPENGL = Repo(
         lib_type=LibType.UND,
         switch='--enable-opengl',
         default=SwitchState.NO,
-        repo_tool=RepoTool.UND,
+        repo_tool=RepoTool.GIT_TOOL,
         repo_rev=UND,
-        repo_url=UNKNOWN,
-        dest_path=NOT_DEFINED)
+        repo_url='https://github.com/nigels-com/glew.git',
+        dest_path='opengl')
 
-Openssl = Repo(
+OPENSSL = Repo(
         lib_type=LibType.PROTOCOL,
         switch='--enable-openssl',
         default=SwitchState.NO,
-        repo_tool=RepoTool.UND,
+        repo_tool=RepoTool.GIT_TOOL,
         repo_rev=UND,
-        repo_url=UNKNOWN,
-        dest_path=NOT_DEFINED)
+        repo_url='https://github.ccom/openssl/openssl.git',
+        dest_path='openssl')
 
-Sndio = Repo(
+SNDIO = Repo(
         lib_type=LibType.UND,
         switch='--disable-sndio',
         default=SwitchState.AUTO_DETECT,
-        repo_tool=RepoTool.UND,
+        repo_tool=RepoTool.GIT_TOOL,
         repo_rev=UND,
-        repo_url=UNKNOWN,
-        dest_path=NOT_DEFINED)
+        repo_url='git://caoua.org/git/sndio.git',
+        dest_path='sndio')
 
-Schannel = Repo(
+# This is located somwhere on Microsoft..  Maybe native on Windows Platforms
+SCHANNEL = Repo(
         lib_type=LibType.UND,
         switch='--disable-schannel',
         default=SwitchState.AUTO_DETECT,
@@ -867,16 +880,16 @@ Schannel = Repo(
         dest_path=NOT_DEFINED)
 
 # Required for ffplay
-Sdl2 = Repo(
+SDL2 = Repo(
         lib_type=LibType.UND,
         switch='--disable-sdl2',
         default=SwitchState.AUTO_DETECT,
-        repo_tool=RepoTool.UND,
+        repo_tool=RepoTool.HG_TOOL,
         repo_rev=UND,
-        repo_url=UNKNOWN,
-        dest_path=NOT_DEFINED)
+        repo_url='https://hw.libsdl.org/SDL',
+        dest_path='sdl')
 
-Securtransport = Repo(
+SECURETRANSPORT = Repo(
         lib_type=LibType.UND,
         switch='--disable-securetransport',
         default=SwitchState.AUTO_DETECT,
@@ -885,7 +898,7 @@ Securtransport = Repo(
         repo_url=UNKNOWN,
         dest_path=NOT_DEFINED)
 
-Xlib = Repo(
+XLIB = Repo(
         lib_type=LibType.UND,
         switch='--disable-xlib',
         default=SwitchState.AUTO_DETECT,
@@ -894,25 +907,25 @@ Xlib = Repo(
         repo_url=UNKNOWN,
         dest_path=NOT_DEFINED)
 
-Zlib = Repo(
+ZLIB = Repo(
         lib_type=LibType.UND,
         switch='--disable-zlib',
         default=SwitchState.AUTO_DETECT,
-        repo_tool=RepoTool.UND,
+        repo_tool=RepoTool.GIT_TOOL,
         repo_rev=UND,
-        repo_url=UNKNOWN,
-        dest_path=NOT_DEFINED)
+        repo_url='https://git.code.sf.net/p/libpng/code',
+        dest_path='zlib')
 
-Amf = Repo(
+AMF = Repo(
         lib_type=LibType.HWACCEL,
         switch='--disable-amf',
         default=SwitchState.AUTO_DETECT,
-        repo_tool=RepoTool.UND,
+        repo_tool=RepoTool.GIT_TOOL,
         repo_rev=UND,
-        repo_url=UNKNOWN,
-        dest_path=NOT_DEFINED)
+        repo_url='https://github.com/GPUOpen-LIBrariesAndSDKs/AMF.git',
+        dest_path='amf')
 
-Audiotoolbox = Repo(
+AUDIOTOOLBOX = Repo(
         lib_type=LibType.HWACCEL,
         switch='--disable-audiotoolbox',
         default=SwitchState.AUTO_DETECT,
@@ -921,25 +934,28 @@ Audiotoolbox = Repo(
         repo_url=UNKNOWN,
         dest_path=NOT_DEFINED)
 
-Cuda_SDK = Repo(
+# Hte download is probably huge, and I think you may need a Cuda capable GPU...
+CUDA_SDK = Repo(
         lib_type=LibType.HWACCEL,
         switch='--enable-cuda-sdk',
         default=SwitchState.NO,
         repo_tool=RepoTool.UND,
         repo_rev=UND,
-        repo_url=UNKNOWN,
+        repo_url='https://developer.nvidia.com/cuda-downloads',
         dest_path=NOT_DEFINED)
 
-Cuvid = Repo(
+# Probably wanna use curl to download this though..
+# The link in repo_url here may also be needed for Cuda_sdk..  I'm not sure.  It may also be the samething..
+CUUVID = Repo(
         lib_type=LibType.HWACCEL,
         switch='--disable-cuvid',
         default=SwitchState.AUTO_DETECT,
         repo_tool=RepoTool.UND,
         repo_rev=UND,
-        repo_url=UNKNOWN,
+        repo_url='https://developer.nvidia.com/cuda-toolkit',
         dest_path=NOT_DEFINED)
 
-D3d11va = Repo(
+D3D11VA = Repo(
         lib_type=LibType.HWACCEL,
         switch='--disable-d3d11va',
         default=SwitchState.AUTO_DETECT,
@@ -948,7 +964,7 @@ D3d11va = Repo(
         repo_url=UNKNOWN,
         dest_path=NOT_DEFINED)
 
-Dxva2 = Repo(
+DXVA2 = Repo(
         lib_type=LibType.HWACCEL,
         switch='--disable-dxva2',
         default=SwitchState.AUTO_DETECT,
@@ -957,7 +973,7 @@ Dxva2 = Repo(
         repo_url=UNKNOWN,
         dest_path=NOT_DEFINED)
 
-Ffnvcodec = Repo(
+FFNVCODEC = Repo(
         lib_type=LibType.HWACCEL,
         switch='--disable-ffnvcodec',
         default=SwitchState.AUTO_DETECT,
@@ -967,7 +983,7 @@ Ffnvcodec = Repo(
         dest_path=NOT_DEFINED)
 
 # Linux
-Libdrm = Repo(
+LIBDRM = Repo(
         lib_type=LibType.HWACCEL,
         switch='--enable-libdrmn',
         default=SwitchState.NO,
@@ -976,7 +992,7 @@ Libdrm = Repo(
         repo_url=UNKNOWN,
         dest_path=NOT_DEFINED)
 
-Libmfx = Repo(
+LIBMFX = Repo(
         lib_type=LibType.HWACCEL,
         switch='--enable-libmfx',
         default=SwitchState.NO,
@@ -985,7 +1001,7 @@ Libmfx = Repo(
         repo_url=UNKNOWN,
         dest_path=NOT_DEFINED)
 
-Libnpp = Repo(
+LIBNPP = Repo(
         lib_type=LibType.HWACCEL,
         switch='--enable-libnpp',
         default=SwitchState.NO,
@@ -994,7 +1010,7 @@ Libnpp = Repo(
         repo_url=UNKNOWN,
         dest_path=NOT_DEFINED)
 
-Mmal = Repo(
+MMAL = Repo(
         lib_type=LibType.HWACCEL,
         switch='--enable-mmal',
         default=SwitchState.NO,
@@ -1003,7 +1019,7 @@ Mmal = Repo(
         repo_url=UNKNOWN,
         dest_path=NOT_DEFINED)
 
-Nvdec = Repo(
+NVDEC = Repo(
         lib_type=LibType.HWACCEL,
         switch='--disable-nvdec',
         default=SwitchState.AUTO_DETECT,
@@ -1012,7 +1028,7 @@ Nvdec = Repo(
         repo_url=UNKNOWN,
         dest_path=NOT_DEFINED)
 
-Nvenc = Repo(
+NVENC = Repo(
         lib_type=LibType.HWACCEL,
         switch='--disable-nvenc',
         default=SwitchState.AUTO_DETECT,
@@ -1021,7 +1037,7 @@ Nvenc = Repo(
         repo_url=UNKNOWN,
         dest_path=NOT_DEFINED)
 
-Omx = Repo(
+OMX = Repo(
         lib_type=LibType.HWACCEL,
         switch='--enable-omx',
         default=SwitchState.NO,
@@ -1030,7 +1046,7 @@ Omx = Repo(
         repo_url=UNKNOWN,
         dest_path=NOT_DEFINED)
 
-Omx_rpi = Repo(
+OMX_RPI = Repo(
         lib_type=LibType.HWACCEL,
         switch='--enable-omx-rpi',
         default=SwitchState.NO,
@@ -1039,7 +1055,7 @@ Omx_rpi = Repo(
         repo_url=UNKNOWN,
         dest_path=NOT_DEFINED)
 
-Rkmpp = Repo(
+RKMPP = Repo(
         lib_type=LibType.HWACCEL,
         switch='--enable-rkmpp',
         default=SwitchState.NO,
@@ -1048,7 +1064,7 @@ Rkmpp = Repo(
         repo_url=UNKNOWN,
         dest_path=NOT_DEFINED)
 
-V4l2_m2m = Repo(
+V4L2_M2M = Repo(
         lib_type=LibType.HWACCEL,
         switch='--disable-v4l2-m2m',
         default=SwitchState.AUTO_DETECT,
@@ -1057,25 +1073,25 @@ V4l2_m2m = Repo(
         repo_url=UNKNOWN,
         dest_path=NOT_DEFINED)
 
-Vaapi = Repo(
+VAAPI = Repo(
         lib_type=LibType.HWACCEL,
         switch='--disable-vaapi',
         default=SwitchState.AUTO_DETECT,
-        repo_tool=RepoTool.UND,
+        repo_tool=RepoTool.GIT_TOOL,
         repo_rev=UND,
-        repo_url=UNKNOWN,
-        dest_path=NOT_DEFINED)
+        repo_url='https://github.com/intel/libva.git',
+        dest_path='vaapi')
 
-Vdpau = Repo(
+VDPAU = Repo(
         lib_type=LibType.HWACCEL,
         switch='--disable-vdpau',
         default=SwitchState.AUTO_DETECT,
-        repo_tool=RepoTool.UND,
+        repo_tool=RepoTool.GIT_TOOL,
         repo_rev=UND,
-        repo_url=UNKNOWN,
-        dest_path=NOT_DEFINED)
+        repo_url='git://anongit.freedesktop.org/vdpau/libvdpau.git',
+        dest_path='vdpau')
 
-Videotoolbox = Repo(
+VIDEOTOOLBOX = Repo(
         lib_type=LibType.HWACCEL,
         switch='--disable-videotoolbox',
         default=SwitchState.AUTO_DETECT,
@@ -1083,31 +1099,18 @@ Videotoolbox = Repo(
         repo_rev=UND,
         repo_url=UNKNOWN,
         dest_path=NOT_DEFINED)
+TMPVAR = (CHROMAPRINT, FREI0R, LIBICONV, LADSPA, LIBAOM, LIBASS, LIBBLURAY, LIBBS2B, LIBCACA, LIBCELT, LIBCDIO,
+        LIBDC1394, LIBFDK_AAC, LIBFLITE, LIBFONTCONFIG, LIBFREETYPE, LIBFRIBIDI, LIBGME, LIBILBC, LIBKVAZAAR,
+        LIBMODPLUG, LIBMP3LAME, LIBOPENCV, LIBOPENH264, LIBOPENJPEG, LIBOPUS, LIBRSVG, LIBRUBBERBAND, LIBSHINE,
+        LIBSNAPPY, LIBSOXR, LIBSPEEX, LIBTESSERACT, LIBTHEORA, LIBTWOLAME, LIBV4L2, LIBVIDSTAB, LIBVORBIS, LIBVPX,
+        LIBWAVPACK, LIBWEBP, LIBX264, LIBX265, LIBXAVS, LIBXVID, LIBXML2, LIBZIMG, LIBZMQ, LIBZVBI, LV2, LZMA,
+        LIBMYSOFA, OPENAL, OPENCL, OPENGL, SDL2, ZLIB, AMF)
 
-
-
-# git://git.alsa-projects.org/ is the root of all the alsa projects.
-
-
-
-REPO_PATH = './repos'
-CODEC_PATH = 'codecs'
-AUDIO_CODEC_PATH = 'acodec'
-VIDEO_CODEC_PATH = 'vcodec'
-FILTER_PATH = 'filters'
-AUDIO_FILTER_PATH = 'audio'
-VIDEO_FILTER_PATH = 'video'
-SUPPORT_PATH = 'support'
-
-
-
-
-
-CHROMAPRINT_REPO_TOOL = GIT_TOOL
-CHROMAPRINT_REPO = 
-CHROMAPRINT_PATH = chromaprint
-
-FREI0R_REPO_TOOL = GIT_TOOL
-FREI0R_REPO = 
-FREI0R_PATH = 'frei0r'
-
+def download_repos(repo_tuple: REPOS) -> None:
+    for repo in repo_tuple:
+        if repo.repo_url == UNKNOWN or repo.dest_path == NOT_DEFINED or repo.repo_tool == RepoTool.UND or (repo.repo_tool == RepoTool.SVN_TOOL and repo.repo_rev == UND):
+            continue
+        tmpstr = (repo.repo_tool + ('' if repo.repo_rev == UND else repo.repo_rev) + ' ' + repo.repo_url + ' ' + repo.dest_path)
+        print(tmpstr)
+        os.system(tmpstr)
+        print('done')
