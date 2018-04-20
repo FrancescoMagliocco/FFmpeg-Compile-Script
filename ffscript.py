@@ -172,8 +172,8 @@ LADSPA = Repo(
         switch='--enable-ladspa',
         default=SwitchState.NO,
         repo_tool=RepoTool.CURL_TOOL,
-        repo_rev='http://www.ladspa.org/ladspa_sdk/ladspa.h.txt -L -o ',
-        repo_url=UNKNOWN,
+        repo_rev=NA,
+        repo_url='http://www.ladspa.org/ladspa_sdk/ladspa.h.txt -L -o ',
         dest_path='ladspa.h')
 
 LIBAOM = Repo(
