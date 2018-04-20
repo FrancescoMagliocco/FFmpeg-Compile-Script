@@ -45,7 +45,7 @@ class Repo(NamedTuple):
     repo_url: str
     dest_path: str
 
-REPOS = lambda Repo: tuple(Repo)
+REPOS = tuple(Repo)
 
 # Do not use this
 ALSA = Repo(
@@ -841,7 +841,7 @@ OPENCL = Repo(
         repo_url='https://github.com/KhronosGroup/OpenCL-Headers.git',
         dest_path='opencl')
 
-# Not sure if this is the correct repo.  
+# Not sure if this is the correct repo.
 OPENGL = Repo(
         lib_type=LibType.UND,
         switch='--enable-opengl',
@@ -1109,9 +1109,20 @@ TMPVAR = (CHROMAPRINT, FREI0R, LIBICONV, LADSPA, LIBAOM, LIBASS, LIBBLURAY, LIBB
 
 def download_repos(repo_tuple: REPOS) -> None:
     for repo in repo_tuple:
-        if repo.repo_url == UNKNOWN or repo.dest_path == NOT_DEFINED or repo.repo_tool == RepoTool.UND or (repo.repo_tool == RepoTool.SVN_TOOL and repo.repo_rev == UND):
+        print(repo.switch)
+        if (repo.repo_url == UNKNOWN
+                or repo.dest_path == NOT_DEFINED
+                or repo.repo_tool == RepoTool.UND
+                or (repo.repo_tool == RepoTool.SVN_TOOL and repo.repo_rev == UND)):
             continue
-        tmpstr = (repo.repo_tool + ('' if repo.repo_rev == UND else repo.repo_rev) + ' ' + repo.repo_url + ' ' + repo.dest_path)
+        tmpstr = (repo.repo_tool.value
+                + ('' if repo.repo_rev == UND else str(repo.repo_rev))
+                + ' ' + repo.repo_url
+                + ' ' + repo.dest_path)
+
         print(tmpstr)
         os.system(tmpstr)
         print('done')
+
+print('calling download_repos()')
+download_repos(TMPVAR)
