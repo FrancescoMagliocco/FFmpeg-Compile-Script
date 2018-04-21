@@ -1,42 +1,43 @@
 import argparse
+import logging
 import os
 import sys
 from enum import Enum
 from typing import NamedTuple
 
-NA = -1
-UND = NA
-UNKNOWN = 'unknown'
-NOT_DEFINED = 'not defined'
+NA: int = -1
+UND: int = NA
+UNKNOWN: str = 'unknown'
+NOT_DEFINED: str = 'not defined'
 
 class LibType(Enum):
-    CODEC = 'codecs'
-    ENCODER = 'encoders'
-    DECODER = 'decoders'
-    HWACCEL = 'hwaccels'
-    MUXER = 'muxers'
-    DEMUXER = 'demuxers'
-    PARSER = 'parsers'
-    BSF = 'bsfs'
-    PROTOCOL = 'protocols'
-    DEV = 'devices'
-    INDEV = 'input-devices'
-    OUTDEV = 'output-devices'
-    FILTER = 'filters'
-    UND = 'undertermined'
+    CODEC: str = 'codecs'
+    ENCODER: str = 'encoders'
+    DECODER: str = 'decoders'
+    HWACCEL: str = 'hwaccels'
+    MUXER: str = 'muxers'
+    DEMUXER: str = 'demuxers'
+    PARSER: str = 'parsers'
+    BSF: str = 'bsfs'
+    PROTOCOL: str = 'protocols'
+    DEV: str = 'devices'
+    INDEV: str = 'input-devices'
+    OUTDEV: str = 'output-devices'
+    FILTER: str = 'filters'
+    UND: str = 'undertermined'
 
 class SwitchState(Enum):
-    NO = 0
-    YES = 1
-    AUTO_DETECT = -1
+    NO: int = 0
+    YES: int = 1
+    AUTO_DETECT: int = -1
 
 class RepoTool(Enum):
-    CURL_TOOL = 'curl '
-    GIT_TOOL = 'git clone '
-    GIT_SVN_TOOL = 'git svn clone -r '
-    HG_TOOL = 'hg clone '
-    SVN_TOOL = 'svn co -r '
-    UND = 'echo RepoTool is inconclusive.'
+    CURL_TOOL: str = 'curl '
+    GIT_TOOL: str = 'git clone '
+    GIT_SVN_TOOL: str = 'git svn clone -r '
+    HG_TOOL: str = 'hg clone '
+    SVN_TOOL: str = 'svn co -r '
+    UND: str = 'echo RepoTool is inconclusive.'
 
 class Repo(NamedTuple):
     lib_type: LibType
@@ -1109,9 +1110,8 @@ TMPVAR = (CHROMAPRINT, FREI0R, LIBICONV, LADSPA, LIBAOM, LIBASS, LIBBLURAY, LIBB
         LIBWAVPACK, LIBWEBP, LIBX264, LIBX265, LIBXAVS, LIBXVID, LIBXML2, LIBZIMG, LIBZMQ, LIBZVBI, LV2, LZMA,
         LIBMYSOFA, OPENAL, OPENCL, OPENGL, SDL2, ZLIB, AMF)
 
-NO_DOWN: bool = False
 
-def download_repos(repo_tuple: REPOS) -> None:
+def download_repos(repo_tuple: REPOS, no_download: bool = False) -> None:
     for repo in repo_tuple:
         print(repo.switch)
         if (repo.repo_url == UNKNOWN
@@ -1125,21 +1125,100 @@ def download_repos(repo_tuple: REPOS) -> None:
                 + ' ' + repo.dest_path)
 
         print(tmpstr)
-        if not NO_DOWN:
-            os.system(tmpstr)
+        if not no_download:
+            #os.system(tmpstr)
             print('done')
         else:
             print('--no-download was specified.  Not downloading repo.')
 
+def getLogLevelWithName(
+        lvl: int = logging.getLogger().getEffectiveLevel(),
+        strFmt: str = '{0}: {1}') -> str:
+    return strFmt.format(logging.getLevelName(lvl), lvl)
+
+def setLogLevelGetWithName(
+        logLvlOrName,
+        strFmt: str = '{0}: {1}',
+        logger: logging.Logger = logging.getLogger()) -> str:
+    tmpLvl = logger.getEffectiveLevel()
+    isInt: bool = isinstance(logLvlOrName, int)
+    if isInt and tmpLvl == logLvlOrName:
+        logger.info(
+                'Specified verbose level: %s is the same as current effective verbose level: %s', logLvlOrName, tmpLvl)
+        return 'Verbosity level not changed'
+
+    logger.info('%s is %s integer!', logLvlOrName, ('an' if isInt else 'not an'))
+    logger.debug('Attempting to set verbosity level to %s from %s...', logLvlOrName, tmpLvl)
+    logger.setLevel(logLvlOrName)
+
+    # curLvlName is retrieved after attempting to set the new verbose level
+    curLvlName: str = logging.getLevelName(logger.getEffectiveLevel())
+    # If 'logLvlOrName' IS a str, AND IS a valid verbose name, 'curLvlName' can NOT be equal to 'Level {lvl}'
+    # If 'logLvlOrName' IS an int, AND DOES have a valid verbose name, 'curLvlName' can NOT be equal to 'Level {lvl}'
+    # If 'logLvlOrName' IS a str, AND is NOT a valid verbose name, 'curLvlName' HAS to be equal to 'Level {lvl}'
+    # If 'logLvlOrName' IS an int, AND does NOT have a valid verbose name, 'curLvlName' HAS to be equal to 'Level {lvl}'
+    if curLvlName == 'Level {0}'.format(logLvlOrName):
+        logger.warning('%s is not a valid level', logLvlOrName)
+
+        # ONLY if 'logLvlOrName' was a str, can the effective level be equal to 'tmpLvl'
+        # If 'logLvlOrName' was an int, and was the same as the effective level, 'logLvlOrName' would have been caught
+        # above and reported as so.  But because 'logLvlOrName' was not an int, and was a string that did not have a
+        # valid level name, is it possible for the effective level to be the same as 'tmpLvl' as the 'tmpLvl' was the
+        # effective level previously as it is now, for the reason being that 'logLvlOrName' was a str that had no
+        # matching name.
+        if logger.getEffectiveLevel() == tmpLvl:
+            # If the effective level is equal to 'tmpLvl', we can use 'curLvlName' because the levels never changed, and
+            # therefore their names never changed.  (Only in the scenario where 'logLvlOrName' was a string had no
+            # corresponding name.)
+            # We are not using 'getLogLevelWithName()' because as of current revision, the return value in this scenario
+            # would be 'Level {lvl}: {lvl}'.  The reason for that is 'getLogLevelWithName()' does not validate weather
+            # or not the specified level (If any) is valid.  In this scenario, the effective level does not have a valid
+            # name, but was still set previosly with the now still effective level.
+            logger.warning('Verbosity level not changed!  Verbose level: %s', curLvlName)
+            return curLvlName
+
+        logger.warning()
 
 
 def main():
+    logging.basicConfig(level=logging.WARNING)
+    log = logging.getLogger()
+
     p = argparse.ArgumentParser(description='Does the dirty work so you don\'t have too')
     p.add_argument(
-            '-no', '--no-download', dest='nodown', action='store_false', help='Repos won\'t actually be downloaded.')
-    args = p.parse_args()
-    if args.nodown:
-        NO_DOWN = True
+            '-no',
+            '--no-download',
+            action='store_true',
+            help='Repos won\'t actually be downloaded.',
+            dest='nodown')
 
+    p.add_argument(
+            '-d',
+            '--download',
+            metavar='repo',
+            nargs='*',
+            help='Download repos',
+            dest='down')
+
+    p.add_argument(
+            '-v',
+            '--verbose',
+            nargs='?',
+            default='WARNING',
+            choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'],
+            help='Sets the verbose level.',
+            metavar='lvl',
+            dest='vlvl')
+
+    args = p.parse_args()
+
+    logging.debug('Parsing arguments...')
+    if args.vlvl:
+        log.info(
+                'Found verbose argument!\nChanging verbose level from: %s to: %s',
+                getLogLevelWithName(),
+                setLogLevelGetWithName(args.lvl))
+    if args.down:
+        download_repos([LIBICONV], args.nodown)
 
 main()
