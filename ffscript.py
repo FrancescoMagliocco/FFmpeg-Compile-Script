@@ -54,8 +54,8 @@ class Repo(NamedTuple):
 # Do not use this
 
 
-REPOCHK: Dict[str, Repo]
-REPOCHK = {
+ALL_REPOS: Dict[str, Repo]
+ALL_REPOS = {
         'ALSA': Repo(
                 lib_type=LibType.DEV,
                 switch='--disable-alsa',
@@ -994,8 +994,10 @@ REPOCHK = {
                 dest_path=NOT_DEFINED)
         }
 
+# repo_tuple: List[Repo] really isn't needed here anymore since the argument passed from main() is a list of str.
 def download_repos(repo_tuple: List[Repo], no_download: bool = False) -> None:
     for reporaw in repo_tuple:
+        if 
         repo = REPOCHK[reporaw]
         logging.debug(reporaw)
         logging.debug('switch:\t%s', repo.switch)
