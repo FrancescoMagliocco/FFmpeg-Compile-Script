@@ -1018,31 +1018,33 @@ def download_repos(repo_list: List[Repo], no_download: bool = False) -> None:
             logging.warning('%s is not a complete/usable repo!', repo_str)
             continue
 
-        command_str: str = '{0}{1} {2} {3}'.format(repo.repo_tool.value, ('' if repo.repo_rev == UND else
-            str(repo.repo_rev)),
+        command_str: str = '{0}{1} {2} {3}'.format(
+                repo.repo_tool.value,
+                ('' if repo.repo_rev == UND else str(repo.repo_rev)),
                 repo.repo_url, repo.dest_path)
 
-        print(command_str)
+        logging.info(command_str)
         if not no_download:
-            #os.system(tmpstr)
-            print('done')
+            print('Downloading repo %s...', repo_str)
+            os.system(command_str)
+            print('Finished download repo %s!', repo_str)
         else:
-            print('--no-download was specified.  Not downloading repo.')
+            print('Repo %s was not actually downloaded because -no/--no-downloaded was specified.', repo_str)
     return None
 
 def main():
     logging.basicConfig(level=logging.DEBUG, format='%(levelname)s\t%(message)s')
     log: logging.Logger = logging.getLogger()
 
-    p = argparse.ArgumentParser(description='Does the dirty work so you don\'t have too')
-    p.add_argument(
+    parser = argparse.ArgumentParser(description='Does the dirty work so you don\'t have too')
+    parser.add_argument(
             '-no',
             '--no-download',
             action='store_true',
             help='Repos won\'t actually be downloaded.',
             dest='nodown')
 
-    p.add_argument(
+    parser.add_argument(
             '-d',
             '--download',
             metavar='repo',
@@ -1050,7 +1052,7 @@ def main():
             help='Download repos',
             dest='down')
 
-    p.add_argument(
+    parser.add_argument(
             '-v',
             '--verbose',
             nargs='?',
@@ -1060,13 +1062,18 @@ def main():
             metavar='lvl',
             dest='vlvl')
 
-    args = p.parse_args()
+    args = parser.parse_args()
     log.debug('parse_args():\t%s', args)
 
     logging.debug('Parsing arguments...')
+    if args.nodown:
+        log.debug('Found -no/--no-download!')
     if args.vlvl:
         log.debug('Found verbose argument!')
-        log.info('verbosity from %s to %s', logging.getLevelName(log.getEffectiveLevel()), logging.getLevelName(args.vlvl))
+        log.info(
+                'verbosity from %s to %s',
+                logging.getLevelName(log.getEffectiveLevel()),
+                logging.getLevelName(args.vlvl))
         log.setLevel(args.vlvl)
     if args.down:
         download_repos(args.down, args.nodown)
