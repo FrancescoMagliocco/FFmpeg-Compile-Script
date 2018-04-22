@@ -3,6 +3,7 @@ import logging
 import os
 from enum import Enum
 from typing import NamedTuple, Dict, List
+from pathlib import Path
 
 NA: int = -1
 UND: int = NA
@@ -1030,6 +1031,24 @@ def download_repos(repo_list: List[Repo], no_download: bool = False) -> None:
         else:
             print('Repo %s was not actually downloaded because -no/--no-downloaded was specified.', repo_str)
     return None
+
+def file_exists(file_str: str, path_str: str = '.') -> bool:
+    file_str = file_str.strip('/')
+    path_str = path_str.rstrip('/')
+    logging.debug('Checking if directroy %s exists..', path_str)
+    tmp_path: Path = Path(path_str)
+    if tmp_path.is_dir():
+        logging.info('Directroy %s exists!', path_str)
+        logging.debug('Checking if %s exists in %s..', file_str, path_str)
+        logging.debug('%s/%s', path_str, file_str)
+        tmp_file: Path = Path('{0}/{1}'.format(path_str, file_str))
+        if tmp_file.is_file():
+            logging.debug('%s exists in %s!', file_str, path_str)
+            return True
+        logging.warning('%s does not exist in %s', file_str, path_str)
+        return False
+    logging.warning('Directory %s does not exist', path_str)
+    return False
 
 def main():
     logging.basicConfig(level=logging.DEBUG, format='%(levelname)s\t%(message)s')
