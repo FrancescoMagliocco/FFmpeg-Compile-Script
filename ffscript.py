@@ -994,8 +994,6 @@ REPOCHK = {
                 dest_path=NOT_DEFINED)
         }
 
-
-
 def download_repos(repo_tuple: List[Repo], no_download: bool = False) -> None:
     for reporaw in repo_tuple:
         repo = REPOCHK[reporaw]
