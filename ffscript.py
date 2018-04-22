@@ -48,9 +48,6 @@ class Repo(NamedTuple):
     repo_url: str
     dest_path: str
 
-#REPOS = lambda Repo: tuple(Repo)
-#REPOS: Tuple[Repo] = tuple(Repo)
-
 ALL_REPOS: Dict[str, Repo]
 ALL_REPOS = {
         'ALSA': Repo(
