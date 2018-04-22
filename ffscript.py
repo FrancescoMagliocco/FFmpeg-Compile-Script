@@ -51,9 +51,6 @@ class Repo(NamedTuple):
 #REPOS = lambda Repo: tuple(Repo)
 #REPOS: Tuple[Repo] = tuple(Repo)
 
-# Do not use this
-
-
 ALL_REPOS: Dict[str, Repo]
 ALL_REPOS = {
         'ALSA': Repo(
