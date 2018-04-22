@@ -1177,11 +1177,15 @@ def setLogLevelGetWithName(
             logger.warning('Verbosity level not changed!  Verbose level: %s', curLvlName)
             return curLvlName
 
-        logger.warning()
+        logger.warning('Verbosity level changed to %s but with warnings..', curLvlName)
+        return curLvlName
+
+    logger.debug('Successfully changed verbnose level')
+    return getLogLevelWithName()
 
 
 def main():
-    logging.basicConfig(level=logging.WARNING)
+    logging.basicConfig(level=logging.DEBUG, format='%(levelname)s\t%(message)s')
     log = logging.getLogger()
 
     p = argparse.ArgumentParser(description='Does the dirty work so you don\'t have too')
@@ -1214,10 +1218,10 @@ def main():
 
     logging.debug('Parsing arguments...')
     if args.vlvl:
-        log.info(
-                'Found verbose argument!\nChanging verbose level from: %s to: %s',
-                getLogLevelWithName(),
-                setLogLevelGetWithName(args.lvl))
+        log.debug('Found verbose argument!')
+        log.info('Changing verbose level from:')
+        getLogLevelWithName()
+        setLogLevelGetWithName(args.vlvl)
     if args.down:
         download_repos([LIBICONV], args.nodown)
 
