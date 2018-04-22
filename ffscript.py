@@ -997,7 +997,7 @@ def download_repos(repo_list: List[Repo], no_download: bool = False) -> None:
             logging.warning('%s is not a valid repo', repo_str)
             return None
         logging.debug('%s is a valid repo!', repo_str)
-        
+
         repo: Repo = ALL_REPOS[repo_str]
         logging.debug('lib_type:\t%s', repr(repo.lib_type))
         logging.debug('switch:\t\t%s', repo.switch)
