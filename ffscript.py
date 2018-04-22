@@ -5,11 +5,6 @@ from enum import Enum
 from typing import NamedTuple, Dict, List
 from pathlib import Path
 
-NA: int = -1
-UND: int = NA
-UNKNOWN: str = 'unknown'
-NOT_DEFINED: str = 'not defined'
-
 class LibType(Enum):
     CODEC: str = 'codecs'
     ENCODER: str = 'encoders'
@@ -48,8 +43,12 @@ class Repo(NamedTuple):
     repo_url: str
     dest_path: str
 
-ALL_REPOS: Dict[str, Repo]
-ALL_REPOS = {
+NA: int = -1
+UND: int = NA
+UNKNOWN: str = 'unknown'
+NOT_DEFINED: str = 'not defined'
+
+ALL_REPOS: Dict[str, Repo] = {
         'ALSA': Repo(
                 lib_type=LibType.DEV,
                 switch='--disable-alsa',
