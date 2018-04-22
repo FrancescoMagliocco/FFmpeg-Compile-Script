@@ -987,7 +987,7 @@ ALL_REPOS: Dict[str, Repo] = {
                 dest_path=NOT_DEFINED)
         }
 
-# repo_tuple: List[Repo] really isn't needed here anymore since the argument passed from main() is a list of str.
+# repo_tuple: List[Repo] really isn't needed here anymore since the argument passed from main() is a list of str
 def download_repos(repo_list: List[Repo], no_download: bool = False) -> None:
     # repo_str is a str even though repo_list is a list of Repo's
     for repo_str in repo_list:
