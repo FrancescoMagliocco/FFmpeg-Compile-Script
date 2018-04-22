@@ -992,34 +992,43 @@ ALL_REPOS = {
         }
 
 # repo_tuple: List[Repo] really isn't needed here anymore since the argument passed from main() is a list of str.
-def download_repos(repo_tuple: List[Repo], no_download: bool = False) -> None:
-    for reporaw in repo_tuple:
-        if 
-        repo = REPOCHK[reporaw]
-        logging.debug(reporaw)
-        logging.debug('switch:\t%s', repo.switch)
-        logging.debug('default:\t%s', repr(repo.default))
+def download_repos(repo_list: List[Repo], no_download: bool = False) -> None:
+    # repo_str is a str even though repo_list is a list of Repo's
+    for repo_str in repo_list:
+        logging.debug('Checking if %s is a valid repo...', repo_str)
+        repo_str = repo_str.upper()
+        if repo_str not in ALL_REPOS:
+            logging.warning('%s is not a valid repo', repo_str)
+            return None
+        logging.debug('%s is a valid repo!', repo_str)
+        repo: Repo = ALL_REPOS[repo_str]
         logging.debug('lib_type:\t%s', repr(repo.lib_type))
+        logging.debug('switch:\t\t%s', repo.switch)
+        logging.debug('default:\t%s', repr(repo.default))
         logging.debug('repo_tool:\t%s', repr(repo.repo_tool))
         logging.debug('repo_rev:\t%d', repo.repo_rev)
         logging.debug('repo_url:\t%s', repo.repo_url)
         logging.debug('dest_path:\t%s', repo.dest_path)
+
+        logging.debug('Checking if %s is a completed/usable repo...', repo_str)
         if (repo.repo_url == UNKNOWN
                 or repo.dest_path == NOT_DEFINED
                 or repo.repo_tool == RepoTool.UND
                 or (repo.repo_tool == RepoTool.SVN_TOOL and repo.repo_rev == UND)):
+            logging.warning('%s is not a complete/usable repo!', repo_str)
             continue
-        tmpstr = (repo.repo_tool.value
-                + ('' if repo.repo_rev == UND else str(repo.repo_rev))
-                + ' ' + repo.repo_url
-                + ' ' + repo.dest_path)
 
-        print(tmpstr)
+        command_str: str = '{0}{1} {2} {3}'.format(repo.repo_tool.value, ('' if repo.repo_rev == UND else
+            str(repo.repo_rev)),
+                repo.repo_url, repo.dest_path)
+
+        print(command_str)
         if not no_download:
             #os.system(tmpstr)
             print('done')
         else:
             print('--no-download was specified.  Not downloading repo.')
+    return None
 
 def main():
     logging.basicConfig(level=logging.DEBUG, format='%(levelname)s\t%(message)s')
