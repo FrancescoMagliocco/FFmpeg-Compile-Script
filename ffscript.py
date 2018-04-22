@@ -1062,6 +1062,15 @@ def main():
             metavar='lvl',
             dest='vlvl')
 
+    parser.add_argument(
+            '-src',
+            '--ffmpeg-src',
+            nargs=1,
+            default='./',
+            help='FFmpeg source directory, where ./configure is located.  (Default: Current Directory)',
+            metavar='dir',
+            dest='ffsrc')
+
     args = parser.parse_args()
     log.debug('parse_args():\t%s', args)
 
