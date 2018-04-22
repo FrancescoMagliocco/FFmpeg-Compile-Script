@@ -1,9 +1,8 @@
 import argparse
 import logging
 import os
-import sys
 from enum import Enum
-from typing import NamedTuple, Dict, Tuple, NewType, List
+from typing import NamedTuple, Dict, List
 
 NA: int = -1
 UND: int = NA
