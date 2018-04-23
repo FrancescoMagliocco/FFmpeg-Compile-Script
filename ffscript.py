@@ -988,7 +988,6 @@ ALL_REPOS: Dict[str, Repo] = {
                 dest_path=NOT_DEFINED)
         }
 
-
 # repo_tuple: List[Repo] really isn't needed here anymore since the argument passed from main() is a list of str.
 def download_repos(repo_list: List[Repo], no_download: bool = False) -> None:
     # repo_str is a str even though repo_list is a list of Repo's
@@ -1016,7 +1015,7 @@ def download_repos(repo_list: List[Repo], no_download: bool = False) -> None:
             logging.warning('%s is not a complete/usable repo!', repo_str)
             continue
 
-        command_str: str = '{0}{1} {2} {3}'.format(
+        command_str: str = '{0}{1} {2} ../{3}'.format(
                 repo.repo_tool.value,
                 ('' if repo.repo_rev == UND else str(repo.repo_rev)),
                 repo.repo_url, repo.dest_path)
@@ -1079,6 +1078,13 @@ def main():
             dest='vlvl')
 
     parser.add_argument(
+            '--compile',
+            action='store_true',
+            default=False,
+            help='Perform compilation?  (Default:  No)',
+            dest='compile')
+
+    parser.add_argument(
             '-src',
             '--ffmpeg-src',
             nargs=1,
@@ -1090,20 +1096,22 @@ def main():
     args = parser.parse_args()
     log.debug('parse_args():\t%s', args)
 
-    logging.debug('Parsing arguments...')
-    if args.ffsrc != None:
-        logging.debug('Found -src/--ffmpeg-src!')
-    if not file_exists('configure', args.ffsrc):
-        log.error('Can\'t locate the ffmpeg configure file in %s!', args.ffsrc)
-        sys.exit(1)
+    log.debug('Parsing arguments...')
+    if args.ffsrc != None and args.compile:
+        log.debug('Found -src/--ffmpeg-src!')
+    if args.compile:
+        log.debug('Found --compile!')
+        if not file_exists('configure', args.ffsrc):
+            log.error('Can\'t locate the ffmpeg configure file in %s!', args.ffsrc)
+            sys.exit(1)
     if args.nodown:
         log.debug('Found -no/--no-download!')
     if args.vlvl:
         log.debug('Found verbose argument!')
         log.info(
                 'verbosity from %s to %s',
-                logging.getLevelName(log.getEffectiveLevel()),
-                logging.getLevelName(args.vlvl))
+                log.getLevelName(log.getEffectiveLevel()),
+                log.getLevelName(args.vlvl))
         log.setLevel(args.vlvl)
     if args.down:
         download_repos(args.down, args.nodown)
