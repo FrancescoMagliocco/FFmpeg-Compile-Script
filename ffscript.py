@@ -1022,11 +1022,11 @@ def download_repos(repo_list: List[Repo], no_download: bool = False) -> None:
 
         logging.info(command_str)
         if not no_download:
-            print('Downloading repo %s...', repo_str)
+            print('Downloading repo {0}...'.format(repo_str))
             os.system(command_str)
-            print('Finished download repo %s!', repo_str)
+            print('Finished download repo {0}!'.format(repo_str))
         else:
-            print('Repo %s was not actually downloaded because -no/--no-downloaded was specified.', repo_str)
+            print('Repo {0} was not actually downloaded because -no/--no-downloaded was specified.'.format(repo_str))
     return None
 
 def file_exists(file_str: str, path_str: str = '.') -> bool:
@@ -1110,8 +1110,8 @@ def main():
         log.debug('Found verbose argument!')
         log.info(
                 'verbosity from %s to %s',
-                log.getLevelName(log.getEffectiveLevel()),
-                log.getLevelName(args.vlvl))
+                logging.getLevelName(log.getEffectiveLevel()),
+                logging.getLevelName(args.vlvl))
         log.setLevel(args.vlvl)
     if args.down:
         download_repos(args.down, args.nodown)
