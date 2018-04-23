@@ -796,7 +796,7 @@ ALL_REPOS: Dict[str, Repo] = {
                 default=SwitchState.AUTO_DETECT,
                 repo_tool=RepoTool.HG_TOOL,
                 repo_rev=UND,
-                repo_url='https://hw.libsdl.org/SDL',
+                repo_url='https://hg.libsdl.org/SDL',
                 dest_path='sdl'),
         'SECURETRANSPORT': Repo(
                 lib_type=LibType.UND,
