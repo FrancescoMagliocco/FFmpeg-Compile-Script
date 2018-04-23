@@ -338,7 +338,7 @@ ALL_REPOS: Dict[str, Repo] = {
                 default=SwitchState.NO,
                 repo_tool=RepoTool.SVN_TOOL,
                 repo_rev=6431,
-                repo_url='https://svn.code.sf.net/p/lame/svn/trunk',
+                repo_url='https://svn.code.sf.net/p/lame/svn/trunk/lame',
                 dest_path='libmp3lame'),
         'LIBOPENCORE_AMRNB': Repo(
                 lib_type=LibType.CODEC,
