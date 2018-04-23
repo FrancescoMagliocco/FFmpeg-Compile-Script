@@ -1,6 +1,7 @@
 import argparse
 import logging
 import os
+import sys
 from enum import Enum
 from typing import NamedTuple, Dict, List
 from pathlib import Path
@@ -987,6 +988,7 @@ ALL_REPOS: Dict[str, Repo] = {
                 dest_path=NOT_DEFINED)
         }
 
+
 # repo_tuple: List[Repo] really isn't needed here anymore since the argument passed from main() is a list of str.
 def download_repos(repo_list: List[Repo], no_download: bool = False) -> None:
     # repo_str is a str even though repo_list is a list of Repo's
@@ -1089,6 +1091,11 @@ def main():
     log.debug('parse_args():\t%s', args)
 
     logging.debug('Parsing arguments...')
+    if args.ffsrc != None:
+        logging.debug('Found -src/--ffmpeg-src!')
+    if not file_exists('configure', args.ffsrc):
+        log.error('Can\'t locate the ffmpeg configure file in %s!', args.ffsrc)
+        sys.exit(1)
     if args.nodown:
         log.debug('Found -no/--no-download!')
     if args.vlvl:
