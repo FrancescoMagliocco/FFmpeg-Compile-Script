@@ -820,7 +820,7 @@ ALL_REPOS: Dict[str, Repo] = {
                 default=SwitchState.AUTO_DETECT,
                 repo_tool=RepoTool.GIT_TOOL,
                 repo_rev=UND,
-                repo_url='https://git.code.sf.net/p/libpng/code',
+                repo_url='https://github.com/madler/zlib.git',
                 dest_path='zlib'),
         'AMF': Repo(
                 lib_type=LibType.HWACCEL,
