@@ -49,31 +49,38 @@ UND: int = NA
 UNKNOWN: str = 'unknown'
 NOT_DEFINED: str = 'not defined'
 
+# As of right now, I will just be focusing on the features that are compatible with Windows.
+# That means that any Linux, Raspberry Pie, MAC etc..  Will not be implemented yet.
+
 ALL_REPOS: Dict[str, Repo] = {
-        'ALSA': Repo(
-                lib_type=LibType.DEV,
-                switch='--disable-alsa',
-                default=SwitchState.AUTO_DETECT,
-                repo_tool=RepoTool.GIT_TOOL,
-                repo_rev=NA,
-                repo_url='git://git.alsa-projects.org/',
-                dest_path=NOT_DEFINED),
-        'APPKIT': Repo(
-                lib_type=LibType.UND,
-                switch='--disable-appkit',
-                default=SwitchState.AUTO_DETECT,
-                repo_tool=RepoTool.UND,
-                repo_rev=UND,
-                repo_url=UNKNOWN,
-                dest_path=NOT_DEFINED),
-        'AVFOUNDATION': Repo(
-                lib_type=LibType.UND,
-                switch='--disable-avfoundation',
-                default=SwitchState.AUTO_DETECT,
-                repo_tool=RepoTool.UND,
-                repo_rev=UND,
-                repo_url=UNKNOWN,
-                dest_path=NOT_DEFINED),
+        # Advanced Linux Sound Architecture
+        # During configuration, you will need libasound installed on your system
+        # alsa-project.org
+#        'ALSA': Repo(
+#                lib_type=LibType.DEV,
+#                switch='--disable-alsa',
+#                default=SwitchState.AUTO_DETECT,
+#                repo_tool=RepoTool.GIT_TOOL,
+#                repo_rev=NA,
+#                repo_url='git://git.alsa-projects.org/',
+#                dest_path=NOT_DEFINED),
+#        'APPKIT': Repo(
+#                lib_type=LibType.UND,
+#                switch='--disable-appkit',
+#                default=SwitchState.AUTO_DETECT,
+#                repo_tool=RepoTool.UND,
+#                repo_rev=UND,
+#                repo_url=UNKNOWN,
+#                dest_path=NOT_DEFINED),
+        # AVFoundation is the currently recommended framework by Apple for streamgrabbing on OSX >= 10.7 as well as IOS.
+#        'AVFOUNDATION': Repo(
+#                lib_type=LibType.INDEV,
+#                switch='--disable-avfoundation',
+#                default=SwitchState.AUTO_DETECT,
+#                repo_tool=RepoTool.UND,
+#                repo_rev=UND,
+#                repo_url=UNKNOWN,
+#                dest_path=NOT_DEFINED),
         'AVISYNTH': Repo(
                 lib_type=LibType.UND,
                 switch='--enable-avisynth',
@@ -82,24 +89,28 @@ ALL_REPOS: Dict[str, Repo] = {
                 repo_rev=2345,
                 repo_url='https://svn.code.sf.net/p/avisynth2/svn/',
                 dest_path=NOT_DEFINED),
-        'BZLIB': Repo(
-                lib_type=LibType.UND,
-                switch='--disable-bzlib',
-                default=SwitchState.AUTO_DETECT,
-                repo_tool=RepoTool.UND,
-                repo_rev=UND,
-                repo_url=UNKNOWN,
-                dest_path=NOT_DEFINED),
-        'COREIMAGE': Repo(
-                lib_type=LibType.UND,
-                switch='--disable-coreimage',
-                default=SwitchState.AUTO_DETECT,
-                repo_tool=RepoTool.UND,
-                repo_rev=UND,
-                repo_url=UNKNOWN,
-                dest_path=NOT_DEFINED),
+        # The last release of BZLIB was over 7 years ago.
+        # Correct me If I'm wrong but, bzip2 and bzlib are the samething I believe.
+#        'BZLIB': Repo(
+#                lib_type=LibType.UND,
+#                switch='--disable-bzlib',
+#                default=SwitchState.AUTO_DETECT,
+#                repo_tool=RepoTool.GIT_TOOL,
+#                repo_rev=UND,
+        # I'm not sure if this is the 'Offical' repo or not.
+        # The website for bzip2 though is https://bzip.org
+#                repo_url=https://github.com/enthought/bzip2-1.0.6.git,
+#                dest_path=bzlib),
+#        'COREIMAGE': Repo(
+#                lib_type=LibType.UND,
+#                switch='--disable-coreimage',
+#                default=SwitchState.AUTO_DETECT,
+#                repo_tool=RepoTool.UND,
+#                repo_rev=UND,
+#                repo_url=UNKNOWN,
+#                dest_path=NOT_DEFINED),
         'CHROMAPRINT': Repo(
-                lib_type=LibType.UND,
+                lib_type=LibType.MUXER,
                 switch='--enable-chromaprint',
                 default=SwitchState.NO,
                 repo_tool=RepoTool.GIT_TOOL,
@@ -138,23 +149,26 @@ ALL_REPOS: Dict[str, Repo] = {
                 repo_rev=UND,
                 repo_url=UNKNOWN,
                 dest_path=NOT_DEFINED),
-        'LIBICONV': Repo(
-                lib_type=LibType.UND,
-                switch='--disable-iconv',
-                default=SwitchState.AUTO_DETECT,
-                repo_tool=RepoTool.GIT_TOOL,
-                repo_rev=UND,
-                repo_url='https://github.com/win-iconv/win-iconv.git',
-                dest_path='libiconv'),
-        'JNI': Repo(
-                lib_type=LibType.UND,
-                switch='--enable-jni',
-                default=SwitchState.NO,
-                repo_tool=RepoTool.UND,
-                repo_rev=UND,
-                repo_url=UNKNOWN,
-                dest_path=NOT_DEFINED),
-        # Use curl
+        # All that this is used for is converting international text into different encodings.
+        # For the sake of it, I tried compiling iconv (I didn't try very hard) and I wasn't able too.  I can't remember
+        # why though.
+#        'LIBICONV': Repo(
+#                lib_type=LibType.UND,
+#                switch='--disable-iconv',
+#                default=SwitchState.AUTO_DETECT,
+#                repo_tool=RepoTool.GIT_TOOL,
+#                repo_rev=UND,
+#                repo_url='https://github.com/win-iconv/win-iconv.git',
+#                dest_path='libiconv'),
+        # I can not figure out how and where to get this.  I'm thinking that maybe you need JDK installed?
+#        'JNI': Repo(
+#                lib_type=LibType.UND,
+#                switch='--enable-jni',
+#                default=SwitchState.NO,
+#                repo_tool=RepoTool.UND,
+#                repo_rev=UND,
+#                repo_url=UNKNOWN,
+#                dest_path=NOT_DEFINED),
         'LADSPA': Repo(
                 lib_type=LibType.FILTER,
                 switch='--enable-ladspa',
@@ -163,6 +177,8 @@ ALL_REPOS: Dict[str, Repo] = {
                 repo_rev=NA,
                 repo_url='http://www.ladspa.org/ladspa_sdk/ladspa.h.txt -L -o ',
                 dest_path='ladspa.h'),
+        # It will be a while before I get this compiled.  I have no use for it (But I do still want it), but I want to
+        # worry about the more important things for now.
         'LIBAOM': Repo(
                 lib_type=LibType.CODEC,
                 switch='--enable-libaom',
@@ -171,6 +187,7 @@ ALL_REPOS: Dict[str, Repo] = {
                 repo_rev=UND,
                 repo_url='https://aomedia.googlesource.com/aom.git',
                 dest_path='libaom'),
+        # This is a subtile renderer.  I'm not sure if this would be a bsf though..
         'LIBASS': Repo(
                 lib_type=LibType.UND,
                 switch='--enable-libass',
@@ -195,14 +212,21 @@ ALL_REPOS: Dict[str, Repo] = {
                 repo_rev=175,
                 repo_url='https://svn.code.sf.net/p/bs2b/code/trunk',
                 dest_path='libbs2b'),
-        'LIBCACA': Repo(
-                lib_type=LibType.UND,
-                switch='--enable-libcaca',
-                default=SwitchState.NO,
-                repo_tool=RepoTool.GIT_TOOL,
-                repo_rev=UND,
-                repo_url='https://github.comm/cacalibs/libcaca.git',
-                dest_path='libcaca'),
+        # The latest release of libcaca is in 2014
+        # The website caca.zoy.org/wiki/libcaca (Doesn't support https)
+        # It outputs text instead of pixels, so it can work on older graphics cards and text terminals.  (Info from
+        # site)
+        # It says it does however say it works natively on DOS and Windows.
+        # I like how it says it's distrubuted under Do What The Fuck YOu Want To Public License (IT'S A REAL LISENCE
+        # TOO!)
+#        'LIBCACA': Repo(
+#                lib_type=LibType.OUTDEV,
+#                switch='--enable-libcaca',
+#                default=SwitchState.NO,
+#                repo_tool=RepoTool.GIT_TOOL,
+#                repo_rev=UND,
+#                repo_url='https://github.comm/cacalibs/libcaca.git',
+#                dest_path='libcaca'),
         'LIBCELT': Repo(
                 lib_type=LibType.DECODER,
                 switch='--enable-libcelt',
@@ -211,6 +235,7 @@ ALL_REPOS: Dict[str, Repo] = {
                 repo_rev=UND,
                 repo_url='git://git.xiph.org/celt.git',
                 dest_path='libcelt'),
+        # Audio-CD input device
         'LIBCDIO': Repo(
                 lib_type=LibType.INDEV,
                 switch='--enable-libcdio',
@@ -228,14 +253,17 @@ ALL_REPOS: Dict[str, Repo] = {
                 repo_rev=3508,
                 repo_url='https://svn.code.sf.net/p/freetel/code/freetel-code',
                 dest_path=NOT_DEFINED),
-        'LIBDC1394': Repo(
-                lib_type=LibType.INDEV,
-                switch='--enable-libdc1394',
-                default=SwitchState.NO,
-                repo_tool=RepoTool.GIT_TOOL,
-                repo_rev=UND,
-                repo_url='https://git.code.sf.net/p/libdc1394/codec',
-                dest_path='libdc1394'),
+        # IIDC1394 input device, based on libdc1394 and libdraw1394
+        # May add support for this later in the future.  To me it's obsolete, but if someone wants it, I'll add support
+        # for it.
+#        'LIBDC1394': Repo(
+#                lib_type=LibType.INDEV,
+#                switch='--enable-libdc1394',
+#                default=SwitchState.NO,
+#                repo_tool=RepoTool.GIT_TOOL,
+#                repo_rev=UND,
+#                repo_url='https://git.code.sf.net/p/libdc1394/codec',
+#                dest_path='libdc1394'),
         'LIBFDK_AAC': Repo(
                 lib_type=LibType.CODEC,
                 switch='--enable-libfdk-aac',
@@ -292,14 +320,17 @@ ALL_REPOS: Dict[str, Repo] = {
                 repo_rev=UND,
                 repo_url=UNKNOWN,
                 dest_path=NOT_DEFINED),
-        'LIBIEC61883': Repo(
-                lib_type=LibType.UND,
-                switch='--enable-libiec61883',
-                default=SwitchState.NO,
-                repo_tool=RepoTool.GIT_TOOL,
-                repo_rev=UND,
-                repo_url='git://dennedy.org/libiec61883.git',
-                dest_path='libiec61883'),
+        # This is for FireWire DV/HDV input devices, those are pretty obsolete, aren't they?
+        # If you do enable this, you need not only libiec61883, but libraw1394 and libavc1394 installed on your system.
+        # Because  it's old to me at least, I will add support for this later.
+#        'LIBIEC61883': Repo(
+#                lib_type=LibType.INDEV,
+#                switch='--enable-libiec61883',
+#                default=SwitchState.NO,
+#                repo_tool=RepoTool.GIT_TOOL,
+#                repo_rev=UND,
+#                repo_url='git://dennedy.org/libiec61883.git',
+#                dest_path='libiec61883'),
         'LIBILBC': Repo(
                 lib_type=LibType.CODEC,
                 switch='--enable-libilbc',
@@ -308,8 +339,11 @@ ALL_REPOS: Dict[str, Repo] = {
                 repo_rev=UND,
                 repo_url='https://github.com/TimothyGu/libilbc.git',
                 dest_path='libilbc'),
+        # To enable thhis device during configuration you need libjack installed on your system.
+        # What this 'Apparently' does is, allows you to take the audio output of one piece of software, and send it to
+        # another.  So this kind of sounds like bananamixer or whatever it's called.
         'LIBJACK': Repo(
-                lib_type=LibType.UND,
+                lib_type=LibType.INDEV,
                 switch='--enable-libjack',
                 default=SwitchState.NO,
                 repo_tool=RepoTool.GIT_TOOL,
@@ -398,14 +432,19 @@ ALL_REPOS: Dict[str, Repo] = {
                 repo_rev=UND,
                 repo_url='https://git.xiph.org/opus.git',
                 dest_path='libopus'),
-        'LIBPULSE': Repo(
-                lib_type=LibType.INDEV,
-                switch='--enable-libpulse',
-                default=SwitchState.NO,
-                repo_tool=RepoTool.GIT_TOOL,
-                repo_rev=UND,
-                repo_url='git://anongit.freedesktop.org/pulseaudio/pulseaudio.git',
-                dest_path='libpulse'),
+        # Pulse audio used to be suported on Windows, but the port has not been updated since 2011.
+        # If you want to read more, visit http://pulseaudio.org (Doesn't support https), you will be redirected to
+        # https://greedesktop.org/wiki/Software/PulseAudio/
+        # This 'May' be usable on Windows, but it's old as fuck, hasn't been updated, and is of no use to me, but if
+        # someone would like support for it, I will add support for it.
+#        'LIBPULSE': Repo(
+#                lib_type=LibType.DEV,
+#                switch='--enable-libpulse',
+#                default=SwitchState.NO,
+#                repo_tool=RepoTool.GIT_TOOL,
+#                repo_rev=UND,
+#                repo_url='git://anongit.freedesktop.org/pulseaudio/pulseaudio.git',
+#                dest_path='libpulse'),
         'LIBRSVG': Repo(
                 lib_type=LibType.UND,
                 switch='--enable-librsvg',
@@ -521,14 +560,21 @@ ALL_REPOS: Dict[str, Repo] = {
                 repo_rev=UND,
                 repo_url='https://github.com/njh/twolame.git',
                 dest_path='libtwolame'),
-        'LIBV4L2': Repo(
-                lib_type=LibType.UND,
-                switch='--enable-libv4l2',
-                default=SwitchState.NO,
-                repo_tool=RepoTool.GIT_TOOL,
-                repo_rev=UND,
-                repo_url='https://github.com/philips/libv4l.git',
-                dest_path='libv4l2'),
+        #If FFmpeg is build with v4l-utils suport (By using --enable-libv4l2) it is possible to use it(?) with the
+        # -use_libv4l2 input device option
+        # For more info check out https://linuxtv.org
+        # On the wiki it says you need atleast libjpeg-dev..
+        # I'm not sure if this is supported on Windows or not..  I'm very doubtful that it is though.
+#        'LIBV4L2': Repo(
+#                lib_type=LibType.INDEV,
+#                switch='--enable-libv4l2',
+#                default=SwitchState.NO,
+#                repo_tool=RepoTool.GIT_TOOL,
+#                repo_rev=UND,
+                # There are lot of repositories listed here, but I'm pretty sure the correct one is v4l-utils.git as
+                # listed above.
+#                repo_url='https://git.linuxtv.org/v4l-utils.git',
+#                dest_path='libv4l2'),
         'LIBVIDSTAB': Repo(
                 lib_type=LibType.UND,
                 switch='--enable-libvidstab',
@@ -610,38 +656,38 @@ ALL_REPOS: Dict[str, Repo] = {
                 repo_url='https://svn.code.sf.net/p/xavs/trunk',
                 dest_path='libxavs'),
         # Might be platform independent
-        'LIBXCB': Repo(
-                lib_type=LibType.INDEV,
-                switch='--enable-libxcb',
-                default=SwitchState.AUTO_DETECT,
-                repo_tool=RepoTool.GIT_TOOL,
-                repo_rev=UND,
-                repo_url='https://anongit.freedesktop.org/git/xcb/libxcb.git',
-                dest_path='libxcb'),
-        'LIBXCB_SHM': Repo(
-                lib_type=LibType.INDEV,
-                switch='--enable-libxcb-shm',
-                default=SwitchState.AUTO_DETECT,
-                repo_tool=RepoTool.UND,
-                repo_rev=UND,
-                repo_url=UNKNOWN,
-                dest_path=NOT_DEFINED),
-        'LIBXCB_FIXES': Repo(
-                lib_type=LibType.INDEV,
-                switch='--enable-libxcb-xfixes',
-                default=SwitchState.AUTO_DETECT,
-                repo_tool=RepoTool.UND,
-                repo_rev=UND,
-                repo_url=UNKNOWN,
-                dest_path=NOT_DEFINED),
-        'LIBXCB_SHAPE': Repo(
-                lib_type=LibType.INDEV,
-                switch='--enable-libxcb-shape',
-                default=SwitchState.AUTO_DETECT,
-                repo_tool=RepoTool.UND,
-                repo_rev=UND,
-                repo_url=UNKNOWN,
-                dest_path=NOT_DEFINED),
+#        'LIBXCB': Repo,
+#                lib_type=LibType.INDEV,
+#                switch='--enable-libxcb',
+#                default=SwitchState.AUTO_DETECT,
+#                repo_tool=RepoTool.GIT_TOOL,
+#                repo_rev=UND,
+#                repo_url='https://anongit.freedesktop.org/git/xcb/libxcb.git',
+#                dest_path='libxcb'),
+#        'LIBXCB_SHM': Repo(
+#                lib_type=LibType.INDEV,
+#                switch='--enable-libxcb-shm',
+#                default=SwitchState.AUTO_DETECT,
+#                repo_tool=RepoTool.UND,
+#                repo_rev=UND,
+#                repo_url=UNKNOWN,
+#                dest_path=NOT_DEFINED),
+#        'LIBXCB_FIXES': Repo(
+#                lib_type=LibType.INDEV,
+#                switch='--enable-libxcb-xfixes',
+#                default=SwitchState.AUTO_DETECT,
+#                repo_tool=RepoTool.UND,
+#                repo_rev=UND,
+#                repo_url=UNKNOWN,
+#                dest_path=NOT_DEFINED),
+#        'LIBXCB_SHAPE': Repo(
+#                lib_type=LibType.INDEV,
+#                switch='--enable-libxcb-shape',
+#                default=SwitchState.AUTO_DETECT,
+#                repo_tool=RepoTool.UND,
+#                repo_rev=UND,
+#                repo_url=UNKNOWN,
+#                dest_path=NOT_DEFINED),
         # xvid requires you to use the username anonymous with no password if not using your own...
         'LIBXVID': Repo(
                 lib_type=LibType.ENCODER,
@@ -700,7 +746,10 @@ ALL_REPOS: Dict[str, Repo] = {
                 repo_rev=UND,
                 repo_url='https://sourceforge.net/projects/sevenzip/files/LZMA%20SDK/9.18/lzma918.tar.bz2/download -L -o ',
                 dest_path='lzma918.tar.bz2'),
-        # You need to download the SDK
+        # Decklink provides capture capabilities for BlackMagic DeckLink devices.
+        # To enable this input device, you need the Blackmagic DeckLink SDK and you need to configure with the
+        # appropriate --extra-cflags and --extra-ldflags.  On windows you need to run the IDL files through widl.
+        # I have already done this with the latest update, so you need not worry.
         'DECKLINK': Repo(
                 lib_type=LibType.DEV,
                 switch='--enable-decklink',
@@ -710,6 +759,7 @@ ALL_REPOS: Dict[str, Repo] = {
                 repo_url=UNKNOWN,
                 dest_path=NOT_DEFINED),
         # You are sent an email with the download link. It's free though.
+        # You need the NDI SDK
         'LIBNDI_NEWTEK': Repo(
                 lib_type=LibType.DEV,
                 switch='--enable-libndi_newtek',
@@ -736,11 +786,22 @@ ALL_REPOS: Dict[str, Repo] = {
                 repo_rev=UND,
                 repo_url='https://github.com/hoene/libmysofa.git',
                 dest_path='libmysofa'),
-        # I'm not sure if this is the samething..
-        # If it's not, you can download the SDK at https://www.openal.org/downloads/
-        # It's over 100MB
+        # OpenAL input device provides audio capture on all systems with a working OpenAL 1.1 Implementation.
+        # To enable this device during configuration, you need OpenAL headers and libraries installed on your system.
+        # Okay, so there are a few sites that are listed on ffmpeg.
+        # It's labeled 'Creative' and says it's the official windows implimentation, providing harddware acceleartion
+        # with supported devices and software fallback.  https://openal.org/ I am not sure if it has a repository or
+        # not.
+        # There is another one called OpenAL Soft and says, 'Portable, open source (LGPL) sofware implemntation.
+        # Includes backends for the most common software APIs on Windows, Linux, Solaris, and BSD operating systems.  It
+        # then lists the website http://kcat.strangesoft.net/openal.html (Doesn't support https). That link looks like
+        # it is in relation to the listed repo link that I have listed.
+        # There is one more, and I will privide it just for completion, it's labeled Apple..
+        # It states, OpenAL is part of Core Audio, the offical Mac OS X audio interface.
+        # https://developer.apple.com/technologies/mac/audio-and-video.html I probably spelt some shit wrong in the
+        # link, but oddly enough, it redirects you too https://developer.apple.com/av-foundation/
         'OPENAL': Repo(
-                lib_type=LibType.UND,
+                lib_type=LibType.INDEV,
                 switch='--enable-openal',
                 default=SwitchState.NO,
                 repo_tool=RepoTool.GIT_TOOL,
@@ -756,14 +817,16 @@ ALL_REPOS: Dict[str, Repo] = {
                 repo_url='https://github.com/KhronosGroup/OpenCL-Headers.git',
                 dest_path='opencl'),
         # Not sure if this is the correct repo.
-        'OPENGL': Repo(
-                lib_type=LibType.UND,
-                switch='--enable-opengl',
-                default=SwitchState.NO,
-                repo_tool=RepoTool.GIT_TOOL,
-                repo_rev=UND,
-                repo_url='https://github.com/nigels-com/glew.git',
-                dest_path='opengl'),
+        # I think this may be supported internally, so I am going to comment it out for the sake of me not downlooading
+        # something that I don't need or that isn't even the right thing of what I don't need.  You know?
+#        'OPENGL': Repo(
+#                lib_type=LibType.OUTDEV,
+#                switch='--enable-opengl',
+#                default=SwitchState.NO,
+#                repo_tool=RepoTool.GIT_TOOL,
+#                repo_rev=UND,
+#                repo_url='https://github.com/nigels-com/glew.git',
+#                dest_path='opengl'),
         'OPENSSL': Repo(
                 lib_type=LibType.PROTOCOL,
                 switch='--enable-openssl',
@@ -772,14 +835,17 @@ ALL_REPOS: Dict[str, Repo] = {
                 repo_rev=UND,
                 repo_url='https://github.ccom/openssl/openssl.git',
                 dest_path='openssl'),
-        'SNDIO': Repo(
-                lib_type=LibType.UND,
-                switch='--disable-sndio',
-                default=SwitchState.AUTO_DETECT,
-                repo_tool=RepoTool.GIT_TOOL,
-                repo_rev=UND,
-                repo_url='git://caoua.org/git/sndio.git',
-                dest_path='sndio'),
+        # This is not supported on Windows
+        # On wiki the link given for the repo is http://bxr.su/OpenBSD/include/sndio.h
+        # I'm not sure what type of repo it is, the link that I gave, I have no idea if it's the same thing or not..
+#        'SNDIO': Repo(
+#                lib_type=LibType.DEV,
+#                switch='--disable-sndio',
+#                default=SwitchState.AUTO_DETECT,
+#                repo_tool=RepoTool.GIT_TOOL,
+#                repo_rev=UND,
+#                repo_url='git://caoua.org/git/sndio.git',
+#                dest_path='sndio'),
         # This is located somwhere on Microsoft.. Maybe native on Windows Platforms
         'SCHANNEL': Repo(
                 lib_type=LibType.UND,
@@ -789,9 +855,10 @@ ALL_REPOS: Dict[str, Repo] = {
                 repo_rev=UND,
                 repo_url=UNKNOWN,
                 dest_path=NOT_DEFINED),
+        # Simple DirectMedia Layer
         # Required for ffplay
         'SDL2': Repo(
-                lib_type=LibType.UND,
+                lib_type=LibType.OUTDEV,
                 switch='--disable-sdl2',
                 default=SwitchState.AUTO_DETECT,
                 repo_tool=RepoTool.HG_TOOL,
