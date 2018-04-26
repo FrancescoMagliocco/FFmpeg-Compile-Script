@@ -721,6 +721,8 @@ ALL_REPOS: Dict[str, Repo] = {
                 repo_rev=UND,
                 repo_url='https://github.com/zeromq/libzmq.git',
                 dest_path='libzmq'),
+        # This allows libavcodec to devocde DVB teletect pages and DVB teletext subtitles.  Requires the libzvbi headers
+        # and library during configuration.
         'LIBZVBI': Repo(
                 lib_type=LibType.UND,
                 switch='--enable-libzvbi',
@@ -1082,7 +1084,7 @@ def download_repos(repo_list: List[Repo], no_download: bool = False) -> None:
             logging.warning('%s is not a complete/usable repo!', repo_str)
             continue
 
-        command_str: str = '{0}{1} {2} ../{3}'.format(
+        command_str: str = '{0}{1} {2} ../repos/{3}'.format(
                 repo.repo_tool.value,
                 ('' if repo.repo_rev == UND else str(repo.repo_rev)),
                 repo.repo_url, repo.dest_path)
