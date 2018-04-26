@@ -769,10 +769,10 @@ ALL_REPOS: Dict[str, Repo] = {
                 lib_type=LibType.UND,
                 switch='--disable-lzma',
                 default=SwitchState.AUTO_DETECT,
-                repo_tool=RepoTool.CURL_TOOL,
+                repo_tool=RepoTool.GIT_TOOL,
                 repo_rev=UND,
-                repo_url='https://sourceforge.net/projects/sevenzip/files/LZMA%20SDK/lzma1803.7z/download -L -o ',
-                dest_path='lzma1803.7z'),
+                repo_url='https://git.tukaani.org/lzma.git',
+                dest_path='lzma'),
         # Decklink provides capture capabilities for BlackMagic DeckLink devices.
         # To enable this input device, you need the Blackmagic DeckLink SDK and you need to configure with the
         # appropriate --extra-cflags and --extra-ldflags.  On windows you need to run the IDL files through widl.
