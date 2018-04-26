@@ -109,6 +109,7 @@ ALL_REPOS: Dict[str, Repo] = {
 #                repo_rev=UND,
 #                repo_url=UNKNOWN,
 #                dest_path=NOT_DEFINED),
+        # Audio muxer
         'CHROMAPRINT': Repo(
                 lib_type=LibType.MUXER,
                 switch='--enable-chromaprint',
@@ -227,6 +228,8 @@ ALL_REPOS: Dict[str, Repo] = {
 #                repo_rev=UND,
 #                repo_url='https://github.comm/cacalibs/libcaca.git',
 #                dest_path='libcaca'),
+        # libcelt alows libavcodec to decode the xiph CELT ultra-low delay audio codece.  It requres the headers and
+        # library to be installed on your system during configuration.
         'LIBCELT': Repo(
                 lib_type=LibType.DECODER,
                 switch='--enable-libcelt',
@@ -313,6 +316,8 @@ ALL_REPOS: Dict[str, Repo] = {
                 repo_rev=UND,
                 repo_url='https://bitbucket.org/mpyne/game-music-emu.git',
                 dest_path='libgme'),
+        # libgsm alows libavcodec to decode the GSM full rate audio codec.  Requres the libgsm headers library during
+        # configuration.  This encoder supports both the ordinary GSM and microsoft variant.
         'LIBGSM': Repo(
                 lib_type=LibType.CODEC,
                 switch='--enable-libgsm',
@@ -332,6 +337,8 @@ ALL_REPOS: Dict[str, Repo] = {
 #                repo_rev=UND,
 #                repo_url='git://dennedy.org/libiec61883.git',
 #                dest_path='libiec61883'),
+        # libilbc allows libavcodec to decode the internet low bitrate codec (iLBC) audio codec.  libilbc headers and
+        # library need to be installed on your system during configuration to use.
         'LIBILBC': Repo(
                 lib_type=LibType.CODEC,
                 switch='--enable-libilbc',
@@ -375,23 +382,32 @@ ALL_REPOS: Dict[str, Repo] = {
                 repo_rev=6431,
                 repo_url='https://svn.code.sf.net/p/lame/svn/trunk/lame',
                 dest_path='libmp3lame'),
-        'LIBOPENCORE_AMRNB': Repo(
-                lib_type=LibType.CODEC,
-                switch='--enable-libopencore-amrnb',
-                default=SwitchState.NO,
-                repo_tool=RepoTool.GIT_TOOL,
-                repo_rev=UND,
-                repo_url='https://git.code.sf.net/p/opencore-amr/code.git',
-                dest_path='libopencore'),
-        # Same as libopencore-amrnb
-        'LIBOPENCORE_AWRWB': Repo(
-                lib_type=LibType.DECODER,
-                switch='--enable-libopencore-amrwb',
-                default=SwitchState.NO,
-                repo_tool=RepoTool.UND,
-                repo_rev=UND,
-                repo_url=UNKNOWN,
-                dest_path=NOT_DEFINED),
+        # libopencore-amrnb alows libavcodec to decode the adaptive multi-rate narowband audio codec.  To use,
+        # libopencore-amrnb headers and library must be installed on your system during configuration.
+        # A FFmpeg natice decoder for AMR-WB exists, so users can decode AMR-NB without this library.
+        # I'm going to disable this for now, as I don't even know if I've got down the correct repo.  If anyone needs or
+        # wants this library, I shall add support for it.
+#        'LIBOPENCORE_AMRNB': Repo(
+#                lib_type=LibType.DECODER,
+#                switch='--enable-libopencore-amrnb',
+#                default=SwitchState.NO,
+#                repo_tool=RepoTool.GIT_TOOL,
+#                repo_rev=UND,
+#                repo_url='https://git.code.sf.net/p/opencore-amr/code.git',
+#                dest_path='libopencore'),
+        # libopencore-amrwb alows libavcodec to decode the adaptive multi-rate wideband audio codec.  To use,
+        # libopencore-amrwb headers and library must be installed on your system during configuration.
+        # A FFmpeg natice decoder for AMR-WB exists, so users can decode AMR-WB without this library.
+        # I'm going to disable this for now, as I don't even know if I've got down the correct repo.  If anyone needs or
+        # wants this library, I shall add support for it.
+#        'LIBOPENCORE_AWRWB': Repo(
+#                lib_type=LibType.DECODER,
+#                switch='--enable-libopencore-amrwb',
+#                default=SwitchState.NO,
+#                repo_tool=RepoTool.UND,
+#                repo_rev=UND,
+#                repo_url=UNKNOWN,
+#                dest_path=NOT_DEFINED),
         'LIBOPENCV': Repo(
                 lib_type=LibType.FILTER,
                 switch='--enable-libopenccv',
@@ -425,6 +441,14 @@ ALL_REPOS: Dict[str, Repo] = {
                 repo_rev=10154,
                 repo_url='https://source.openmpt.org/svn/openmpt/trunk/OpenMPT',
                 dest_path='libopenmpt'),
+        #libopus allows libavcodec to decode the Opus interactive audio Codec.  To use, the libopus headers and library
+        # need to be installed on your system during confiruation.
+        # A FFmpeg native decoder for Opus exists, so users can decode Opus without this library.
+        # Although there is a native deocder, FFmpeg states the the ENCODER is only in development, and only implements
+        # the CELT part of the codec.  The quality is usualy worse and at best is  equal to the libopus encoder.
+        # For just that reason, I am going to include  this CODEC.  I'm not sure if it would be consdiered a CODEC or
+        # not as I'm not sure if this does both the decoding and encoding.  But in the meantime, I will be seting the
+        # LibType to CODEC.
         'LIBOPUS': Repo(
                 lib_type=LibType.CODEC,
                 switch='--enable-libopus',
