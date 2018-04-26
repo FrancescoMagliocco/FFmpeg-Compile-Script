@@ -416,14 +416,14 @@ ALL_REPOS: Dict[str, Repo] = {
                 repo_rev=UND,
                 repo_url='https://github.com/uclouvain/openjpeg.git',
                 dest_path='libopenjpeg'),
-        # This may be broken..
+        # libopenmpt based module demuxer
         'LIBOPENMPT': Repo(
-                lib_type=LibType.UND,
+                lib_type=LibType.DEMUXER,
                 switch='--enable-libopenmpt',
                 default=SwitchState.NO,
                 repo_tool=RepoTool.SVN_TOOL,
-                repo_rev=10109,
-                repo_url='https://source.openmpt.org/svn/openmpt/trunk',
+                repo_rev=10154,
+                repo_url='https://source.openmpt.org/svn/openmpt/trunk/OpenMPT',
                 dest_path='libopenmpt'),
         'LIBOPUS': Repo(
                 lib_type=LibType.CODEC,
