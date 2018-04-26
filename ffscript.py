@@ -286,7 +286,7 @@ ALL_REPOS: Dict[str, Repo] = {
                 default=SwitchState.NO,
                 repo_tool=RepoTool.GIT_TOOL,
                 repo_rev=UND,
-                repo_url='https://anongit.freedesktop.org/git/fontconfig.git',
+                repo_url='https://anongit.freedesktop.org/git/fontconfig',
                 dest_path='libfontconfig'),
         'LIBFREETYPE': Repo(
                 lib_type=LibType.UND,
