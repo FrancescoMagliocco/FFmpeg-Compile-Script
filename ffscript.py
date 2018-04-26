@@ -771,7 +771,7 @@ ALL_REPOS: Dict[str, Repo] = {
                 default=SwitchState.AUTO_DETECT,
                 repo_tool=RepoTool.GIT_TOOL,
                 repo_rev=UND,
-                repo_url='https://git.tukaani.org/lzma.git',
+                repo_url='https://git.tukaani.org/xz.git',
                 dest_path='lzma'),
         # Decklink provides capture capabilities for BlackMagic DeckLink devices.
         # To enable this input device, you need the Blackmagic DeckLink SDK and you need to configure with the
