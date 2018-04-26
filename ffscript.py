@@ -304,13 +304,14 @@ ALL_REPOS: Dict[str, Repo] = {
                 repo_rev=UND,
                 repo_url='https://github.com/fribidi/fribidi.git',
                 dest_path='libfribidi'),
+        # Collection of video game music file emulators.
         'LIBGME': Repo(
-                lib_type=LibType.UND,
+                lib_type=LibType.DEMUXER,
                 switch='--enable-libgme',
                 default=SwitchState.NO,
                 repo_tool=RepoTool.GIT_TOOL,
                 repo_rev=UND,
-                repo_url='https://github.com/mcfiredrill/libgme.git',
+                repo_url='https://bitbucket.org/mpyne/game-music-emu.git',
                 dest_path='libgme'),
         'LIBGSM': Repo(
                 lib_type=LibType.CODEC,
