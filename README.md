@@ -23,7 +23,7 @@ needs to be done.  A list of a few features in no particular order are:
 - [ ] Added color for the output
 
 ### Useful Links
-![FFmpeg Logo][ffico][FFmpeg][ffmpeg-site] Home Page
+[FFmpeg][ffmpeg-site] Home Page
 
 ### What might be done?
 When I originally started working on this script, I wasn't exactly sure how I wanted to go about and do certain things
@@ -34,5 +34,4 @@ When I originally started working on this script, I wasn't exactly sure how I wa
 [libtype]: ffscript.py#L9-L23 "Class LibType"
 [ffmpeg-site]: https://ffmpeg.org "FFmpeg"
 
-[ffico]: https://ffmpeg.org/favicon.ico
 [ffrepo]: git://source.ffmpeg.org/ffmpeg.git "Offical FFmpeg Repository"
