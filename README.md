@@ -1,5 +1,11 @@
 # FFmpeg-Compile-Script
 **FFmpeg-Compile-Script** or just *ffscript* for short, is a project that so far only I am working on.
+
+## TOC
+[What is FFmpeg-Compile-Script?][what-is-ffmpeg-compile-script]
+[what needs to be done?][#what-needs-to-be-done]
+[Useful Links][#useful-links]
+
 ### What is FFmpeg-Compile-Script?
 **FFmpeg-Compile-Script** does pretty much all the work for you when compiling [FFmpeg][ffmpeg-git].  This includes, but
 is not limited too:
