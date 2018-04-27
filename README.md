@@ -30,4 +30,4 @@ When I originally started working on this script, I wasn't exactly sure how I wa
 
 [ffmpeg]: https://Github.com/FFmpeg/FFmpeg.git "FFmpeg Repository"
 [ffscript]: bloc/master/ffscript.py "FFmpeg-Compile-Script"
-[libtype]: blob/master/ffscript.py#L9-L23 "Class LibType"
+[libtype]: ../blob/master/ffscript.py#L9-L23 "Class LibType"
