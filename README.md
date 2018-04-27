@@ -1,8 +1,8 @@
 # FFmpeg-Compile-Script
 **FFmpeg-Compile-Script** or just *ffscript* for short, is a project that so far only I am working on.
 ### What is FFmpeg-Compile-Script?
-**FFmpeg-Compile-Script** does pretty much all the work for you when compiling [FFmpeg][ffmpeg].  This includes, but is
-not limited to:
+**FFmpeg-Compile-Script** does pretty much all the work for you when compiling [FFmpeg][ffmpeg-git].  This includes, but
+is not limited too:
 - Downloading the required repositories
 - Configuring each one to support *every feature* that it possibly can
 - Compiling those repositories
@@ -22,12 +22,17 @@ needs to be done.  A list of a few features in no particular order are:
     - [ ] Filters
 - [ ] Added color for the output
 
-
+### Useful Links
+![FFmpeg Logo][ffico][FFmpeg][ffmpeg-site] Home Page
 
 ### What might be done?
 When I originally started working on this script, I wasn't exactly sure how I wanted to go about and do certain things
 - [ ] Added the install scripts into their corresponding components in the [ffscript.py][ffscript]
 
-[ffmpeg]: https://Github.com/FFmpeg/FFmpeg.git "FFmpeg Repository"
+[ffmpeg-git]: https://Github.com/FFmpeg/FFmpeg.git "FFmpeg Repository"
 [ffscript]: bloc/master/ffscript.py "FFmpeg-Compile-Script"
 [libtype]: ffscript.py#L9-L23 "Class LibType"
+[ffmpeg-site]: https://ffmpeg.org "FFmpeg"
+
+[ffico]: https://ffmpeg.org/favicon.ico
+[ffrepo]: git://source.ffmpeg.org/ffmpeg.git "Offical FFmpeg Repository"
