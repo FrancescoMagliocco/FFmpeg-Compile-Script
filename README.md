@@ -13,8 +13,21 @@ and to add into the script which I will mention below.
 ### What needs to be done?
 The **FFmpeg-Compile-Script** is still in the very early stages of development, so there is a lot of shit that still
 needs to be done.  A list of a few features in no particular order are:
-- [ ] Finish setting the [LibType][libtype]
+- [ ] Setting the [LibType][libtype] for each component
+- [ ] Add a list of dependencies for each component
+- [ ] List platform compatibility for each component
+- [ ] Create a `List` of the following categories containing the corresponding components:
+    - [ ] Audio
+    - [ ] Video
+    - [ ] Filters
+- [ ] Added color for the output
 
-[ffmpeg]: https://Github.com/FFmpeg/FFmpeg.git FFmpeg Repository
-[ffscript]:(bloc/master/ffscript.py) FFmpeg-Compile-Script
-[libtype]:(blob/master/ffscript.py#L9-L23) Class LibType
+
+
+### What might be done?
+When I originally started working on this script, I wasn't exactly sure how I wanted to go about and do certain things
+- [ ] Added the install scripts into their corresponding components in the [ffscript.py][ffscript]
+
+[ffmpeg]: https://Github.com/FFmpeg/FFmpeg.git "FFmpeg Repository"
+[ffscript]: bloc/master/ffscript.py "FFmpeg-Compile-Script"
+[libtype]: blob/master/ffscript.py#L9-L23 "Class LibType"
