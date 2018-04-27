@@ -31,6 +31,25 @@ needs to be done.  A list of a few features in no particular order are:
 ### Useful Links
 [FFmpeg][ffmpeg-site] Home Page
 
+### What Platforms are supported?
+As of right now, only *Microsoft Windows* and to be even more specific, **Microsoft Windows 10 build 16215** or later
+
+### 32-Bit or 64-Bit?
+This is the year 2018..  If you don't have a computer that supports 64-Bit Software...  You shouldn't even be using
+[FFmpeg][ffmpeg-site].  <sup>Save your *compliemnts* please.</sup>
+
+### How do I use ffscript.py?
+This section of the readme will describe on what you need and how to use the [ffscript.py][ffscript].
+#### FFscript Requirements
+The requirements to run *ffscript* are essential for any *Programmer/Coder*, therefore you should already have them, but
+before I get to them, you must be able/comfortable at doing the following:
+- Working from/and only the **Command Line**
+  I will **not** provide any support whatsoever for any type of *IDE* such as *Microsoft Visual Studio*, *Microsoft
+  Visual Studio Code*, *Xcode* etc..  
+Now to the good part. The following is a list of software that you **will** need just to operate the
+[ffscript.py][ffscript]:
+- 
+
 ### What might be done?
 When I originally started working on this script, I wasn't exactly sure how I wanted to go about and do certain things
 - [ ] Added the install scripts into their corresponding components in the [ffscript.py][ffscript]
