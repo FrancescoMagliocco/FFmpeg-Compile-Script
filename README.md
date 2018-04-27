@@ -15,6 +15,6 @@ The **FFmpeg-Compile-Script** is still in the very early stages of development, 
 needs to be done.  A list of a few features in no particular order are:
 - [ ] Finish setting the [LibType][libtype]
 
-[ffmpeg]:(https://Github.com/FFmpeg/FFmpeg.git) FFmpeg Repository
+[ffmpeg]: https://Github.com/FFmpeg/FFmpeg.git FFmpeg Repository
 [ffscript]:(bloc/master/ffscript.py) FFmpeg-Compile-Script
 [libtype]:(blob/master/ffscript.py#L9-L23) Class LibType
