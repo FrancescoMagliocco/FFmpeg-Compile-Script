@@ -2,18 +2,18 @@
 **FFmpeg-Compile-Script** or just *ffscript* for short, is a project that so far only I am working on.
 
 ## Table Of Contents
-- [Internal Libraries][#internal-libraries]
-  - [Audio Decoders][#audio-decoders]
-    - [libopencore-amrnb][#libopencore-amrnb]
-    - [libopencore-amrwb][#libopencore-amrwb]
-    - *[libopus][#libopus-dec]*
+- [Internal Libraries](#internal-libraries)
+  - [Audio Decoders](#audio-decoders)
+    - [libopencore-amrnb](#libopencore-amrnb)
+    - [libopencore-amrwb](#libopencore-amrwb)
+    - *[libopus](#libopus-dec)*
 
 ### Internal libraries
 There are a few libraries that FFmpegg alread has built in, so for this reason (Meeting certain conditions) I will not
 include these libs.  I will list them here.
 #### Audio Decoders
 https://ffmpeg.org/ffmpeg-codecs.html#Audio-Decoders
-##### libopencore-amrnb {libopencore-amrnb-dec} - https://ffmpeg.org/ffmpeg-codecs.html#libopencore_002damrnb
+##### libopencore-amrnb {#libopencore-amrnb-dec} - https://ffmpeg.org/ffmpeg-codecs.html#libopencore_002damrnb
 - libopencore-amrwb - https://ffmpeg.org/ffmpeg-codecs.html#libopencore_002damrwb
 - *libopus* - There is native ffmpeg decoder, but due to the fact that the encoder is worse quality, I will be including
   this.  I may however disable the decoder via `--disable-decoder=libopus`  (That is probably wrong)
