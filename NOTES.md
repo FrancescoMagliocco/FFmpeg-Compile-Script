@@ -5,7 +5,7 @@ Most of the following information I have obtained from the Official [FFmpeg][ffm
 ## External Libraries
 The source page for most of this information is located at https://ffmpeg.org/general.html
 
-### Alliance for Open Media libaomm
+### Alliance for Open Media libaom 
 - Used for decoding `AVI`
 - `Decoder`
 - https://aomedia.org
@@ -33,8 +33,8 @@ The source page for most of this information is located at https://ffmpeg.org/ge
 - https://github.com/uclouvain/openjpeg/releases/download/v2.3.0/openjpeg-v2.3.0-windows-x64.zip
 - https://github.com/uclouvain/openjpeg/archive/v2.3.0.tar.gz
 
-### OpenCore
-OpenCore is spun off Google Android Sources.  OpenCore VisualOn and Fraundhofer libs provides encoders for anumber of
+### OpenCORE
+OpenCORE is spun off Google Android Sources.  OpenCORE VisualOn and Fraundhofer libs provides encoders for anumber of
 audio codecs.
 
 AMR - Adaptive Multi Rate
