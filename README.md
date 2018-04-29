@@ -2,12 +2,12 @@
 **FFmpeg-Compile-Script** or just *ffscript* for short, is a project that so far only I am working on.
 
 ## Table Of Contents
-- [External Lib](#external-li)
-  - [Audio Decoders](#audio-decoders)
+- [External Lib](#external-libs)
+  - [Audio Decoders](#audio-decoders--on-ffmpegffmpeg-audio-dec)
     - [libopencore-amrnb](#libopencore-amrnb)
     - [libopencore-amrwb](#libopencore-amrwb)
     - [*libopus*](#libopus)
-  - [Audio Encoders](#audio-encoders)
+  - [Audio Encoders](#audio-encoders---on-ffmpegffmpeg-audio-enc)
     - [libfdk_aac](#libfdk_aac)
     - [libopus](#llibopus)
     - [*opus*](3opus)
@@ -15,27 +15,27 @@
     - [libopenh264](#libopenh264)
   - [Video Encoders]
 - [Included External Libs](#included-external-libs)
-  - [Audio Decoders](#audio-decoders-1)
+  - [Audio Decoders](#audio-decoders---on-ffmpegffmpeg-audio-dec-1)
     - [libopus](#libopus-1)
-  - [Audio Encoders](#audio-encoders-1)
+  - [Audio Encoders](#audio-encoders---on-ffmpegffmpeg-audio-enc-1)
     - [libmp3lame](#libmp3lame)
     - [libtwolame](#libtwolame)
-  - [Video Encoders](#video-encoders-1)
+  - [Video Encoders](#video-encoders---on-ffmpegffmpeg-vid-enc)
     - [libkvazaar](#libvkazaar)
     - [libvpx](#libvpx)
     - [libwebp](#libwebp)
     - [libx264](#libx264)
     - [libx265](@libx265)
 - [Will be Supporting](#will-be-supporting)
-  - [Audio Decoders](#audio-decoders-2)
+  - [Audio Decoders](#audio-decoders---on-ffmpegffmpeg-audio-dec-2)
     - [libvorbis](#libvorbis)
 - [Possible Support](#possible-support)
-  - [Audio Decoders](#audio-decoders-2)
+  - [Audio Decoders](#audio-decoders---on-ffmpegffmpeg-audio-dec-3)
     - [libgsm](#libgsm)
     - [libilbc](@libilbc)
-  - [Video Encoders](#video-encoders-2)
+  - [Video Encoders](#video-encoders---on-ffmpegffmpeg-vid-enc-1)
     - [libtheora](#libtheora)
-  - [Subtitle Decoders](#subtitle-decoders)
+  - [Subtitle Decoders](#subtitle-decoders---on-ffmpegffmpeg-sub-dec)
     - [libzvbi](#libzvbi)
 
 ### External Libs
@@ -68,7 +68,7 @@ libfdk_aac at the default bitrate of 128kbps. This encoder also implements more 
 #### Audio Decoders - [On FFmpeg][ffmpeg-audio-dec]
 - <a name='libopus-1'>[libopus](https://ffmpeg.org/ffmpeg-codecs.html#libopus)
   Maybe but most likely
-#### Audio Encoders - [On FFmpeg][ffmpeg-audio-ecn]
+#### Audio Encoders - [On FFmpeg][ffmpeg-audio-enc]
 - <a name='libmp3lame'>[libmp3lame](https://ffmpeg.org/ffmpeg-codecs.html#libmp3lame-1)
 - <a name='libtwolame'>[libtwolame](https://ffmpeg.org/ffmpeg-codecs.html#libtwolame)
 #### Video Encoders - [On FFmpeg][ffmpeg-vid-enc]
@@ -86,16 +86,17 @@ libfdk_aac at the default bitrate of 128kbps. This encoder also implements more 
 #### Audio Decoders - [On Ffmpeg][ffmpeg-audio-dec]
 - <a name='libgsm'>[libgsm](https://ffmpeg.org/ffmpeg-codecs.html#libgsm)
 - <a name='libilbc'>[libilbc](https://ffmpeg.org/ffmpeg-codecs.html#libilbc)
-#### Subtitle Decoders - [On FFmpeg][ffmpeg-sub-dec]
-- <a name='libzvbi'>[libzvbi](https://ffmpeg.org/ffmpeg-codecs.html#libzvbi_002dteletext)
 #### Video Encoders - [On FFmpeg][ffmpeg-vid-enc]
 - <a name='libtheora'>[libtheora](https://ffmpeg.org/ffmpeg-codecs.html#libtheora)
+#### Subtitle Decoders - [On FFmpeg][ffmpeg-sub-dec]
+- <a name='libzvbi'>[libzvbi](https://ffmpeg.org/ffmpeg-codecs.html#libzvbi_002dteletext)
 
+[ffmpeg-site]: https://ffmpeg.org "FFmpeg"
+[ffmpeg-audio-dec]: https://ffmpeg.org/ffmpeg-codecs.html#Audio-Decoders "Audio Decoders"
+[ffmpeg-audio-enc]: https://ffmpeg.org/ffmpeg-codecs.html#Audio-Encoders "Audio Encoders"
+[ffmpeg-vid-enc]: https://ffmpeg.org/ffmpeg-codecs.html#Video-Encoders "Video Encoders"
+[ffmpeg-sub-dec]: https://ffmpeg.org/ffmpeg-codecs.html#Subtitles-Decoders "Subtitle Decoders"
 [ffmpeg-git]: https://Github.com/FFmpeg/FFmpeg.git "FFmpeg Repository"
 [ffscript]: bloc/master/ffscript.py "FFmpeg-Compile-Script"
 [libtype]: ffscript.py#L9-L23 "Class LibType"
-[ffmpeg-site]: https://ffmpeg.org "FFmpeg"
-[ffmpeg-audio-dec]: https://ffmpeg.org/ffmpeg-codecs.html#Audio-Decoders "Audio Decoders"
-[ffmpeg-audio-dec]: https://ffmpeg.org/ffmpeg-codecs.html#Audio-Encoders "Audio Encoders"
-[ffmpeg-vid-enc]: https://ffmpeg.org/ffmpeg-codecs.html#Video-Encoders "Video Encoders"
 [ffrepo]: git://source.ffmpeg.org/ffmpeg.git "Offical FFmpeg Repository"
