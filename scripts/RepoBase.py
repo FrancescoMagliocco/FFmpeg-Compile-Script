@@ -4,7 +4,7 @@ from enum import Enum
 class RepoTool(Enum):
     CURL_TOOL = 'curl'
     GIT_TOOL = 'git clone'
-    SVN_TOOL = 'svn co -r'
+    SVN_TOOL = 'svn co -r head'
     HG_TOOL = 'hg clone'
     UND_TOOL = 'Undetermined'
 
