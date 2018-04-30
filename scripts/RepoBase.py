@@ -20,5 +20,5 @@ class RepoBase(ABC):
         raise NotImplementedError()
 
     @abstractmethod
-    def download_repo(self):
-        return NotImplementedError()
+    def get_repo_download(self):
+        raise NotImplementedError('get_repo_download() Not Implemented!')
