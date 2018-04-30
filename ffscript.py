@@ -1,3 +1,5 @@
+#!/usr/bin/python3.6
+
 import argparse
 import logging
 import os
@@ -5,6 +7,9 @@ import sys
 from enum import Enum
 from typing import NamedTuple, Dict, List
 from pathlib import Path
+from scripts import libmp3lame, libx264
+
+
 
 class LibType(Enum):
     CODEC: str = 'codecs'
@@ -99,7 +104,7 @@ ALL_REPOS: Dict[str, Repo] = {
                 switch='--enable-libmp3lame',
                 default=SwitchState.NO,
                 repo_tool=RepoTool.SVN_TOOL,
-                repo_rev=6431,
+                repo_rev=6403,
                 repo_url='https://svn.code.sf.net/p/lame/svn/trunk/lame',
                 dest_path='libmp3lame'),
         # libopencore-amrnb alows libavcodec to decode the adaptive multi-rate narowband audio codec.  To use,
@@ -142,7 +147,7 @@ ALL_REPOS: Dict[str, Repo] = {
                 default=SwitchState.NO,
                 repo_tool=RepoTool.GIT_TOOL,
                 repo_rev=UND,
-                repo_url='https://github.com/njh/twolame.git',
+                repo_url='https://github.com/njh/twolame.git -b 0.3.13',
                 dest_path='libtwolame'),
         'LIBVMAF': Repo(
                 lib_type=LibType.FILTER,
@@ -253,7 +258,7 @@ def download_repos(repo_list: List[Repo], no_download: bool = False) -> None:
             logging.warning('%s is not a complete/usable repo!', repo_str)
             continue
 
-        command_str: str = '{0}{1} {2} ../repos/{3}'.format(
+        command_str: str = '{0}{1} {2} repos/{3}'.format(
                 repo.repo_tool.value,
                 ('' if repo.repo_rev == UND else str(repo.repo_rev)),
                 repo.repo_url, repo.dest_path)
@@ -266,6 +271,9 @@ def download_repos(repo_list: List[Repo], no_download: bool = False) -> None:
         else:
             print('Repo {0} was not actually downloaded because -no/--no-downloaded was specified.'.format(repo_str))
     return None
+
+def Compile():
+    os.system(libmp3lame.CONFIG)
 
 def file_exists(file_str: str, path_str: str = '.') -> bool:
     file_str = file_str.strip('/')
@@ -353,5 +361,4 @@ def main():
         log.setLevel(args.vlvl)
     if args.down:
         download_repos(args.down, args.nodown)
-
 main()
