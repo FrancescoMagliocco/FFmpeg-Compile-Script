@@ -59,6 +59,3 @@ class VFormatter(logging.Formatter):
         self._style._fmt = fmt_orig
 
         return result
-
-class VLogger:
-    def __init__(self, level=logging.WARNING, format='%(levelname)s\t%(message)s', stream=
