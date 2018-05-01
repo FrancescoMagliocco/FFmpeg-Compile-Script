@@ -46,13 +46,25 @@ class VFormatter(logging.Formatter):
         levelname = record.levelname
 
         if self.use_color and VColors.has_name(levelname):
-#            record.levelname = VColors[levelname].value
-            record.levelname = _LEVEL_TO_FMT[levelname]
+            if record.levelno != logging.INFO:
+                record.levelname = VColors[levelname].value + levelname
+            else:
+                record.levelname = VColors[levelname].value
+            if record.levelno >= logging.ERROR:
+                module = record.module
+                lineno = record.lineno
+#                record.lineno = VColors.GREEN.value + str(lineno)
+                record.module = VColors.WARNING.value + module + VColors.GREEN.value
+            else:
+                record.lineno = 0
+                record.module = ""
+
+#            record.levelname = _LEVEL_TO_FMT[levelname]
         return logging.Formatter.format(self, record)
 
 # https://stackoverflow.com/a/384125
 class VLogger(logging.Logger):
-    FORMAT = '%(levelname)s\t%(message)s'
+    FORMAT = '%(levelname)s:%(module)s:%(lineno)d:%(message)s'
 #    FORMAT = _LEVEL_TO_FMT['CRITICAL']
     def __init__(self, name):
         logging.Logger.__init__(self, name, logging.DEBUG)
