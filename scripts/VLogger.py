@@ -14,13 +14,13 @@ __status__ = "Development"
 
 class VColors(Enum):
     _CLR_SEQ = '\033[38;5;'
-    _FMT = '{0:s}{1:d}m[{0:s}{2:d}mCRITICAL{0:s}{1:d}m]'
-    CRITICAL = _FMT.format(_CLR_SEQ, 255, 88)   #'{0}{1}m[{0}{2}mCRITICAL{0}{1}m][]'_FMT.format(88)
-    ERROR = _FMT.format(_CLR_SEQ, 255, 196)     #_CLR_SEQ.format(196)
-    WARNING = _FMT.format(_CLR_SEQ, 255, 202)   #_CLR_SEQ.format(202)
-    INFO = _FMT.format(_CLR_SEQ, 255, 226)      #_CLR_SEQ.format(226)
-    DEBUG = _FMT.format(_CLR_SEQ, 255, 201)     #_CLR_SEQ.format(201)
-    GREEN = _FMT.format(_CLR_SEQ, 255, 46)      #_CLR_SEQ.format(46)
+    _FMT = '{0:s}{1:d}m[{0:s}{2:d}m{3:s}{0:s}{1:d}m]'
+    CRITICAL = _FMT.format(_CLR_SEQ, 255, 88, 'CRITICAL')   #'{0}{1}m[{0}{2}mCRITICAL{0}{1}m][]'_FMT.format(88)
+    ERROR = _FMT.format(_CLR_SEQ, 255, 196, 'ERROR')        #_CLR_SEQ.format(196)
+    WARNING = _FMT.format(_CLR_SEQ, 255, 202, 'WARNING')    #_CLR_SEQ.format(202)
+    INFO = '{0:s}{1:d}m'.format(_CLR_SEQ, 226)              #_CLR_SEQ.format(226)
+    DEBUG = _FMT.format(_CLR_SEQ, 255, 201, 'DEBUG')        #_CLR_SEQ.format(201)
+    GREEN = _FMT.format(_CLR_SEQ, 255, 46, 'DEBUG')         #_CLR_SEQ.format(46)
     NORMAL = '\033[39m'
 
     @classmethod
