@@ -46,21 +46,23 @@ class VerboseFormatter(logging.Formatter):
     def format(self, record):
         levelname = record.levelname
         if self.use_color and VColors.has_name(levelname):
+            print("BALLS")
             record.level = VColors[levelname].value
         return logging.Formatter.format(self, record)
 
 # https://stackoverflow.com/a/384125
 class VerboseLogger(logging.Logger):
-    FORMAT = "[%(name)-20s][%(levelname)-18s]  %(message)s (%(filename)s:%(lineno)d)"
+    FORMAT = '%(levelname)s\t%(message)s'
     def __init__(self, name):
+        print("LKSJDF")
         logging.Logger.__init__(self, name, logging.DEBUG)
 
         color_formatter = VerboseFormatter(self.FORMAT)
         console = logging.StreamHandler()
+        print("HERE")
         console.setFormatter(color_formatter)
 
         self.addHandler(console)
 
-logging.basicConfig(level=logging.DEBUG)
 logging.setLoggerClass(VerboseLogger)
 logging.debug("Test")
