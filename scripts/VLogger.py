@@ -13,13 +13,14 @@ __maintainer__ = "Francesco Magliocco (aka Cmptr)"
 __status__ = "Development"
 
 class VColors(Enum):
-    _ESC = '\033[38;5;{0}m'
-    CRITICAL = _ESC.format(88)
-    ERROR = _ESC.format(196)
-    WARNING = _ESC.format(202)
-    INFO = _ESC.format(226)
-    DEBUG = _ESC.format(201)
-    GREEN = _ESC.format(46)
+    _CLR_SEQ = '\033[38;5;'
+    _FMT = '{0:s}{1:d}m[{0:s}{2:d}mCRITICAL{0:s}{1:d}m]'
+    CRITICAL = _FMT.format(_CLR_SEQ, 255, 88)   #'{0}{1}m[{0}{2}mCRITICAL{0}{1}m][]'_FMT.format(88)
+    ERROR = _FMT.format(_CLR_SEQ, 255, 196)     #_CLR_SEQ.format(196)
+    WARNING = _FMT.format(_CLR_SEQ, 255, 202)   #_CLR_SEQ.format(202)
+    INFO = _FMT.format(_CLR_SEQ, 255, 226)      #_CLR_SEQ.format(226)
+    DEBUG = _FMT.format(_CLR_SEQ, 255, 201)     #_CLR_SEQ.format(201)
+    GREEN = _FMT.format(_CLR_SEQ, 255, 46)      #_CLR_SEQ.format(46)
     NORMAL = '\033[39m'
 
     @classmethod
@@ -44,12 +45,12 @@ class VFormatter(logging.Formatter):
 
     def format(self, record):
         levelname = record.levelname
+        levelno = record.levelno
+        module = record.module
 
         if self.use_color and VColors.has_name(levelname):
-            if record.levelno != logging.INFO:
-                record.levelname = VColors[levelname].value + levelname
-            else:
-                record.levelname = VColors[levelname].value
+            record.levelname = VColors[levelname].value + ('' if record.levelname == logging.INFO else levelname )
+            
             if record.levelno >= logging.ERROR:
                 module = record.module
                 lineno = record.lineno
@@ -64,7 +65,7 @@ class VFormatter(logging.Formatter):
 
 # https://stackoverflow.com/a/384125
 class VLogger(logging.Logger):
-    FORMAT = '%(levelname)s:%(module)s:%(lineno)d:%(message)s'
+    FORMAT = '%(levelname)s%(module)s%(lineno)d%(message)s'
 #    FORMAT = _LEVEL_TO_FMT['CRITICAL']
     def __init__(self, name):
         logging.Logger.__init__(self, name, logging.DEBUG)
@@ -78,7 +79,3 @@ class VLogger(logging.Logger):
 logging.setLoggerClass(VLogger)
 TEST = logging.getLogger('VLogger')
 TEST.critical("Test")
-TEST.info("INFO")
-TEST.warning("warn")
-TEST.error("err")
-TEST.debug("dbg")
