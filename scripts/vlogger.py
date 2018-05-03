@@ -50,9 +50,8 @@ class VFormatter(logging.Formatter):
         module = record.module
 
         if self.use_color and VColors.has_name(levelname):
-            record.levelname = (VColors[levelname].value
-                    + ('' if record.levelname == logging.INFO else levelname ))
-            
+            record.levelname = VColors[levelname].value
+
             if record.levelno >= logging.ERROR:
                 module = record.module
                 lineno = record.lineno
@@ -65,22 +64,18 @@ class VFormatter(logging.Formatter):
                 record.lineno = 0
                 record.module = ""
 
-#            record.levelname = _LEVEL_TO_FMT[levelname]
         return logging.Formatter.format(self, record)
 
 # https://stackoverflow.com/a/384125
-class VLogger(logging.Logger):
-    FORMAT = '%(levelname)s%(module)s%(lineno)d%(message)s'
+#class VLogger(logging.Logger):
+#    FORMAT = '%(levelname)s%(module)s%(lineno)d%(message)s'
 #    FORMAT = _LEVEL_TO_FMT['CRITICAL']
-    def __init__(self, name):
-        logging.Logger.__init__(self, name, logging.DEBUG)
+#    def __init__(self, name):
+#        logging.Logger.__init__(self, name, logging.DEBUG)
 
-        color_formatter = VFormatter(self.FORMAT)
-        console = logging.StreamHandler(sys.stdout)
-        console.setFormatter(color_formatter)
+#        color_formatter = VFormatter(self.FORMAT)
+#        console = logging.StreamHandler(sys.stdout)
+#        console.setFormatter(color_formatter)
 
-        self.addHandler(console)
+#        self.addHandler(console)
 
-logging.setLoggerClass(VLogger)
-TEST = logging.getLogger('VLogger')
-TEST.critical("Test")
