@@ -289,11 +289,12 @@ def file_exists(file_str, path_str='.') -> bool:
     return False
 
 def main():
+    hndlr = logging.StreamHandler(sys.stdout)
+    hndlr.setFormatter(
+            vlogger.VFormatter('%(levelname)s%(module)s%(message)s'))
+
     logging.basicConfig(level=logging.DEBUG,
-            format='%(levelname)s%(module)s%(message)s',
-            handlers=[logging.StreamHandler(sys.stdout).setFormatter(
-                vlogger.VFormatter(
-                    '%(levelname)s%(module)s%(lineno)d%(message)s'))])
+            format='%(levelname)s%(module)s%(message)s', handlers=[hndlr])
 
     parser = argparse.ArgumentParser(
             description="Does the dirty work so you don't have too")
