@@ -7,7 +7,7 @@ import sys
 from enum import Enum
 from typing import NamedTuple, Dict, List
 from pathlib import Path
-from scripts import libmp3lame, libx264, vlogger
+from scripts import vlogger
 
 class LibType(Enum):
     CODEC = 'codecs'
@@ -230,31 +230,31 @@ ALL_REPOS_OLD: Dict[str, Repo] = {
         }
 
 # repo_tuple: List[Repo] really isn't needed here anymore since the argument passed from main() is a list of str.
-def download_repos_OLD(repo_list: List[Repo], no_download = False):
+def download_repos(repo_list: List[Repo], no_download = False):
     # repo_str is a str even though repo_list is a list of Repo's
     for repo_str in repo_list:
-        log.debug('Checking if %s is a valid repo...', repo_str)
+        logging.debug('Checking if %s is a valid repo...', repo_str)
         repo_str = repo_str.upper()
         if repo_str not in ALL_REPOS_OLD:
-            log.warning('%s is not a valid repo', repo_str)
+            logging.warning('%s is not a valid repo', repo_str)
             continue
         logging.debug('%s is a valid repo!', repo_str)
         repo: Repo = ALL_REPOS_OLD[repo_str]
-        log.debug('lib_type:\t%s', repr(repo.lib_type))
-        log.debug('switch:\t\t%s', repo.switch)
-        log.debug('default:\t%s', repr(repo.default))
-        log.debug('repo_tool:\t%s', repr(repo.repo_tool))
-        log.debug('repo_rev:\t%d', repo.repo_rev)
-        log.debug('repo_url:\t%s', repo.repo_url)
-        log.debug('dest_path:\t%s', repo.dest_path)
+        logging.debug('lib_type:\t%s', repr(repo.lib_type))
+        logging.debug('switch:\t\t%s', repo.switch)
+        logging.debug('default:\t%s', repr(repo.default))
+        logging.debug('repo_tool:\t%s', repr(repo.repo_tool))
+        logging.debug('repo_rev:\t%d', repo.repo_rev)
+        logging.debug('repo_url:\t%s', repo.repo_url)
+        logging.debug('dest_path:\t%s', repo.dest_path)
 
-        log.debug('Checking if %s is a completed/usable repo...', repo_str)
+        logging.debug('Checking if %s is a completed/usable repo...', repo_str)
         if (repo.repo_url == UNKNOWN
                 or repo.dest_path == NOT_DEFINED
                 or repo.repo_tool == RepoTool.UND
                 or (repo.repo_tool == RepoTool.SVN_TOOL
                     and repo.repo_rev == UND)):
-            log.warning('%s is not a complete/usable repo!', repo_str)
+            logging.warning('%s is not a complete/usable repo!', repo_str)
             continue
 
         command_str = '{0}{1} {2} repos/{3}'.format(
@@ -262,7 +262,7 @@ def download_repos_OLD(repo_list: List[Repo], no_download = False):
                 ('' if repo.repo_rev == UND else str(repo.repo_rev)),
                 repo.repo_url, repo.dest_path)
 
-        log.info(command_str)
+        logging.info(command_str)
         if not no_download:
             print('Downloading repo {0}...'.format(repo_str))
             os.system(command_str)
@@ -270,38 +270,31 @@ def download_repos_OLD(repo_list: List[Repo], no_download = False):
         else:
             print('Repo {0} was not actually downloaded because -no/--no-downloaded was specified.'.format(repo_str))
 
-def Compile():
-    os.system(libmp3lame.CONFIG)
-
-ALL_REPOS: Dict[str, ]
-
-def download_repos(repo_list, no_download = False, no_compile = True):
-    for repo_str: str in repo_list:
-
-
 def file_exists(file_str, path_str = '.') -> bool:
     file_str = file_str.strip('/')
     path_str = path_str.rstrip('/')
-    log.debug('Checking if directroy %s exists..', path_str)
+    logging.debug('Checking if directroy %s exists..', path_str)
     tmp_path: Path = Path(path_str)
     if tmp_path.is_dir():
-        log.info('Directroy %s exists!', path_str)
-        log.debug('Checking if %s exists in %s..', file_str, path_str)
-        log.debug('%s/%s', path_str, file_str)
+        logging.info('Directroy %s exists!', path_str)
+        logging.debug('Checking if %s exists in %s..', file_str, path_str)
+        logging.debug('%s/%s', path_str, file_str)
         tmp_file: Path = Path('{0}/{1}'.format(path_str, file_str))
         if tmp_file.is_file():
-            log.debug('%s exists in %s!', file_str, path_str)
+            logging.debug('%s exists in %s!', file_str, path_str)
             return True
-        log.warning('%s does not exist in %s', file_str, path_str)
+        logging.warning('%s does not exist in %s', file_str, path_str)
         return False
-    log.warning('Directory %s does not exist', path_str)
+    logging.warning('Directory %s does not exist', path_str)
     return False
 
 def main():
-    logging.setLoggerClass(VLogger)
-    global log
-    log = logging.getLogger('VLogger')
-    log: logging.Logger = logging.getLogger()
+    cf = vlogger.VFormatter('%(levelname)s%(module)s%(lineno)d%(message)s')
+    con = logging.StreamHandler(sys.stdout)
+    con.setFormatter(cf)
+    logging.basicConfig(level=logging.DEBUG,
+            format='%(levelname)s%(module)s%(lineno)d%(message)s',
+            handlers=[con])
 
     parser = argparse.ArgumentParser(description='Does the dirty work so you don\'t have too')
     parser.add_argument(
@@ -346,26 +339,26 @@ def main():
             dest='ffsrc')
 
     args = parser.parse_args()
-    log.debug('parse_args():\t%s', args)
+#    logging.ing.debug('parse_args():\t%s', args)
 
-    log.debug('Parsing arguments...')
+    logging.debug('Parsing arguments...')
     if args.ffsrc != None and args.compile:
-        log.debug('Found -src/--ffmpeg-src!')
+        logging.debug('Found -src/--ffmpeg-src!')
     if args.compile:
-        log.debug('Found --compile!')
+        logging.debug('Found --compile!')
         if not file_exists('configure', args.ffsrc):
-            log.error('Can\'t locate the ffmpeg configure file in %s!',
+            logging.error('Can\'t locate the ffmpeg configure file in %s!',
                     args.ffsrc)
             sys.exit(1)
     if args.nodown:
-        log.debug('Found -no/--no-download!')
+        logging.debug('Found -no/--no-download!')
     if args.vlvl:
-        log.debug('Found verbose argument!')
-        log.info(
+        logging.debug('Found verbose argument!')
+        logging.info(
                 'verbosity from %s to %s',
-                logging.getLevelName(log.getEffectiveLevel()),
+                logging.getLevelName(logging.getLogger().getEffectiveLevel()),
                 logging.getLevelName(args.vlvl))
-        log.setLevel(args.vlvl)
+        logging.getLogger().setLevel(args.vlvl)
     if args.down:
         download_repos(args.down, args.nodown)
 
