@@ -7,7 +7,7 @@ import sys
 from enum import Enum
 from typing import NamedTuple, Dict, List
 from pathlib import Path
-from scripts import libmp3lame, libx264
+from scripts import libmp3lame, libx264, vlogger
 
 class LibType(Enum):
     CODEC = 'codecs'
@@ -366,4 +366,6 @@ def main():
         log.setLevel(args.vlvl)
     if args.down:
         download_repos(args.down, args.nodown)
-main()
+
+if __name__ == '__main__':
+    main()
