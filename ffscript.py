@@ -290,7 +290,7 @@ def file_exists(file_str, path_str='.') -> bool:
 
 def main():
     logging.basicConfig(level=logging.DEBUG,
-            format='%(levelname)s%(module)s%(lineno)d%(message)s',
+            format='%(levelname)s%(module)s%(message)s',
             handlers=[logging.StreamHandler(sys.stdout).setFormatter(
                 vlogger.VFormatter(
                     '%(levelname)s%(module)s%(lineno)d%(message)s'))])
