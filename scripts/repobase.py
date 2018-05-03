@@ -9,7 +9,11 @@ class RepoTool(Enum):
     UND_TOOL = 'Undetermined'
 
 class RepoBase(ABC):
-    def __init__(self, repo_tool=RepoTool.UND_TOOL, repo_url='Not specified', switch='Not specified'):
+    def __init__(
+            self,
+            repo_tool=RepoTool.UND_TOOL,
+            repo_url='Not specified',
+            switch='Not specified'):
         super().__init__()
         self.repo_tool = repo_tool
         self.repo_url = repo_url
@@ -17,8 +21,12 @@ class RepoBase(ABC):
 
     @abstractmethod
     def get_config(self):
-        raise NotImplementedError()
+        raise NotImplementedError("'get_config()' Not Implemented!")
 
     @abstractmethod
     def get_repo_download(self):
-        raise NotImplementedError('get_repo_download() Not Implemented!')
+        raise NotImplementedError("'get_repo_download()' Not Implemented!")
+
+    @abstractmethod
+    def update_repo(self):
+        raise NotImplementedError("'update_repo()' Not Implemented!")
