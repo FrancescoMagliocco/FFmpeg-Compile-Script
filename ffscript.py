@@ -270,7 +270,7 @@ def download_repos(repo_list: List[Repo], no_download = False):
         else:
             print('Repo {0} was not actually downloaded because -no/--no-downloaded was specified.'.format(repo_str))
 
-def file_exists(file_str, path_str = '.') -> bool:
+def file_exists(file_str, path_str='.') -> bool:
     file_str = file_str.strip('/')
     path_str = path_str.rstrip('/')
     logging.debug('Checking if directroy %s exists..', path_str)
@@ -289,19 +289,19 @@ def file_exists(file_str, path_str = '.') -> bool:
     return False
 
 def main():
-    cf = vlogger.VFormatter('%(levelname)s%(module)s%(lineno)d%(message)s')
-    con = logging.StreamHandler(sys.stdout)
-    con.setFormatter(cf)
     logging.basicConfig(level=logging.DEBUG,
             format='%(levelname)s%(module)s%(lineno)d%(message)s',
-            handlers=[con])
+            handlers=[logging.StreamHandler(sys.stdout).setFormatter(
+                vlogger.VFormatter(
+                    '%(levelname)s%(module)s%(lineno)d%(message)s'))])
 
-    parser = argparse.ArgumentParser(description='Does the dirty work so you don\'t have too')
+    parser = argparse.ArgumentParser(
+            description="Does the dirty work so you don't have too")
     parser.add_argument(
             '-no',
             '--no-download',
             action='store_true',
-            help='Repos won\'t actually be downloaded.',
+            help="Repos won't actually be downloaded.",
             dest='nodown')
 
     parser.add_argument(
