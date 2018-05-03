@@ -233,28 +233,28 @@ ALL_REPOS_OLD: Dict[str, Repo] = {
 def download_repos_OLD(repo_list: List[Repo], no_download = False):
     # repo_str is a str even though repo_list is a list of Repo's
     for repo_str in repo_list:
-        logging.debug('Checking if %s is a valid repo...', repo_str)
+        log.debug('Checking if %s is a valid repo...', repo_str)
         repo_str = repo_str.upper()
         if repo_str not in ALL_REPOS_OLD:
-            logging.warning('%s is not a valid repo', repo_str)
+            log.warning('%s is not a valid repo', repo_str)
             continue
         logging.debug('%s is a valid repo!', repo_str)
         repo: Repo = ALL_REPOS_OLD[repo_str]
-        logging.debug('lib_type:\t%s', repr(repo.lib_type))
-        logging.debug('switch:\t\t%s', repo.switch)
-        logging.debug('default:\t%s', repr(repo.default))
-        logging.debug('repo_tool:\t%s', repr(repo.repo_tool))
-        logging.debug('repo_rev:\t%d', repo.repo_rev)
-        logging.debug('repo_url:\t%s', repo.repo_url)
-        logging.debug('dest_path:\t%s', repo.dest_path)
+        log.debug('lib_type:\t%s', repr(repo.lib_type))
+        log.debug('switch:\t\t%s', repo.switch)
+        log.debug('default:\t%s', repr(repo.default))
+        log.debug('repo_tool:\t%s', repr(repo.repo_tool))
+        log.debug('repo_rev:\t%d', repo.repo_rev)
+        log.debug('repo_url:\t%s', repo.repo_url)
+        log.debug('dest_path:\t%s', repo.dest_path)
 
-        logging.debug('Checking if %s is a completed/usable repo...', repo_str)
+        log.debug('Checking if %s is a completed/usable repo...', repo_str)
         if (repo.repo_url == UNKNOWN
                 or repo.dest_path == NOT_DEFINED
                 or repo.repo_tool == RepoTool.UND
                 or (repo.repo_tool == RepoTool.SVN_TOOL
                     and repo.repo_rev == UND)):
-            logging.warning('%s is not a complete/usable repo!', repo_str)
+            log.warning('%s is not a complete/usable repo!', repo_str)
             continue
 
         command_str = '{0}{1} {2} repos/{3}'.format(
@@ -262,7 +262,7 @@ def download_repos_OLD(repo_list: List[Repo], no_download = False):
                 ('' if repo.repo_rev == UND else str(repo.repo_rev)),
                 repo.repo_url, repo.dest_path)
 
-        logging.info(command_str)
+        log.info(command_str)
         if not no_download:
             print('Downloading repo {0}...'.format(repo_str))
             os.system(command_str)
@@ -275,30 +275,32 @@ def Compile():
 
 ALL_REPOS: Dict[str, ]
 
-def download_repos(repo_list: List[str], no_download = False, no_compile = True):
+def download_repos(repo_list, no_download = False, no_compile = True):
     for repo_str: str in repo_list:
 
 
 def file_exists(file_str, path_str = '.') -> bool:
     file_str = file_str.strip('/')
     path_str = path_str.rstrip('/')
-    logging.debug('Checking if directroy %s exists..', path_str)
+    log.debug('Checking if directroy %s exists..', path_str)
     tmp_path: Path = Path(path_str)
     if tmp_path.is_dir():
-        logging.info('Directroy %s exists!', path_str)
-        logging.debug('Checking if %s exists in %s..', file_str, path_str)
-        logging.debug('%s/%s', path_str, file_str)
+        log.info('Directroy %s exists!', path_str)
+        log.debug('Checking if %s exists in %s..', file_str, path_str)
+        log.debug('%s/%s', path_str, file_str)
         tmp_file: Path = Path('{0}/{1}'.format(path_str, file_str))
         if tmp_file.is_file():
-            logging.debug('%s exists in %s!', file_str, path_str)
+            log.debug('%s exists in %s!', file_str, path_str)
             return True
-        logging.warning('%s does not exist in %s', file_str, path_str)
+        log.warning('%s does not exist in %s', file_str, path_str)
         return False
-    logging.warning('Directory %s does not exist', path_str)
+    log.warning('Directory %s does not exist', path_str)
     return False
 
 def main():
-    logging.basicConfig(level=logging.DEBUG, format='%(levelname)s\t%(message)s')
+    logging.setLoggerClass(VLogger)
+    global log
+    log = logging.getLogger('VLogger')
     log: logging.Logger = logging.getLogger()
 
     parser = argparse.ArgumentParser(description='Does the dirty work so you don\'t have too')
