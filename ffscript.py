@@ -1,4 +1,4 @@
-#!/usr/bin/python3.6
+#!/usr/bin/env python3
 
 import argparse
 import logging
@@ -9,36 +9,34 @@ from typing import NamedTuple, Dict, List
 from pathlib import Path
 from scripts import libmp3lame, libx264
 
-
-
 class LibType(Enum):
-    CODEC: str = 'codecs'
-    ENCODER: str = 'encoders'
-    DECODER: str = 'decoders'
-    HWACCEL: str = 'hwaccels'
-    MUXER: str = 'muxers'
-    DEMUXER: str = 'demuxers'
-    PARSER: str = 'parsers'
-    BSF: str = 'bsfs'
-    PROTOCOL: str = 'protocols'
-    DEV: str = 'devices'
-    INDEV: str = 'input-devices'
-    OUTDEV: str = 'output-devices'
-    FILTER: str = 'filters'
-    UND: str = 'undertermined'
+    CODEC = 'codecs'
+    ENCODER = 'encoders'
+    DECODER = 'decoders'
+    HWACCEL = 'hwaccels'
+    MUXER = 'muxers'
+    DEMUXER = 'demuxers'
+    PARSER = 'parsers'
+    BSF = 'bsfs'
+    PROTOCOL = 'protocols'
+    DEV = 'devices'
+    INDEV = 'input-devices'
+    OUTDEV = 'output-devices'
+    FILTER = 'filters'
+    UND = 'undertermined'
 
 class SwitchState(Enum):
-    NO: int = 0
-    YES: int = 1
-    AUTO_DETECT: int = -1
+    NO = 0
+    YES = 1
+    AUTO_DETECT = -1
 
 class RepoTool(Enum):
-    CURL_TOOL: str = 'curl '
-    GIT_TOOL: str = 'git clone '
-    GIT_SVN_TOOL: str = 'git svn clone -r '
-    HG_TOOL: str = 'hg clone '
-    SVN_TOOL: str = 'svn co -r '
-    UND: str = 'echo RepoTool is inconclusive.'
+    CURL_TOOL = 'curl '
+    GIT_TOOL = 'git clone '
+    GIT_SVN_TOOL = 'git svn clone -r '
+    HG_TOOL = 'hg clone '
+    SVN_TOOL = 'svn co -r '
+    UND = 'echo RepoTool is inconclusive.'
 
 class Repo(NamedTuple):
     lib_type: LibType
@@ -49,15 +47,15 @@ class Repo(NamedTuple):
     repo_url: str
     dest_path: str
 
-NA: int = -1
-UND: int = NA
-UNKNOWN: str = 'unknown'
-NOT_DEFINED: str = 'not defined'
+NA = -1
+UND = NA
+UNKNOWN = 'unknown'
+NOT_DEFINED = 'not defined'
 
 # As of right now, I will just be focusing on the features that are compatible with Windows.
 # That means that any Linux, Raspberry Pie, MAC etc..  Will not be implemented yet.
 
-ALL_REPOS: Dict[str, Repo] = {
+ALL_REPOS_OLD: Dict[str, Repo] = {
         'LIBAOM': Repo(
                 lib_type=LibType.CODEC,
                 switch='--enable-libaom',
@@ -232,16 +230,16 @@ ALL_REPOS: Dict[str, Repo] = {
         }
 
 # repo_tuple: List[Repo] really isn't needed here anymore since the argument passed from main() is a list of str.
-def download_repos(repo_list: List[Repo], no_download: bool = False) -> None:
+def download_repos_OLD(repo_list: List[Repo], no_download = False):
     # repo_str is a str even though repo_list is a list of Repo's
     for repo_str in repo_list:
         logging.debug('Checking if %s is a valid repo...', repo_str)
         repo_str = repo_str.upper()
-        if repo_str not in ALL_REPOS:
+        if repo_str not in ALL_REPOS_OLD:
             logging.warning('%s is not a valid repo', repo_str)
             continue
         logging.debug('%s is a valid repo!', repo_str)
-        repo: Repo = ALL_REPOS[repo_str]
+        repo: Repo = ALL_REPOS_OLD[repo_str]
         logging.debug('lib_type:\t%s', repr(repo.lib_type))
         logging.debug('switch:\t\t%s', repo.switch)
         logging.debug('default:\t%s', repr(repo.default))
@@ -254,11 +252,12 @@ def download_repos(repo_list: List[Repo], no_download: bool = False) -> None:
         if (repo.repo_url == UNKNOWN
                 or repo.dest_path == NOT_DEFINED
                 or repo.repo_tool == RepoTool.UND
-                or (repo.repo_tool == RepoTool.SVN_TOOL and repo.repo_rev == UND)):
+                or (repo.repo_tool == RepoTool.SVN_TOOL
+                    and repo.repo_rev == UND)):
             logging.warning('%s is not a complete/usable repo!', repo_str)
             continue
 
-        command_str: str = '{0}{1} {2} repos/{3}'.format(
+        command_str = '{0}{1} {2} repos/{3}'.format(
                 repo.repo_tool.value,
                 ('' if repo.repo_rev == UND else str(repo.repo_rev)),
                 repo.repo_url, repo.dest_path)
@@ -270,12 +269,17 @@ def download_repos(repo_list: List[Repo], no_download: bool = False) -> None:
             print('Finished download repo {0}!'.format(repo_str))
         else:
             print('Repo {0} was not actually downloaded because -no/--no-downloaded was specified.'.format(repo_str))
-    return None
 
 def Compile():
     os.system(libmp3lame.CONFIG)
 
-def file_exists(file_str: str, path_str: str = '.') -> bool:
+ALL_REPOS: Dict[str, ]
+
+def download_repos(repo_list: List[str], no_download = False, no_compile = True):
+    for repo_str: str in repo_list:
+
+
+def file_exists(file_str, path_str = '.') -> bool:
     file_str = file_str.strip('/')
     path_str = path_str.rstrip('/')
     logging.debug('Checking if directroy %s exists..', path_str)
@@ -348,7 +352,8 @@ def main():
     if args.compile:
         log.debug('Found --compile!')
         if not file_exists('configure', args.ffsrc):
-            log.error('Can\'t locate the ffmpeg configure file in %s!', args.ffsrc)
+            log.error('Can\'t locate the ffmpeg configure file in %s!',
+                    args.ffsrc)
             sys.exit(1)
     if args.nodown:
         log.debug('Found -no/--no-download!')
