@@ -1,4 +1,5 @@
-#!/usr/bin/python3.6
+#!/usr/bin/env python3
+"""library mp3 lame"""
 
 import os
 
