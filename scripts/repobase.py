@@ -1,9 +1,13 @@
+#!/usr/bin/env python3
+"""Repository Base"""
+
 import logging
 from enum import Enum
 from abc import ABC, abstractmethod
 from typing import List
 
 class RepoTool(Enum):
+    """Repository Tools"""
     CURL_TOOL = 'curl'
     GIT_TOOL = 'git clone'
     SVN_TOOL = 'svn co -r head'
@@ -11,16 +15,17 @@ class RepoTool(Enum):
     UND_TOOL = 'Undetermined'
 
 class RepoBase(ABC):
+    """Abstract Class for Repositories"""
 
     # TODO: Raise some type of 'warning' or 'notice' if key is either
     # 'RepoTool.CURL_TOOL' or 'RepoTool.UDN_TOOL'.
     _REPOTOOL_TO_UPDATE_CMD = {
-            RepoTool.CURL_TOOL: [''],
-            RepoTool.GIT_TOOL: ['git pull'],
-            RepoTool.SVN_TOOL: ['svn up'],
-            RepoTool.HG_TOOL: ['hg pull', 'hg update'],
-            RepoTool.UND_TOOL: ['']
-            }
+        RepoTool.CURL_TOOL: [''],
+        RepoTool.GIT_TOOL: ['git pull'],
+        RepoTool.SVN_TOOL: ['svn up'],
+        RepoTool.HG_TOOL: ['hg pull', 'hg update'],
+        RepoTool.UND_TOOL: ['']
+    }
 
     def __init__(
             self,
@@ -36,14 +41,17 @@ class RepoBase(ABC):
 
     @abstractmethod
     def get_config(self):
+        '''get configuration arguments'''
         raise NotImplementedError("'get_config()' Not Implemented!")
 
     @abstractmethod
     def get_repo_download(self):
+        '''get repo download link?'''
         raise NotImplementedError("'get_repo_download()' Not Implemented!")
 
     # Gets the update command for the corresponding repository type.
     def get_update_repo(self) -> List[str]:
+        '''Get commands to update repository'''
         logging.debug("Entered 'update_repo!")
         logging.info("Updating repository '%d' ...", self.name)
         return self._REPOTOOL_TO_UPDATE_CMD[self.repo_tool]
