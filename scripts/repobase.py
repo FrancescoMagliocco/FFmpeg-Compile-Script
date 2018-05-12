@@ -12,7 +12,7 @@ class RepoTool(Enum):
     GIT_TOOL = 'git clone'
     SVN_TOOL = 'svn co -r head'
     HG_TOOL = 'hg clone'
-    UND_TOOL = 'Undetermined'
+    UND = 'Undetermined'
 
 class RepoBase(ABC):
     """Abstract Class for Repositories"""
@@ -50,7 +50,7 @@ class RepoBase(ABC):
         raise NotImplementedError("'get_repo_download()' Not Implemented!")
 
     # Gets the update command for the corresponding repository type.
-    def get_update_repo(self):
+    def get_update_repo(self)
         '''Get commands to update repository'''
         logging.debug("Entered 'update_repo!")
         logging.info("Updating repository '%d' ...", self.name)
