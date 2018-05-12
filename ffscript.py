@@ -25,15 +25,16 @@ NOT_DEFINED = 'not defined'
 
 _ALL_REPOS = {'LIBMP3LAME': libmp3lame.LibMP3Lame()}
 
-def download_repos(repo_list, no_download=False):
+def download_repos(repo_list, repo_dir, no_download):
     '''Downloads the specified repo'''
     for repo_str in repo_list:
-        logging.debug('Checking if %s is a valid repo...', repo_str)
+        logging.debug("Checking if '%s' is a valid repo...", repo_str)
         repo_str = repo_str.upper()
         if repo_str not in _ALL_REPOS:
-            logging.warning('%s is not a valid repo', repo_str)
+            logging.warning("'%s' is not a valid repo!", repo_str)
             continue
-        logging.debug('%s is a valid repo!', repo_str)
+
+        logging.debug("'%s' is a valid repo!", repo_str)
         repo = _ALL_REPOS[repo_str]
         logging.debug('lib_type:\t%s', repr(repo.lib_type))
         logging.debug('switch:\t\t%s', repo.switch)
@@ -43,52 +44,51 @@ def download_repos(repo_list, no_download=False):
         logging.debug('repo_url:\t%s', repo.repo_url)
         logging.debug('dest_path:\t%s', repo.dest_path)
 
-        logging.debug('Checking if %s is a completed/usable repo...', repo_str)
+        logging.debug("Checking if '%s' is a completed/usable repo...", repo_str)
         if (repo.repo_url == UNKNOWN
                 or repo.dest_path == NOT_DEFINED
                 or repo.repo_tool == RepoTool.UND
                 or (repo.repo_tool == RepoTool.SVN_TOOL
                     and repo.repo_rev == UND)):
-            logging.warning('%s is not a complete/usable repo!', repo_str)
+            logging.warning("'%s' is not a complete/usable repo!", repo_str)
             continue
 
-        command_str = '{0}{1} {2} repos/{3}'.format(
+        command_str = '{0:s} {1:s} {2:s}/{3:s}'.format(
             repo.repo_tool.value,
-            ('' if repo.repo_rev == UND else str(repo.repo_rev)),
-            repo.repo_url, repo.dest_path)
+            # (None if repo.repo_rev == UND else str(repo.repo_rev)),
+            repo.repo_url,
+            repo_dir,
+            repo.dest_path)
 
         logging.info(command_str)
         if not no_download:
-            print('Downloading repo {0}...'.format(repo_str))
+            print("Downloading repo '{0:s}'...".format(repo_str))
             os.system(command_str)
-            print('Finished download repo {0}!'.format(repo_str))
+            print("Finished download repo '{0:s}'!".format(repo_str))
         else:
-            print('Repo {0} was not actually downloaded '.format(repo_str)
+            print("Repo '{0:s}' was not actually downloaded ".format(repo_str)
                   + 'because -no/--no-downloaded was specified.')
 
 def file_exists(file_str, path_str='.'):
     '''Checks if a file exists'''
     file_str = file_str.strip('/')
     path_str = path_str.rstrip('/')
-    logging.debug('Checking if directroy %s exists..', path_str)
-    tmp_path: Path = Path(path_str)
+    logging.debug("Checking if directroy '%s' exists...", path_str)
+    tmp_path = Path(path_str)
     if tmp_path.is_dir():
-        logging.info('Directroy %s exists!', path_str)
-        logging.debug('Checking if %s exists in %s..', file_str, path_str)
+        logging.info("Directroy '%s' exists!", path_str)
+        logging.debug("Checking if '%s' exists in '%s'...", file_str, path_str)
         logging.debug('%s/%s', path_str, file_str)
-        tmp_file: Path = Path('{0}/{1}'.format(path_str, file_str))
+        tmp_file = Path('{0:s}/{1:s}'.format(path_str, file_str))
         if tmp_file.is_file():
-            logging.debug('%s exists in %s!', file_str, path_str)
+            logging.debug("'%s' exists in '%s'!", file_str, path_str)
             return True
-        logging.warning('%s does not exist in %s', file_str, path_str)
+
+        logging.warning("%s' does not exist in '%s'!", file_str, path_str)
         return False
-    logging.warning('Directory %s does not exist', path_str)
+
+    logging.warning("Directory '%s' does not exist!", path_str)
     return False
-
-def _parse_args(arg):
-    if arg:
-        logging.debug("Found ")
-
 
 def _setup_parser():
     logging.debug('Setting up parser...')
@@ -96,13 +96,12 @@ def _setup_parser():
         description="Does the dirty work so you don't have too")
 
     parser.add_argument(
-        '-fp',
-        '--ff-prefix',
-        metavar='fprfx',
+        '--prefix',
+        metavar='prfx',
         nargs=1,
         default='./ffbuild',
         help='Location to install ffmpeg.  (Default: ./ffbuild)',
-        dest='ff_prefix')
+        dest='prefix')
 
     parser.add_argument(
         '-rp',
@@ -190,40 +189,48 @@ def main():
     # We check for this argument first, that way if verbose level is changed
     #   to "DEBUG", we ccan see those verbose messages.
     if args.verbose_level:
-        logging.debug('Found verbose argument!')
+        logging.debug("Found '-v/--verbose'!")
         logging.info(
             "Changing verbosity from '%s' to '%s'!",
             logging.getLevelName(logging.getLogger().getEffectiveLevel()),
             logging.getLevelName(args.verbose_level))
         logging.getLogger().setLevel(args.verbose_level)
 
-    if args.ff_preffix:
-        logging.debug("Found '-fp/--ff-prefix'!")
+    try:
+        if args.prefix:
+            logging.debug("Found '--prefix'!")
+            raise NotImplementedError('--prefix')
 
-    if args.repo_prefix:
-        logging.debug("Found '-rp/--repo-prefix'!")
+        if args.repo_prefix:
+            logging.debug("Found '-rp/--repo-prefix'!")
+            raise NotImplementedError('-rp/--repo-prefix')
 
-    if args.update_repo:
-        logging.debug("Found '-u/--update-repo'!")
+        if args.update_repo:
+            logging.debug("Found '-u/--update-repo'!")
+            raise NotImplementedError('-u/--update-repo')
 
-    if args.ffmpeg_src != None and args.compile:
-        logging.debug("Found '-src/--ffmpeg-src!'")
-    elif args.ffmpeg_src is None and args.compile:
-        logging.debug("Found '-src/--ffmpeg-src!'")
-        logging.info("No directory specified.  Using default: './'")
+        if args.ffmpeg_src != None and args.compile:
+            logging.debug("Found '-src/--ffmpeg-src!'")
+        elif args.ffmpeg_src is None and args.compile:
+            logging.debug("Found '-src/--ffmpeg-src!'")
+            logging.info("No directory specified.  Using default: './'")
 
-    if args.compile:
-        logging.debug("Found '--compile'!")
-        if not file_exists('configure', args.ffmpeg_src):
-            logging.error("Can't locate the ffmpeg configure file in %s!",
-                          args.ffmpeg_src)
-            sys.exit(1)
+        if args.compile:
+            logging.debug("Found '--compile'!")
+            if not file_exists('configure', args.ffmpeg_src):
+                logging.error("Can't locate the ffmpeg configure file in %s!",
+                              args.ffmpeg_src)
+                sys.exit(1)
 
-    if args.no_download:
-        logging.debug("Found '-no/--no-download'!")
+        if args.no_download:
+            logging.debug("Found '-no/--no-download'!")
 
-    if args.down:
-        download_repos(args.download, args.no_download)
+        if args.download:
+            logging.debug("Found '-d/--download'!")
+            download_repos(args.download, args.repo_prefix, args.no_download)
+
+    except NotImplementedError as emsg:
+        print("'{0}' has not yet been implemented.".format(emsg))
 
 if __name__ == '__main__':
     main()
