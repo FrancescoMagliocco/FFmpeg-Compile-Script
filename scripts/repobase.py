@@ -24,13 +24,13 @@ class RepoBase(ABC):
         RepoTool.GIT_TOOL: ['git pull'],
         RepoTool.SVN_TOOL: ['svn up'],
         RepoTool.HG_TOOL: ['hg pull', 'hg update'],
-        RepoTool.UND_TOOL: ['']
+        RepoTool.UND: ['']
     }
 
     def __init__(
             self,
             name,
-            repo_tool=RepoTool.UND_TOOL,
+            repo_tool=RepoTool.UND,
             repo_url='Not specified',
             switch='Not specified'):
         super().__init__()
