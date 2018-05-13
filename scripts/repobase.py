@@ -16,14 +16,14 @@ class RepoTool(Enum):
 class RepoBase(ABC):
     """Abstract Class for Repositories"""
 
-    # TODO: Raise some type of 'warning' or 'notice' if key is either
-    # 'RepoTool.CURL_TOOL' or 'RepoTool.UND'.
+    # NOTE: This isn't exactly ideal on handling if the key is
+    #   'RepoTool.CURL_TOOL' or 'RepoTool.UND', but it's good enough for now.
     _REPOTOOL_TO_UPDATE_CMD = {
-        RepoTool.CURL_TOOL: [''],
+        RepoTool.CURL_TOOL: ["echo 'Update via \'curl\' not implemented!'"],
         RepoTool.GIT_TOOL: ['git pull'],
         RepoTool.SVN_TOOL: ['svn up'],
         RepoTool.HG_TOOL: ['hg pull', 'hg update'],
-        RepoTool.UND: ['']
+        RepoTool.UND: ["echo 'RepoTool undetermined...'"]
     }
 
     def __init__(
