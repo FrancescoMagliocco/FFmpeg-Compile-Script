@@ -37,13 +37,9 @@ def download_repos(repo_list, repo_prefix, no_download):
         logging.debug("'%s' is a valid repo!", repo_str)
         repo = _ALL_REPOS[repo_str]
         logging.debug('name:\t\t%s', repo.name)
-        #logging.debug('lib_type:\t%s', repr(repo.lib_type))
         logging.debug('switch:\t\t%s', repo.switch)
-        #logging.debug('default:\t%s', repr(repo.default))
         logging.debug('repo_tool:\t%s', repr(repo.repo_tool))
-        #logging.debug('repo_rev:\t%d', repo.repo_rev)
         logging.debug('repo_url:\t%s', repo.repo_url)
-        #logging.debug('dest_path:\t%s', repo.dest_path)
 
         logging.debug("Checking if '%s' is a completed/usable repo...", repo_str)
         if (repo.repo_url == UNKNOWN
@@ -74,10 +70,10 @@ def file_exists(file_str, path_str='.'):
     '''Checks if a file exists'''
     file_str = file_str.strip('/')
     path_str = path_str.rstrip('/')
-    logging.debug("Checking if directroy '%s' exists...", path_str)
+    logging.debug("Checking if directory '%s' exists...", path_str)
     tmp_path = Path(path_str)
     if tmp_path.is_dir():
-        logging.info("Directroy '%s' exists!", path_str)
+        logging.info("Directory '%s' exists!", path_str)
         logging.debug("Checking if '%s' exists in '%s'...", file_str, path_str)
         logging.debug('%s/%s', path_str, file_str)
         tmp_file = Path('{0:s}/{1:s}'.format(path_str, file_str))
@@ -110,7 +106,7 @@ def _setup_parser():
         '--repo-prefix',
         nargs=1,
         default='./repos',
-        help='Localtion for repos to be downloaded to.',
+        help='Location for repos to be downloaded to.',
         metavar='rprfx',
         dest='repo_prefix')
 
@@ -180,7 +176,7 @@ def _setup_logger(level):
     logging.debug('Logger setup!')
 
 def main():
-    '''MainEntry Point'''
+    '''Main Entry Point'''
     _setup_logger(
         logging.DEBUG
         if __status__.lower().startswith('dev')
@@ -190,7 +186,7 @@ def main():
     args = parser.parse_args()
 
     # We check for this argument first, that way if verbose level is changed
-    #   to "DEBUG", we ccan see those verbose messages.
+    #   to "DEBUG", we can see those verbose messages.
     if args.verbose_level:
         logging.debug("Found '-v/--verbose'!")
         logging.debug("Verbose level:\t'{0:s}'".format(args.verbose_level[0]))
