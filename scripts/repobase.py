@@ -26,12 +26,11 @@ class RepoBase(ABC):
         RepoTool.UND: ["echo 'RepoTool undetermined...'"]
     }
 
-    def __init__(
-            self,
-            name,
-            repo_tool=RepoTool.UND,
-            repo_url='Not specified',
-            switch='Not specified'):
+    def __init__(self,
+                 name,
+                 repo_tool=RepoTool.UND,
+                 repo_url='Not specified',
+                 switch='Not specified'):
         super().__init__()
         self.name = name
         self.repo_tool = repo_tool

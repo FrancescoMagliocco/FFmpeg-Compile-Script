@@ -65,10 +65,9 @@ class VFormatter(logging.Formatter):
                 module = record.module
 #                lineno = record.lineno
 #                record.lineno = VColors.GREEN.value + str(lineno)
-                record.module = (
-                    VColors.WARNING.value
-                    + module
-                    + VColors.GREEN.value)
+                record.module = (VColors.WARNING.value
+                                 + module
+                                 + VColors.GREEN.value)
             else:
                 record.lineno = 0
                 record.module = ""

@@ -41,6 +41,18 @@ def is_repo(repo_str):
     logging.debug("'%s' is a valid repo!", repo_str)
     return True
 
+def update_repo(repo_prefix, repo_list):
+    for repo_str in repo_list:
+        repo_str = repo_str.lower()
+        if not is_repo(repo_str):
+            continue
+
+        repo = _ALL_REPOS[repo_str]
+        for v in repo.get_update_commands():
+            command_str = ('{0:s} {1:s}/{2:s}'.format(v,
+                                                      repo_prefix.rstrip('/'),
+                                                      repo.name))
+
 def download_repos(repo_list, repo_prefix, no_download):
     '''Downloads the specified repo'''
     for repo_str in repo_list:
@@ -55,20 +67,14 @@ def download_repos(repo_list, repo_prefix, no_download):
         logging.debug('repo_url:\t%s', repo.repo_url)
 
         logging.debug("Checking if '%s' is a completed/usable repo...", repo_str)
-        if (repo.repo_url == UNKNOWN
-                #or repo.dest_path == NOT_DEFINED
-                or repo.repo_tool == RepoTool.UND):
-                #or (repo.repo_tool == RepoTool.SVN_TOOL
-                #    and repo.repo_rev == UND)):
+        if (repo.repo_url == UNKNOWN or repo.repo_tool == RepoTool.UND):
             logging.warning("'%s' is not a complete/usable repo!", repo_str)
             continue
 
-        command_str = '{0:s} {1:s} {2:s}/{3:s}'.format(
-            repo.repo_tool.value,
-            # (None if repo.repo_rev == UND else str(repo.repo_rev)),
-            repo.repo_url,
-            repo_prefix,
-            repo.name)
+        command_str = ('{0:s} {1:s} {2:s}/{3:s}'.format(repo.repo_tool.value,
+                                                        repo.repo_url,
+                                                        repo_prefix,
+                                                        repo.name))
 
         logging.info(command_str)
         if not no_download:
@@ -102,92 +108,89 @@ def file_exists(file_str, path_str='.'):
 
 def _setup_parser():
     logging.debug('Setting up parser...')
-    parser = argparse.ArgumentParser(
+    parser = (argparse.ArgumentParser(
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
-        description="Does the dirty work so you don't have too")
+        description="Does the dirty work so you don't have too"))
 
-    parser.add_argument(
-        '--prefix',
-        nargs=1,
-        default='./ffbuild',
-        help='Location to install ffmpeg.',
-        metavar='prfx',
-        dest='prefix')
+    parser.add_argument('--prefix',
+                        nargs=1,
+                        default='./ffbuild',
+                        help='Location to install ffmpeg.',
+                        metavar='prfx',
+                        dest='prefix')
 
-    parser.add_argument(
-        '-rp',
-        '--repo-prefix',
-        nargs=1,
-        default='./repos',
-        help='Location for repos to be downloaded to.',
-        metavar='rprfx',
-        dest='repo_prefix')
+    parser.add_argument('-rp',
+                        '--repo-prefix',
+                        nargs=1,
+                        default='./repos',
+                        help='Location for repos to be downloaded to.',
+                        metavar='rprfx',
+                        dest='repo_prefix')
 
-    parser.add_argument(
-        '-l',
-        '--list',
-        action='store_true',
-        help='Shows all supported repositories.',
-        dest='list')
+    parser.add_argument('-l',
+                        '--list',
+                        action='store_true',
+                        help='Shows all supported repositories.',
+                        dest='list')
 
-    parser.add_argument(
-        '-no',
-        '--no-download',
-        action='store_true',
-        help="Repos won't actually be downloaded.",
-        dest='no_download')
+    parser.add_argument('-no',
+                        '--no-download',
+                        action='store_true',
+                        help="Repos won't actually be downloaded.",
+                        dest='no_download')
 
-    parser.add_argument(
-        '-d',
-        '--download',
-        nargs='*',
-        help='Download repos',
-        metavar='repo',
-        dest='download')
+    parser.add_argument('-d',
+                        '--download',
+                        nargs='*',
+                        help='Download repos',
+                        metavar='repo',
+                        dest='download')
 
-    parser.add_argument(
-        '-u',
-        '--update-repo',
-        nargs='*',
-        help=(
-            'Update specified repositories.  If no arguments are given, '
-            + 'all repositories that have already been downloaded, '
-            + 'will be updated.'),
-        metavar='repos',
-        dest='update_repo')
+    parser.add_argument('-u',
+                        '--update-repo',
+                        nargs='*',
+                        help=('Update specified repositories.  If no '
+                              + 'arguments are given, all repositories that '
+                              + 'have already been downloaded, will be '
+                              + 'updated.'),
+                        metavar='repos',
+                        dest='update_repo')
 
-    parser.add_argument(
-        '--compile',
-        action='store_true',
-        help='Perform compilation?',
-        dest='compile')
+    parser.add_argument('--compile',
+                        action='store_true',
+                        help='Perform compilation?',
+                        dest='compile')
 
-    parser.add_argument(
-        '-v',
-        '--verbose',
-        nargs=1,
-        default=logging.getLevelName(logging.getLogger().getEffectiveLevel()),
-        choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'],
-        help='Sets the verbose level.',
-        metavar='lvl',
-        dest='verbose_level')
+    parser.add_argument('-v',
+                        '--verbose',
+                        nargs=1,
+                        default=(logging.getLevelName(logging.getLogger()
+                                                      .getEffectiveLevel())),
+                        choices=['DEBUG',
+                                 'INFO',
+                                 'WARNING',
+                                 'ERROR',
+                                 'CRITICAL'],
+                        help='Sets the verbose level.',
+                        metavar='lvl',
+                        dest='verbose_level')
 
-    parser.add_argument(
-        '-src',
-        '--ffmpeg-src',
-        nargs=1,
-        default='./',
-        help='FFmpeg source directory, where ./configure is located.',
-        metavar='dir',
-        dest='ffmpeg_src')
+    parser.add_argument('-src',
+                        '--ffmpeg-src',
+                        nargs=1,
+                        default='./',
+                        help=('FFmpeg source directory, where ./configure is '
+                              + 'located.'),
+                        metavar='dir',
+                        dest='ffmpeg_src')
 
     logging.debug('Finished setting up arguments!')
     return parser
 
 def _setup_logger(level):
     hndlr = logging.StreamHandler(sys.stdout)
-    fmt = '%(levelname)s%(module)s%(message)s{0:s}'.format(
-        vlogger.VColors.NORMAL.value)
+    fmt = ('%(levelname)s%(module)s%(message)s{0:s}'
+           .format(vlogger.VColors.NORMAL.value))
     hndlr.setFormatter(vlogger.VFormatter(fmt))
 
     logging.basicConfig(level=level, format=fmt, handlers=[hndlr])
@@ -207,10 +210,10 @@ def main():
     #   to "DEBUG", we can see those verbose messages.
     if args.verbose_level:
         logging.debug("Found '-v/--verbose'!")
-        logging.info(
-            "Changing verbosity from '%s' to '%s'!",
-            logging.getLevelName(logging.getLogger().getEffectiveLevel()),
-            args.verbose_level)
+        logging.info("Changing verbosity from '%s' to '%s'!",
+                     logging.getLevelName(logging.getLogger()
+                                          .getEffectiveLevel()),
+                     args.verbose_level)
         logging.getLogger().setLevel(args.verbose_level)
 
     try:
@@ -251,7 +254,9 @@ def main():
             download_repos(args.download, args.repo_prefix, args.no_download)
 
     except NotImplementedError as emsg:
-        logging.error("'{0}' has not yet been implemented.".format(emsg))
+        # TODO: Check if this throws another exception.  Using 'str.format()',
+        #   with '{0:s}' resulted in an exception.
+        logging.error("'%s' has not yet been implemented.", emsg)
 
 if __name__ == '__main__':
     main()
