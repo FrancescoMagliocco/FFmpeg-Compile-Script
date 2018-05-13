@@ -23,23 +23,31 @@ UND = NA
 UNKNOWN = 'unknown'
 NOT_DEFINED = 'not defined'
 
-_ALL_REPOS = {'LIBMP3LAME': libmp3lame.LibMP3Lame()}
+_ALL_REPOS = {'libmp3lame': libmp3lame.LibMP3Lame()}
 
 def list_repos():
     '''List all repositories'''
     for k in _ALL_REPOS:
         print(k)
 
+def is_repo(repo_str):
+    '''Checks if 'repo_str' is a valid repository'''
+    logging.debug("Checking if '%s' is a valid repo...", repo_str)
+    repo_str = repo_str.lower()
+    if repo_str not in _ALL_REPOS:
+        logging.warning("'%s' is not a valid repo!", repo_str)
+        return False
+
+    logging.debug("'%s' is a valid repo!", repo_str)
+    return True
+
 def download_repos(repo_list, repo_prefix, no_download):
     '''Downloads the specified repo'''
     for repo_str in repo_list:
-        logging.debug("Checking if '%s' is a valid repo...", repo_str)
-        repo_str = repo_str.upper()
-        if repo_str not in _ALL_REPOS:
-            logging.warning("'%s' is not a valid repo!", repo_str)
+        repo_str = repo_str.lower()
+        if not is_repo(repo_str):
             continue
 
-        logging.debug("'%s' is a valid repo!", repo_str)
         repo = _ALL_REPOS[repo_str]
         logging.debug('name:\t\t%s', repo.name)
         logging.debug('switch:\t\t%s', repo.switch)
