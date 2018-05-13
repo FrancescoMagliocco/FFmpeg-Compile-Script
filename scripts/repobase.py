@@ -49,7 +49,7 @@ class RepoBase(ABC):
         raise NotImplementedError("'get_repo_download()' Not Implemented!")
 
     # Gets the update command for the corresponding repository type.
-    def get_update_repo(self):
+    def get_update_commands(self):
         '''Get commands to update repository'''
         logging.info("Updating repository '%d' ...", self.name)
         return self._REPOTOOL_TO_UPDATE_CMD[self.repo_tool]
