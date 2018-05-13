@@ -25,7 +25,7 @@ NOT_DEFINED = 'not defined'
 
 _ALL_REPOS = {'LIBMP3LAME': libmp3lame.LibMP3Lame()}
 
-def download_repos(repo_list, repo_dir, no_download):
+def download_repos(repo_list, repo_prefix, no_download):
     '''Downloads the specified repo'''
     for repo_str in repo_list:
         logging.debug("Checking if '%s' is a valid repo...", repo_str)
@@ -36,20 +36,21 @@ def download_repos(repo_list, repo_dir, no_download):
 
         logging.debug("'%s' is a valid repo!", repo_str)
         repo = _ALL_REPOS[repo_str]
-        logging.debug('lib_type:\t%s', repr(repo.lib_type))
+        logging.debug('name:\t\t%s', repo.name)
+        #logging.debug('lib_type:\t%s', repr(repo.lib_type))
         logging.debug('switch:\t\t%s', repo.switch)
-        logging.debug('default:\t%s', repr(repo.default))
+        #logging.debug('default:\t%s', repr(repo.default))
         logging.debug('repo_tool:\t%s', repr(repo.repo_tool))
-        logging.debug('repo_rev:\t%d', repo.repo_rev)
+        #logging.debug('repo_rev:\t%d', repo.repo_rev)
         logging.debug('repo_url:\t%s', repo.repo_url)
-        logging.debug('dest_path:\t%s', repo.dest_path)
+        #logging.debug('dest_path:\t%s', repo.dest_path)
 
         logging.debug("Checking if '%s' is a completed/usable repo...", repo_str)
         if (repo.repo_url == UNKNOWN
-                or repo.dest_path == NOT_DEFINED
-                or repo.repo_tool == RepoTool.UND
-                or (repo.repo_tool == RepoTool.SVN_TOOL
-                    and repo.repo_rev == UND)):
+                #or repo.dest_path == NOT_DEFINED
+                or repo.repo_tool == RepoTool.UND):
+                #or (repo.repo_tool == RepoTool.SVN_TOOL
+                #    and repo.repo_rev == UND)):
             logging.warning("'%s' is not a complete/usable repo!", repo_str)
             continue
 
@@ -57,8 +58,8 @@ def download_repos(repo_list, repo_dir, no_download):
             repo.repo_tool.value,
             # (None if repo.repo_rev == UND else str(repo.repo_rev)),
             repo.repo_url,
-            repo_dir,
-            repo.dest_path)
+            repo_prefix,
+            repo.name)
 
         logging.info(command_str)
         if not no_download:
@@ -93,22 +94,24 @@ def file_exists(file_str, path_str='.'):
 def _setup_parser():
     logging.debug('Setting up parser...')
     parser = argparse.ArgumentParser(
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
         description="Does the dirty work so you don't have too")
 
     parser.add_argument(
         '--prefix',
-        metavar='prfx',
         nargs=1,
         default='./ffbuild',
-        help='Location to install ffmpeg.  (Default: ./ffbuild)',
+        help='Location to install ffmpeg.',
+        metavar='prfx',
         dest='prefix')
 
     parser.add_argument(
         '-rp',
         '--repo-prefix',
-        metavar='rprfx',
         nargs=1,
-        help='Localtion for repos to be downloaded to.  (Default: ./repos)',
+        default='./repos',
+        help='Localtion for repos to be downloaded to.',
+        metavar='rprfx',
         dest='repo_prefix')
 
     parser.add_argument(
@@ -121,20 +124,20 @@ def _setup_parser():
     parser.add_argument(
         '-d',
         '--download',
-        metavar='repo',
         nargs='*',
         help='Download repos',
+        metavar='repo',
         dest='download')
 
     parser.add_argument(
         '-u',
         '--update-repo',
-        metavar='repos',
         nargs='*',
         help=(
             'Update specified repositories.  If no arguments are given, '
             + 'all repositories that have already been downloaded, '
             + 'will be updated.'),
+        metavar='repos',
         dest='update_repo')
 
     parser.add_argument(
@@ -183,25 +186,26 @@ def main():
         if __status__.lower().startswith('dev')
         else logging.WARNING)
 
-    args = _setup_parser().parse_args()
-    logging.debug('Parsing arguments...')
+    parser = _setup_parser()
+    args = parser.parse_args()
 
     # We check for this argument first, that way if verbose level is changed
     #   to "DEBUG", we ccan see those verbose messages.
     if args.verbose_level:
         logging.debug("Found '-v/--verbose'!")
+        logging.debug("Verbose level:\t'{0:s}'".format(args.verbose_level[0]))
         logging.info(
             "Changing verbosity from '%s' to '%s'!",
             logging.getLevelName(logging.getLogger().getEffectiveLevel()),
-            logging.getLevelName(args.verbose_level))
-        logging.getLogger().setLevel(args.verbose_level)
+            logging.getLevelName(args.verbose_level[0]))
+        logging.getLogger().setLevel(args.verbose_level[0])
 
     try:
-        if args.prefix:
+        if args.prefix != parser.get_default('prefix'):
             logging.debug("Found '--prefix'!")
             raise NotImplementedError('--prefix')
 
-        if args.repo_prefix:
+        if args.repo_prefix != parser.get_default('repo_prefix'):
             logging.debug("Found '-rp/--repo-prefix'!")
             raise NotImplementedError('-rp/--repo-prefix')
 
