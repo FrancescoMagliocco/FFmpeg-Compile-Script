@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# vim: se fenc=utf8 :
+# vim: se fenc=utf8
 '''ffmpeg compile script'''
 
 __author__ = "Francesco Magliocco (aka Cmptr)"
@@ -24,6 +24,11 @@ UNKNOWN = 'unknown'
 NOT_DEFINED = 'not defined'
 
 _ALL_REPOS = {'LIBMP3LAME': libmp3lame.LibMP3Lame()}
+
+def list_repos():
+    '''List all repositories'''
+    for k in _ALL_REPOS:
+        print(k)
 
 def download_repos(repo_list, repo_prefix, no_download):
     '''Downloads the specified repo'''
@@ -111,6 +116,13 @@ def _setup_parser():
         dest='repo_prefix')
 
     parser.add_argument(
+        '-l',
+        '--list',
+        action='store_true',
+        help='Shows all supported repositories.',
+        dest='list')
+
+    parser.add_argument(
         '-no',
         '--no-download',
         action='store_true',
@@ -139,15 +151,14 @@ def _setup_parser():
     parser.add_argument(
         '--compile',
         action='store_true',
-        default=False,
-        help='Perform compilation?  (Default:  No)',
+        help='Perform compilation?',
         dest='compile')
 
     parser.add_argument(
         '-v',
         '--verbose',
         nargs=1,
-        default='WARNING',
+        default=logging.getLevelName(logging.getLogger().getEffectiveLevel()),
         choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'],
         help='Sets the verbose level.',
         metavar='lvl',
@@ -167,20 +178,19 @@ def _setup_parser():
 
 def _setup_logger(level):
     hndlr = logging.StreamHandler(sys.stdout)
-    hndlr.setFormatter(
-        vlogger.VFormatter('%(levelname)s%(module)s%(message)s'))
+    fmt = '%(levelname)s%(module)s%(message)s{0:s}'.format(
+        vlogger.VColors.NORMAL.value)
+    hndlr.setFormatter(vlogger.VFormatter(fmt))
 
-    logging.basicConfig(
-        level=level,
-        format='%(levelname)s%(module)s%(message)s', handlers=[hndlr])
+    logging.basicConfig(level=level, format=fmt, handlers=[hndlr])
     logging.debug('Logger setup!')
 
 def main():
     '''Main Entry Point'''
-    _setup_logger(
-        logging.DEBUG
-        if __status__.lower().startswith('dev')
-        else logging.WARNING)
+    default_level = (logging.DEBUG
+                     if __status__.lower().startswith('dev')
+                     else logging.WARNING)
+    _setup_logger(default_level)
 
     parser = _setup_parser()
     args = parser.parse_args()
@@ -189,12 +199,11 @@ def main():
     #   to "DEBUG", we can see those verbose messages.
     if args.verbose_level:
         logging.debug("Found '-v/--verbose'!")
-        logging.debug("Verbose level:\t'{0:s}'".format(args.verbose_level[0]))
         logging.info(
             "Changing verbosity from '%s' to '%s'!",
             logging.getLevelName(logging.getLogger().getEffectiveLevel()),
-            logging.getLevelName(args.verbose_level[0]))
-        logging.getLogger().setLevel(args.verbose_level[0])
+            args.verbose_level)
+        logging.getLogger().setLevel(args.verbose_level)
 
     try:
         if args.prefix != parser.get_default('prefix'):
@@ -208,6 +217,10 @@ def main():
         if args.update_repo:
             logging.debug("Found '-u/--update-repo'!")
             raise NotImplementedError('-u/--update-repo')
+
+        if args.list:
+            logging.debug("Found '-l/--list'!")
+            list_repos()
 
         if args.ffmpeg_src != None and args.compile:
             logging.debug("Found '-src/--ffmpeg-src!'")
@@ -230,7 +243,7 @@ def main():
             download_repos(args.download, args.repo_prefix, args.no_download)
 
     except NotImplementedError as emsg:
-        print("'{0}' has not yet been implemented.".format(emsg))
+        logging.error("'{0}' has not yet been implemented.".format(emsg))
 
 if __name__ == '__main__':
     main()
