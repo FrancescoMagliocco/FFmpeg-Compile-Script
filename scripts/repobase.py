@@ -4,7 +4,6 @@
 import logging
 from enum import Enum
 from abc import ABC, abstractmethod
-from typing import List
 
 class RepoTool(Enum):
     """Repository Tools"""
@@ -18,7 +17,7 @@ class RepoBase(ABC):
     """Abstract Class for Repositories"""
 
     # TODO: Raise some type of 'warning' or 'notice' if key is either
-    # 'RepoTool.CURL_TOOL' or 'RepoTool.UDN_TOOL'.
+    # 'RepoTool.CURL_TOOL' or 'RepoTool.UND'.
     _REPOTOOL_TO_UPDATE_CMD = {
         RepoTool.CURL_TOOL: [''],
         RepoTool.GIT_TOOL: ['git pull'],
