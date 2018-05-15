@@ -42,6 +42,7 @@ def is_repo(repo_str):
     return True
 
 def update_repos(repo_prefix, repo_list):
+    '''Update specified repositories'''
     for repo_str in repo_list:
         repo_str = repo_str.lower()
         if not is_repo(repo_str):
