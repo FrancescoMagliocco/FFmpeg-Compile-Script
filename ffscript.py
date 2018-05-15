@@ -41,17 +41,22 @@ def is_repo(repo_str):
     logging.debug("'%s' is a valid repo!", repo_str)
     return True
 
-def update_repo(repo_prefix, repo_list):
+def update_repos(repo_prefix, repo_list):
     for repo_str in repo_list:
         repo_str = repo_str.lower()
         if not is_repo(repo_str):
             continue
 
         repo = _ALL_REPOS[repo_str]
-        for v in repo.get_update_commands():
-            command_str = ('{0:s} {1:s}/{2:s}'.format(v,
+        for i in repo.get_update_commands():
+            command_str = ('{0:s} {1:s}/{2:s}'.format(i,
                                                       repo_prefix.rstrip('/'),
                                                       repo.name))
+            logging.debug(command_str)
+            os.system(command_str)
+
+        logging.info("Finished updating repository '%s'!", repo.name)
+
 
 def download_repos(repo_list, repo_prefix, no_download):
     '''Downloads the specified repo'''
@@ -149,6 +154,7 @@ def _setup_parser():
     parser.add_argument('-u',
                         '--update-repo',
                         nargs='*',
+                        default=['All'],
                         help=('Update specified repositories.  If no '
                               + 'arguments are given, all repositories that '
                               + 'have already been downloaded, will be '
@@ -225,9 +231,11 @@ def main():
             logging.debug("Found '-rp/--repo-prefix'!")
             raise NotImplementedError('-rp/--repo-prefix')
 
-        if args.update_repo:
+        if args.update_repo is not None:
             logging.debug("Found '-u/--update-repo'!")
-            raise NotImplementedError('-u/--update-repo')
+            update_repos(args.repo_prefix, (_ALL_REPOS
+                                            if not args.update_repo
+                                            else args.update_repo))
 
         if args.list:
             logging.debug("Found '-l/--list'!")
