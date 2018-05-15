@@ -14,7 +14,7 @@ __status__ = "Development"
 class VColors(Enum):
     """Colors for Verbose Logger"""
     _CLR_SEQ = '\033[38;5;'
-    _FMT = '{0:s}{1:d}m[{0:s}{2:d}m{3:s}{0:s}{1:d}m]'
+    _FMT = '{0:s}{1:d}m[{0:s}{2:d}m{3:<7s}{0:s}{1:d}m]\t'
     CRITICAL = _FMT.format(_CLR_SEQ, 255, 88, 'CRITICAL')
     ERROR = _FMT.format(_CLR_SEQ, 255, 196, 'ERROR')
     WARNING = _FMT.format(_CLR_SEQ, 255, 202, 'WARNING')
