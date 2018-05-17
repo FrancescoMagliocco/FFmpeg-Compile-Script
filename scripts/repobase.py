@@ -26,9 +26,9 @@ class Options:
         # TODO: Finish doc
         '''add option'''
         opt_kwargs = {
-            'aliases': [cls._ALL_ADD_OPTION_KWARGS['aliases']],
+            'aliases': (cls._ALL_ADD_OPTION_KWARGS['aliases']),
             'kwarg':  cls._ALL_ADD_OPTION_KWARGS['kwarg'],
-            'values': [cls._ALL_ADD_OPTION_KWARGS['values']]
+            'values': (cls._ALL_ADD_OPTION_KWARGS['values'])
         }
 
         # TODO: Check for duplicate keywords
@@ -42,7 +42,7 @@ class Options:
 
             logging.debug("'%s' is a valid keyword!", k)
 
-            if (k == 'kwarg' and not v.isinstance(bool)):
+            if (k == 'kwarg' and not isinstance(v, bool)):
                 logging.warning(
                     "'kwarg' requires type 'bool', but type '%s' was given",
                     type(v).__name__)
@@ -70,7 +70,7 @@ class Options:
                 opt_kwargs[k] = False
                 continue
 
-            if not v.isinstance(tuple):
+            if not isinstance(v, tuple):
                 v = tuple(set(v))
 
             if k == 'kwarg':
