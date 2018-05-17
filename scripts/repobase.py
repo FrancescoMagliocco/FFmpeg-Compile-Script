@@ -32,8 +32,6 @@ class Options:
         }
 
         # TODO: Check for duplicate keywords
-        # TODO: Check for duplicate aliases
-        # TODO: Check for duplicate 'values' in keyword 'values'
         logging.debug("Parsing 'kwargs'...")
         for k, v in kwargs.items():
             logging.debug("Checking if '%s' is a valid keyword...", k)
@@ -66,20 +64,22 @@ class Options:
                     opt_kwargs[k] = True
                     continue
 
-                else:
-                    logging.info("Keyword 'values' was not given.  Aassuming "
-                                 + "'kwarg' is to be 'False'")
-                    # 'k' is 'kwarg'
-                    opt_kwargs[k] = False
-                    continue
+                logging.info("Keyword 'values' was not given.  Aassuming "
+                             + "'kwarg' is to be 'False'")
+                # 'k' is 'kwarg'
+                opt_kwargs[k] = False
+                continue
 
-            v = tuple(set(v))
+            if not v.isinstance(tuple):
+                v = tuple(set(v))
+
             if k == 'kwarg':
                 logging.debug("Setting '%s' to '%s'", k, v[0])
                 opt_kwargs[k] = v[0]
-            else:
-                logging.debug("Setting '%s' to '%s'", k, v)
-                opt_kwargs[k] = v
+                continue
+
+            logging.debug("Setting '%s' to '%s'", k, v)
+            opt_kwargs[k] = v
 
         logging.debug("Defining option '%s'..", name)
         tmp_fmt = '%-7s: %s'
