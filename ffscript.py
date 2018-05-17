@@ -13,10 +13,23 @@ import logging
 import os.path
 import sys
 
+from utils_ import vlogger
+def _setup_logger(level):
+    hndlr = logging.StreamHandler(sys.stdout)
+    fmt = ('%(levelname)s%(module)s%(message)s{0:s}'
+           .format(vlogger.VColors.NORMAL.value))
+    hndlr.setFormatter(vlogger.VFormatter(fmt))
+
+    logging.basicConfig(level=level, format=fmt, handlers=[hndlr])
+    logging.debug('Logger setup!')
+
+_setup_logger(logging.DEBUG
+              if __status__.lower().startswith('dev')
+              else logging.WARNING)
+
 from pathlib import Path
 from scripts import libmp3lame
 from scripts.repobase import RepoTool
-from utils_ import vlogger
 
 NA = -1
 UND = NA
@@ -117,6 +130,10 @@ def main(parser):
     '''Main Entry Point'''
     args = parser.parse_args()
     fmt = '%-12s: %s'
+
+    print(_ALL_REPOS['libmp3lame'].get_config(prefix='/usr'))
+    sys.exit(0)
+
     # We check for this argument first, that way if verbose level is changed
     #   to "DEBUG", we can see those verbose messages.
     if args.verbose_level != parser.get_default('verbose_level'):
@@ -262,17 +279,5 @@ def _setup_parser():
     logging.debug('Finished setting up arguments!')
     return parser
 
-def _setup_logger(level):
-    hndlr = logging.StreamHandler(sys.stdout)
-    fmt = ('%(levelname)s%(module)s%(message)s{0:s}'
-           .format(vlogger.VColors.NORMAL.value))
-    hndlr.setFormatter(vlogger.VFormatter(fmt))
-
-    logging.basicConfig(level=level, format=fmt, handlers=[hndlr])
-    logging.debug('Logger setup!')
-
 if __name__ == '__main__':
-    _setup_logger(logging.DEBUG
-                  if __status__.lower().startswith('dev')
-                  else logging.WARNING)
     main(_setup_parser())
