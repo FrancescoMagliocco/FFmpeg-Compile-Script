@@ -48,8 +48,8 @@ class RepoBase(ABC):
             logging.warning("'%s' is not an absolute path!", path_str)
             logging.debug("Getting absolute path for '%s'...", path_str)
             path_str = os.path.abspath(path_str)
-            logging.debug('absolute path: %s', path_str)
 
+        logging.debug('absolute path: %s', path_str)
         return path_str
 
     def _is_dir(self, path_str):
