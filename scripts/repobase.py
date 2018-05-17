@@ -13,12 +13,10 @@ class Options:
     # Using a 'NamedTuple' instead of a regular class because I want these
     #   members to be constant.
     class _Option(NamedTuple):
-        name = None
-        aliases = None
-        kwarg = False
-
-        # NOTE: May make this equal to '[None]'
-        values = None
+        name: str
+        aliases: tuple
+        kwarg: bool
+        values: tuple
 
     # TODO: Check for duplicates
     _options = []
@@ -28,9 +26,9 @@ class Options:
         # TODO: Finish doc
         '''add option'''
         opt_kwargs = {
-            'aliases': cls._ALL_ADD_OPTION_KWARGS['aliases'],
+            'aliases': [cls._ALL_ADD_OPTION_KWARGS['aliases']],
             'kwarg':  cls._ALL_ADD_OPTION_KWARGS['kwarg'],
-            'values': cls._ALL_ADD_OPTION_KWARGS['values']
+            'values': [cls._ALL_ADD_OPTION_KWARGS['values']]
         }
 
         # TODO: Check for duplicate keywords
@@ -46,9 +44,7 @@ class Options:
 
             logging.debug("'%s' is a valid keyword!", k)
 
-            # FIXME: Unidiomatic-typecheck: using type() instead of
-            #   isinstance() for a typecheck.
-            if (k == 'kwarg' and type(v) is not bool):
+            if (k == 'kwarg' and not v.isinstance(bool)):
                 logging.warning(
                     "'kwarg' requires type 'bool', but type '%s' was given",
                     type(v).__name__)
@@ -77,8 +73,13 @@ class Options:
                     opt_kwargs[k] = False
                     continue
 
-            logging.debug("Setting '%s' to %s'", k, v)
-            opt_kwargs[k] = v
+            v = tuple(set(v))
+            if k == 'kwarg':
+                logging.debug("Setting '%s' to '%s'", k, v[0])
+                opt_kwargs[k] = v[0]
+            else:
+                logging.debug("Setting '%s' to '%s'", k, v)
+                opt_kwargs[k] = v
 
         logging.debug("Defining option '%s'..", name)
         tmp_fmt = '%-7s: %s'
@@ -86,10 +87,10 @@ class Options:
         logging.debug(tmp_fmt, 'aliases', opt_kwargs['aliases'])
         logging.debug(tmp_fmt, 'kwarg', opt_kwargs['kwarg'])
         logging.debug(tmp_fmt, 'values', opt_kwargs['values'])
-        cls._options.append(cls._Option(name,
-                                        opt_kwargs['aliases'],
-                                        opt_kwargs['kwarg'],
-                                        opt_kwargs['values']))
+        cls._options.append(cls._Option(name=name,
+                                        aliases=opt_kwargs['aliases'],
+                                        kwarg=opt_kwargs['kwarg'],
+                                        values=opt_kwargs['values']))
 
 class RepoTool(Enum):
     """Repository Tools"""
