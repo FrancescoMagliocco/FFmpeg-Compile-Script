@@ -6,6 +6,23 @@ import os
 from enum import Enum
 from abc import ABC, abstractmethod
 from pathlib import Path
+from typing import NamedTuple
+
+class Options:
+    class _Option(NamedTuple):
+        name,
+        aliases,
+        kwarg,
+        values
+
+    _options = []
+    _ADD_OPTION_KWARGS = {'aliases': None, 'kwarg': False, 'values': None}
+    def add_option(self, name, **kwargs):
+        for k, v in kwargs:
+            if k not in self._ADD_OPTION_KWARGS:
+
+
+
 
 class RepoTool(Enum):
     """Repository Tools"""
@@ -17,6 +34,13 @@ class RepoTool(Enum):
 
 class RepoBase(ABC):
     """Abstract Class for Repositories"""
+
+    _DIR_KW = ('srcdir', 'prefix', 'execc-prefix', 'bindir', 'sbindir',
+               'libexecdir', 'sysconfdir', 'sahredstatedir', 'localstatedir',
+               'libdir', 'includedir', 'oldincludedir', 'datarootdir',
+               'datadir', 'localdir', 'mandir', 'docdir', 'htmldir', 'dvidir',
+               'pdfdir', 'psdir', 'with-sysroot', 'with-libiconv-prefix')
+
 
     # NOTE: This isn't exactly ideal on handling if the key is
     #   'RepoTool.CURL_TOOL' or 'RepoTool.UND', but it's good enough for now.
@@ -38,6 +62,23 @@ class RepoBase(ABC):
         self.repo_tool = repo_tool
         self.repo_url = repo_url
         self.switch = switch
+
+#    @staticmethod
+#    def _get_for(source, value):
+#        tmp_name = repo(eval(source))
+        # _TODO: The '%s' may break if argument  is not of type 'str'
+#        logging.debug("Checking if '%s' is in '%s'...", value, tmp_name)
+#        if value not in source:
+#            logging.error("'%s' is not in '%s'!", value, tmp_name)
+            # NOTE: May go about this a different way.
+#            raise KeyError
+
+#        indx = source.index(value)
+#        logging.debug("'%s' is located at index %d in %s.",
+#                      value,
+#                      indx,
+#                      tmp_name)
+#        return indx
 
     @staticmethod
     def _to_abspath(path_str):
