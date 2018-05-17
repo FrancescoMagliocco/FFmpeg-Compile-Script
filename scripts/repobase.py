@@ -9,20 +9,87 @@ from pathlib import Path
 from typing import NamedTuple
 
 class Options:
+
+    # Using a 'NamedTuple' instead of a regular class because I want these
+    #   members to be constant.
     class _Option(NamedTuple):
-        name,
-        aliases,
-        kwarg,
-        values
+        name = None
+        aliases = None
+        kwarg = False
 
+        # NOTE: May make this equal to '[None]'
+        values = None
+
+    # TODO: Check for duplicates
     _options = []
-    _ADD_OPTION_KWARGS = {'aliases': None, 'kwarg': False, 'values': None}
-    def add_option(self, name, **kwargs):
+    _ALL_ADD_OPTION_KWARGS = {'aliases': None, 'kwarg': False, 'values': None}
+    @classmethod
+    def add_option(cls, name, **kwargs):
+        # TODO: Finish doc
+        '''add option'''
+        opt_kwargs = {
+            'aliases': cls._ALL_ADD_OPTION_KWARGS['aliases'],
+            'kwarg':  cls._ALL_ADD_OPTION_KWARGS['kwarg'],
+            'values': cls._ALL_ADD_OPTION_KWARGS['values']
+        }
+
+        # TODO: Check for duplicate keywords
+        # TODO: Check for duplicate aliases
+        # TODO: Check for duplicate 'values' in keyword 'values'
+        logging.debug("Parsing 'kwargs'...")
         for k, v in kwargs:
-            if k not in self._ADD_OPTION_KWARGS:
+            logging.debug("Checking if '%s' is a valid keyword...", k)
+            if k not in cls._ALL_ADD_OPTION_KWARGS:
+                logging.debug('%-10s: %s', k, v)
+                logging.warning("'%s' is not a valid keyword.", k)
+                continue
 
+            logging.debug("'%s' is a valid keyword!", k)
 
+            # FIXME: Unidiomatic-typecheck: using type() instead of
+            #   isinstance() for a typecheck.
+            if (k == 'kwarg' and type(v) is not bool):
+                logging.warning(
+                    "'kwarg' requires type 'bool', but type '%s' was given",
+                    type(v).__name__)
 
+                logging.debug("Checking if keyword 'values' was given..")
+                if 'values' in kwargs:
+                    logging.debug("Keyword 'values' was specified!")
+                    logging.info(
+                        "Specified values specified for option '%s'.  %s",
+                        name,
+                        "Assuming 'kwarg' is to be 'True'.")
+
+                    if not kwargs['values']:
+                        logging.warning(
+                            "'Values' was specified..  But none were given..")
+
+                    logging.debug("Setting 'kwarg' to 'True'")
+                    # 'k' is 'kwarg'
+                    opt_kwargs[k] = True
+                    continue
+
+                else:
+                    logging.info("Keyword 'values' was not given.  Aassuming "
+                                 + "'kwarg' is to be 'False'")
+                    # 'k' is 'kwarg'
+                    opt_kwargs[k] = False
+                    continue
+
+            logging.debug("Setting '%s' to %s'", k, v)
+            opt_kwargs[k] = v
+
+        logging.debug("Defining option '%s'..", name)
+        tmp_fmt = '%-8s: %s'
+        logging.debug(tmp_fmt, 'name', name)
+        logging.debug(tmp_fmt, 'aliases', opt_kwargs['aliases'])
+        logging.debug(tmp_fmt, 'kwarg', opt_kwargs['kwarg'])
+        logging.debug(tmp_fmt, 'values', opt_kwargs['values'])
+        cls._options.append(cls._Option(name=name,
+                                        aliases=opt_kwargs['aliases'],
+                                        kwarg=opt_kwargs['kwarg'],
+                                        wablues=opt_kwargs['values']))
 
 class RepoTool(Enum):
     """Repository Tools"""
