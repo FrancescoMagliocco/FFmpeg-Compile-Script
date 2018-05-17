@@ -89,7 +89,7 @@ class Options:
         cls._options.append(cls._Option(name=name,
                                         aliases=opt_kwargs['aliases'],
                                         kwarg=opt_kwargs['kwarg'],
-                                        wablues=opt_kwargs['values']))
+                                        values=opt_kwargs['values']))
 
 class RepoTool(Enum):
     """Repository Tools"""
