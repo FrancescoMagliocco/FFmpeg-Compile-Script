@@ -37,7 +37,7 @@ class Options:
         # TODO: Check for duplicate aliases
         # TODO: Check for duplicate 'values' in keyword 'values'
         logging.debug("Parsing 'kwargs'...")
-        for k, v in kwargs:
+        for k, v in kwargs.items():
             logging.debug("Checking if '%s' is a valid keyword...", k)
             if k not in cls._ALL_ADD_OPTION_KWARGS:
                 logging.debug('%-10s: %s', k, v)
@@ -81,15 +81,15 @@ class Options:
             opt_kwargs[k] = v
 
         logging.debug("Defining option '%s'..", name)
-        tmp_fmt = '%-8s: %s'
+        tmp_fmt = '%-7s: %s'
         logging.debug(tmp_fmt, 'name', name)
         logging.debug(tmp_fmt, 'aliases', opt_kwargs['aliases'])
         logging.debug(tmp_fmt, 'kwarg', opt_kwargs['kwarg'])
         logging.debug(tmp_fmt, 'values', opt_kwargs['values'])
-        cls._options.append(cls._Option(name=name,
-                                        aliases=opt_kwargs['aliases'],
-                                        kwarg=opt_kwargs['kwarg'],
-                                        values=opt_kwargs['values']))
+        cls._options.append(cls._Option(name,
+                                        opt_kwargs['aliases'],
+                                        opt_kwargs['kwarg'],
+                                        opt_kwargs['values']))
 
 class RepoTool(Enum):
     """Repository Tools"""
