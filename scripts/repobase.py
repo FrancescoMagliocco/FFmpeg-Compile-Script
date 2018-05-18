@@ -30,22 +30,17 @@ class Options:
         }
 
         # TODO: Check for duplicate keywords
-        logging.debug("Parsing 'kwargs'...")
         for k, v in kwargs.items():
-            logging.debug("Checking if '%s' is a valid keyword...", k)
             if k not in cls._ALL_ADD_OPTION_KWARGS:
                 logging.debug('%-10s: %s', k, v)
                 logging.warning("'%s' is not a valid keyword.", k)
                 continue
-
-            logging.debug("'%s' is a valid keyword!", k)
 
             if (k == 'kwarg' and not isinstance(v, bool)):
                 logging.warning(
                     "'kwarg' requires type 'bool', but type '%s' was given",
                     type(v).__name__)
 
-                logging.debug("Checking if keyword 'values' was given..")
                 if 'values' in kwargs:
                     logging.debug("Keyword 'values' was specified!")
                     logging.info(
@@ -69,22 +64,15 @@ class Options:
                 continue
 
             if k == 'kwarg':
-                logging.debug("Setting '%s' to '%s'", k, v)
                 opt_kwargs[k] = v
                 continue
 
             if not isinstance(v, tuple):
                 v = tuple(set(v))
 
-            logging.debug("Setting '%s' to '%s'", k, v)
             opt_kwargs[k] = v
 
-        logging.debug("Defining option '%s'..", name)
         tmp_fmt = '%-7s: %s'
-        logging.debug(tmp_fmt, 'name', name)
-        logging.debug(tmp_fmt, 'aliases', opt_kwargs['aliases'])
-        logging.debug(tmp_fmt, 'kwarg', opt_kwargs['kwarg'])
-        logging.debug(tmp_fmt, 'values', opt_kwargs['values'])
         cls._options.append(cls._Option(name=name,
                                         aliases=opt_kwargs['aliases'],
                                         kwarg=opt_kwargs['kwarg'],
