@@ -16,38 +16,7 @@ from repobase import RepoTool, RepoBase, Options
 
 class LibMP3Lame(RepoBase):
     _KWARGS_DEFAULT = {'prefix': '/usr/local', 'exec-prefix': '/usr/local'}
-    _kwargs = {}
 
-    _ALL_OPTS = ('help', 'version', 'quiet', 'cache-file', 'config-cache',
-                 'no-create', 'srcdir', 'prefix', 'exec-prefix', 'bindir',
-                 'sbindir', 'libexecdir', 'sysconfdir', 'sharedstatedir',
-                 'localstatedir', 'libdir', 'includedir', 'oldincludedie',
-                 'datarootdir', 'datadir', 'infodir', 'localdir', 'mandir',
-                 'docdir', 'htmldir', 'dvidir', 'pdfdir', 'psdir',
-                 'program-prefix', 'program-suffix', 'program-transform-name',
-                 'build', 'host', 'disable-option-checking', 'disable-FEATURE',
-                 'enable-FEATURE', 'enable-silent-rules',
-                 'disable-silent-rules', 'enable-maintainer-mode',
-                 'enable-dependency-tracking', 'disable-dependency-tracking',
-                 'enable-shared', 'enable-static', 'enable-fast-install',
-                 'disable-libtool-lock', 'disable-largefile', 'enable-nasm',
-                 'disable-rpath', 'disable-cpml', 'disable-gtktest',
-                 'enable-efence', 'disable-analyzer-hooks', 'disable-decoder',
-                 'disable-frontend', 'enable-mp3x', 'enable-dynamic-frontends',
-                 'enable-expopt', 'enable-debug', 'with-PACKAGE',
-                 'without-PACKAGE', 'with-aid-soname', 'with-gnu-ld',
-                 'with-sysroot', 'with-dmalloc', 'with-iconf-prefix',
-                 'without-libiconv-prefix', 'with-gtk-prefix',
-                 'with-gtk-exec-prefix', 'with-fileio')
-
-    _ALIAS_TO_OPS = {'h': 'help',
-                     'V': 'version',
-                     'q': 'quiet',
-                     'silent': 'quiet',
-                     'C': 'config-cache',
-                     'n': 'no-create'}
-
-    '''Test'''
     def __init__(self):
         super().__init__('libmp3lame',
                          RepoTool.SVN_TOOL,
@@ -118,27 +87,17 @@ class LibMP3Lame(RepoBase):
         Options.add_option(
             'with-fileio', kwarg=True, values=('lame', 'sndfile'))
 
-    def get_config(self, **kwargs):
-        for k, v in kwargs.items():
-            if k not in self._kwargs:
-                logging.debug('%-13s: %s', k, v)
-                logging.warning("'%s', is not a value keyword.", k)
-                continue
+    def get_config(self, *args, **kwargs):
+        command_str = 'configure '
+        for arg in args:
+            logging.debug('%-3s: %s', 'arg', arg)
+            command_str += '--{0.name:s} '.format(Options.get_arg(arg))
+        print(max(len(k) for k, v in kwargs.items()))
+#        fmt = '%-{0:d}s: %s'.format(max(len(v.name) for v in kwargs))
+#        for k, v in kwargs.items():
+#            logging.debug(k, v)
 
-            #if not _is_dir(k.value()):
-                # TODO: Check if path is abosulte or relative.  Some parameters
-                #   only accept abosoulte paths.
-                #logging.error("'%s' is not a valid directory", k.value())
-                #break
-
-            if (k == 'prefix'
-                    and self._kwargs['prefix'] == self._kwargs['exec-prefix']):
-                self._kwargs['exec-prefix'] = v
-
-            self._kwargs[k] = v
-
-        # TODO: Make return value make sence..
-        return list(kwargs.values())[0]
+        return command_str
 
     def get_repo_download(self):
         raise NotImplementedError()
