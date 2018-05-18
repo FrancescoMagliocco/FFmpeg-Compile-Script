@@ -3,6 +3,7 @@
 
 import logging
 import os
+import sys
 from enum import Enum
 from abc import ABC, abstractmethod
 from pathlib import Path
@@ -95,7 +96,26 @@ class Options:
             if cls._is_opt(opt):
                 return cls._options[i]
 
-        raise Exception("'{0:s}' is not a valid option!".format(opt))
+        logging.error("'%s' is not a valid option!", opt)
+        sys.exit(1)
+
+    @classmethod
+    def get_arg(cls, arg):
+        tmp_opt = None if not cls.has_arg(arg) else cls._get_opt(arg)
+        if tmp_opt:
+            return tmp_opt
+
+        logging.error("'%s' is not a valid argument!", arg)
+        sys.exit(1)
+
+    @classmethod
+    def get_karg(cls, kwarg):
+        tmp_opt = None if not cls.has_kwarg(kwarg) else cls._get_opt(kwarg)
+        if tmp_opt:
+            return tmp_opt
+
+        logging.error("'%s' is not a valid keyword argument!", kwarg)
+        sys.exit(1)
 
     @classmethod
     def has_option(cls, option):
