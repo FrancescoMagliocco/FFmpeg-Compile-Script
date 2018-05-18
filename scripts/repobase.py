@@ -196,7 +196,7 @@ class RepoBase(ABC):
         return False
 
     @abstractmethod
-    def get_config(self, **kwargs):
+    def get_config(self, *args, **kwargs):
         raise NotImplementedError("'get_config()' Not Implemented!")
 
     @abstractmethod
