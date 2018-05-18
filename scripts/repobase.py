@@ -20,7 +20,7 @@ class Options:
         values: tuple
 
     # TODO: Check for duplicates
-    _options = []
+    _options = {}
     _ALL_ADD_OPTION_KWARGS = {'aliases': '', 'kwarg': False, 'values': ''}
     @classmethod
     def add_option(cls, name, **kwargs):
@@ -70,11 +70,12 @@ class Options:
 
             opt_kwargs[k] = v
 
-        cls._options.append(cls._Option(name=name,
-                                        aliases=opt_kwargs['aliases'],
-                                        kwarg=(opt_kwargs['kwarg']
-                                               or opt_kwargs['values']),
-                                        values=opt_kwargs['values']))
+        cls._options.append(
+            name.replace('-', '_'): cls._Option(name=name,
+                                                aliases=opt_kwargs['aliases'],
+                                                kwarg=(opt_kwargs['kwarg']
+                                                or opt_kwargs['values']),
+                                                values=opt_kwargs['values']))
 
     @classmethod
     def _is_opt(cls, option):
@@ -84,7 +85,7 @@ class Options:
     @classmethod
     def _get_opt(cls, opt):
         for i in range(len(cls._options)):
-            if cls._is_opt(opt):
+            if opt == cls._options[i].name or opt in cls._options[i].aliases:
                 return cls._options[i]
 
         logging.warning("'%s' is not a valid option!", opt)
@@ -92,9 +93,9 @@ class Options:
 
     @classmethod
     def get_option(cls, opt):
-        for i in range(len(cls._options)):
-            if cls._is_opt(opt):
-                return cls._options[i]
+        opt = cls._get_opt(opt)
+        if opt:
+            return opt
 
         logging.error("'%s' is not a valid option!", opt)
         sys.exit(1)
@@ -124,7 +125,7 @@ class Options:
     @classmethod
     def has_arg(cls, arg):
         tmp_opt = cls._get_opt(arg)
-        return tmp_opt and not tmp_opt.kwarg
+        return tmp_opt and (not tmp_opt.kwarg or None in tmp_opt.values)
 
     @classmethod
     def has_kwarg(cls, kwarg):
