@@ -68,13 +68,13 @@ class Options:
                 opt_kwargs[k] = False
                 continue
 
+            if k == 'kwarg':
+                logging.debug("Setting '%s' to '%s'", k, v)
+                opt_kwargs[k] = v
+                continue
+
             if not isinstance(v, tuple):
                 v = tuple(set(v))
-
-            if k == 'kwarg':
-                logging.debug("Setting '%s' to '%s'", k, v[0])
-                opt_kwargs[k] = v[0]
-                continue
 
             logging.debug("Setting '%s' to '%s'", k, v)
             opt_kwargs[k] = v
