@@ -61,16 +61,16 @@ class VFormatter(logging.Formatter):
         if self.use_color and VColors.has_name(levelname):
             record.levelname = VColors[levelname].value
 
-            if record.levelno >= logging.ERROR:
-                module = record.module
+#            if record.levelno >= logging.ERROR:
+#                module = record.module
 #                lineno = record.lineno
 #                record.lineno = VColors.GREEN.value + str(lineno)
-                record.module = (VColors.WARNING.value
-                                 + module
-                                 + VColors.GREEN.value)
-            else:
-                record.lineno = 0
-                record.module = ""
+#                record.module = (VColors.WARNING.value
+#                                 + module
+#                                 + VColors.GREEN.value)
+#            else:
+            record.lineno = 0
+            record.module = ""
 
         return logging.Formatter.format(self, record)
 
