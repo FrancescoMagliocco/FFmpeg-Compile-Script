@@ -42,9 +42,8 @@ class Options:
                     type(v).__name__)
 
                 if 'values' in kwargs:
-                    logging.debug("Keyword 'values' was specified!")
                     logging.info(
-                        "Specified values specified for option '%s'.  %s",
+                        "Specified specific values for option '%s'.  %s",
                         name,
                         "Assuming 'kwarg' is to be 'True'.")
 
@@ -52,18 +51,16 @@ class Options:
                         logging.warning(
                             "'Values' was specified..  But none were given..")
 
-                    logging.debug("Setting 'kwarg' to 'True'")
                     # 'k' is 'kwarg'
                     opt_kwargs[k] = True
                     continue
-
-                logging.info("Keyword 'values' was not given.  Aassuming "
-                             + "'kwarg' is to be 'False'")
-                # 'k' is 'kwarg'
-                opt_kwargs[k] = False
-                continue
-
-            if k == 'kwarg':
+                else:
+                    logging.info("Keyword 'values' was not given.  Aassuming "
+                                 + "'kwarg' is to be 'False'")
+                    # 'k' is 'kwarg'
+                    opt_kwargs[k] = False
+                    continue
+            elif k == 'kwarg':
                 opt_kwargs[k] = v
                 continue
 
