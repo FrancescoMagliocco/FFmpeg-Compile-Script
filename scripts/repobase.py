@@ -70,23 +70,26 @@ class Options:
 
             opt_kwargs[k] = v
 
-        cls._options.append(
+        cls._options.update({
             name.replace('-', '_'): cls._Option(name=name,
                                                 aliases=opt_kwargs['aliases'],
-                                                kwarg=(opt_kwargs['kwarg']
-                                                or opt_kwargs['values']),
-                                                values=opt_kwargs['values']))
+                                                kwarg=(
+                                                    opt_kwargs['kwarg']
+                                                    or opt_kwargs['values']),
+                                                values=opt_kwargs['values'])})
 
     @classmethod
     def _is_opt(cls, option):
-        return any((option == opt.name or option in opt.aliases)
-                   for opt in cls._options)
+        return (option.replace('-', '_') in cls._options
+                or (any(option in opt.aliases)
+                    for opt in cls._options.values()))
 
     @classmethod
     def _get_opt(cls, opt):
-        for i in range(len(cls._options)):
-            if opt == cls._options[i].name or opt in cls._options[i].aliases:
-                return cls._options[i]
+        if cls._is_opt(opt):
+            for k, v in cls._options.items():
+                if opt.replace('-', '_') == k or opt in v.aliases:
+                    return cls._options[k]
 
         logging.warning("'%s' is not a valid option!", opt)
         return None
