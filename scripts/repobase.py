@@ -23,8 +23,6 @@ class Options:
     _ALL_ADD_OPTION_KWARGS = {'aliases': None, 'kwarg': False, 'values': None}
     @classmethod
     def add_option(cls, name, **kwargs):
-        # TODO: Finish doc
-        '''add option'''
         opt_kwargs = {
             'aliases': (cls._ALL_ADD_OPTION_KWARGS['aliases']),
             'kwarg':  cls._ALL_ADD_OPTION_KWARGS['kwarg'],
@@ -92,8 +90,34 @@ class Options:
                                         kwarg=opt_kwargs['kwarg'],
                                         values=opt_kwargs['values']))
 
+    @classmethod
+    def _is_opt(cls, option):
+        return any((option == opt.name or option in opt.aliases)
+                   for opt in cls._options)
+
+    @classmethod
+    def get_option(cls, opt):
+        for i in i < len(cls._options):
+            if cls._is_opt(opt):
+                return cls._options[i]
+
+        raise Exception("'{0:s}' is not a valid option!".format(opt))
+
+    @classmethod
+    def has_option(cls, option):
+        return cls._is_opt(option)
+
+    @classmethod
+    def has_arg(cls, arg):
+        return any(((arg == opt.name or arg in opt.aliases) and not opt.kwarg)
+                   for opt in cls._options)
+
+    @classmethod
+    def has_kwarg(cls, kwarg):
+        return any(((kwarg == opt.name or kwarg in opt.aliases) and opt.kwarg)
+                   for opt in cls._options)
+
 class RepoTool(Enum):
-    """Repository Tools"""
     CURL_TOOL = 'curl'
     GIT_TOOL = 'git clone'
     SVN_TOOL = 'svn co -r head'
@@ -101,7 +125,6 @@ class RepoTool(Enum):
     UND = 'Undetermined'
 
 class RepoBase(ABC):
-    """Abstract Class for Repositories"""
 
     _DIR_KW = ('srcdir', 'prefix', 'execc-prefix', 'bindir', 'sbindir',
                'libexecdir', 'sysconfdir', 'sahredstatedir', 'localstatedir',
@@ -174,16 +197,13 @@ class RepoBase(ABC):
 
     @abstractmethod
     def get_config(self, **kwargs):
-        '''get configuration arguments'''
         raise NotImplementedError("'get_config()' Not Implemented!")
 
     @abstractmethod
     def get_repo_download(self):
-        '''get repo download link?'''
         raise NotImplementedError("'get_repo_download()' Not Implemented!")
 
     # Gets the update command for the corresponding repository type.
     def get_update_commands(self):
-        '''Get commands to update repository'''
         logging.info("Updating repository '%s' ...", self.name)
         return self._REPOTOOL_TO_UPDATE_CMD[self.repo_tool]
