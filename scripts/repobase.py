@@ -20,7 +20,7 @@ class Options:
 
     # TODO: Check for duplicates
     _options = []
-    _ALL_ADD_OPTION_KWARGS = {'aliases': None, 'kwarg': False, 'values': None}
+    _ALL_ADD_OPTION_KWARGS = {'aliases': '', 'kwarg': False, 'values': ''}
     @classmethod
     def add_option(cls, name, **kwargs):
         opt_kwargs = {
@@ -71,7 +71,8 @@ class Options:
 
         cls._options.append(cls._Option(name=name,
                                         aliases=opt_kwargs['aliases'],
-                                        kwarg=opt_kwargs['kwarg'],
+                                        kwarg=(opt_kwargs['kwarg']
+                                               or opt_kwargs['values']),
                                         values=opt_kwargs['values']))
 
     @classmethod
@@ -80,8 +81,17 @@ class Options:
                    for opt in cls._options)
 
     @classmethod
+    def _get_opt(cls, opt):
+        for i in range(len(cls._options)):
+            if cls._is_opt(opt):
+                return cls._options[i]
+
+        logging.warning("'%s' is not a valid option!", opt)
+        return None
+
+    @classmethod
     def get_option(cls, opt):
-        for i in i < len(cls._options):
+        for i in range(len(cls._options)):
             if cls._is_opt(opt):
                 return cls._options[i]
 
@@ -93,13 +103,18 @@ class Options:
 
     @classmethod
     def has_arg(cls, arg):
-        return any(((arg == opt.name or arg in opt.aliases) and not opt.kwarg)
-                   for opt in cls._options)
+        tmp_opt = cls._get_opt(arg)
+        return tmp_opt and not tmp_opt.kwarg
 
     @classmethod
     def has_kwarg(cls, kwarg):
-        return any(((kwarg == opt.name or kwarg in opt.aliases) and opt.kwarg)
-                   for opt in cls._options)
+        tmp_opt = cls._get_opt(kwarg)
+        return tmp_opt and tmp_opt.kwarg
+
+    @classmethod
+    def has_values(cls, kwarg):
+        tmp_opt = cls._get_opt(kwarg)
+        return tmp_opt and tmp_opt.values
 
 class RepoTool(Enum):
     CURL_TOOL = 'curl'
