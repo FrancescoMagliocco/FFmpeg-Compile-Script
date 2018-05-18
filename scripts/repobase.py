@@ -113,7 +113,7 @@ class Options:
         sys.exit(1)
 
     @classmethod
-    def get_karg(cls, kwarg):
+    def get_kwarg(cls, kwarg):
         tmp_opt = None if not cls.has_kwarg(kwarg) else cls._get_opt(kwarg)
         if tmp_opt:
             return tmp_opt
