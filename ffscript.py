@@ -39,12 +39,10 @@ NOT_DEFINED = 'not defined'
 _ALL_REPOS = {'libmp3lame': libmp3lame.LibMP3Lame()}
 
 def list_repos():
-    '''List all repositories'''
     for k in _ALL_REPOS:
         print(k)
 
 def is_repo(repo_str):
-    '''Checks if 'repo_str' is a valid repository'''
     logging.debug("Checking if '%s' is a valid repo...", repo_str)
     repo_str = repo_str.lower()
     if repo_str not in _ALL_REPOS:
@@ -55,7 +53,6 @@ def is_repo(repo_str):
     return True
 
 def update_repos(repo_prefix, repo_list):
-    '''Update specified repositories'''
     for repo_str in repo_list:
         repo_str = repo_str.lower()
         if not is_repo(repo_str):
@@ -73,7 +70,6 @@ def update_repos(repo_prefix, repo_list):
 
 
 def download_repos(repo_list, repo_prefix, no_download):
-    '''Downloads the specified repo'''
     for repo_str in repo_list:
         repo_str = repo_str.lower()
         if not is_repo(repo_str):
@@ -105,8 +101,16 @@ def download_repos(repo_list, repo_prefix, no_download):
             print("Repo '{0:s}' was not actually downloaded ".format(repo_str)
                   + 'because -no/--no-downloaded was specified.')
 
+def compile_libs(lib_list, repo_prefix, ff_prefix):
+    for lib_str in lib_list:
+        lib_str = lib_str.lower()
+        if not is_repo(lib_str):
+            continue
+
+        lib = _ALL_REPOS[lib_str]
+        logging.debug(lib.get_config(prefix=ff_prefix))
+
 def file_exists(file_str, path_str='.'):
-    '''Checks if a file exists'''
     file_str = file_str.strip('/')
     path_str = path_str.rstrip('/')
     logging.debug("Checking if directory '%s' exists...", path_str)
@@ -127,12 +131,8 @@ def file_exists(file_str, path_str='.'):
     return False
 
 def main(parser):
-    '''Main Entry Point'''
     args = parser.parse_args()
     fmt = '%-12s: %s'
-
-    print(_ALL_REPOS['libmp3lame'].get_config(prefix='/usr'))
-    sys.exit(0)
 
     # We check for this argument first, that way if verbose level is changed
     #   to "DEBUG", we can see those verbose messages.
@@ -186,6 +186,10 @@ def main(parser):
                     "Can't locate the ffmpeg configure file in '%s'!",
                     args.ffmpeg_src)
                 sys.exit(1)
+
+        if args.compile_lib:
+            compile_libs(args.compile_lib, args.repo_prefix, args.prefix)
+            
 
         if args.no_download:
             logging.debug(fmt, 'Found', '-no/--no-download')
@@ -254,6 +258,11 @@ def _setup_parser():
                         default=False,
                         help='Perform compilation?',
                         dest='compile')
+
+    parser.add_argument('--compile-lib',
+                        nargs='+',
+                        help='Compile specified libs',
+                        dest='compile_lib')
 
     parser.add_argument('-v',
                         '--verbose',
