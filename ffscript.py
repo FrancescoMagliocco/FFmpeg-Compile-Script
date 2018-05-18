@@ -43,13 +43,11 @@ def list_repos():
         print(k)
 
 def is_repo(repo_str):
-    logging.debug("Checking if '%s' is a valid repo...", repo_str)
     repo_str = repo_str.lower()
     if repo_str not in _ALL_REPOS:
         logging.warning("'%s' is not a valid repo!", repo_str)
         return False
 
-    logging.debug("'%s' is a valid repo!", repo_str)
     return True
 
 def update_repos(repo_prefix, repo_list):
@@ -81,8 +79,6 @@ def download_repos(repo_list, repo_prefix, no_download):
         logging.debug('%-10s: {0!r:s}'.format(repo.repo_tool), 'repo_tool')
         logging.debug('%-10s: %s', 'repo_url', repo.repo_url)
 
-        logging.debug(
-            "Checking if '%s' is a completed/usable repo...", repo_str)
         if (repo.repo_url == UNKNOWN or repo.repo_tool == RepoTool.UND):
             logging.warning("'%s' is not a complete/usable repo!", repo_str)
             continue
@@ -113,15 +109,10 @@ def compile_libs(lib_list, repo_prefix, ff_prefix):
 def file_exists(file_str, path_str='.'):
     file_str = file_str.strip('/')
     path_str = path_str.rstrip('/')
-    logging.debug("Checking if directory '%s' exists...", path_str)
     tmp_path = Path(path_str)
     if tmp_path.is_dir():
-        logging.info("Directory '%s' exists!", path_str)
-        logging.debug("Checking if '%s' exists in '%s'...", file_str, path_str)
-        logging.debug('%s/%s', path_str, file_str)
         tmp_file = Path('{0:s}/{1:s}'.format(path_str, file_str))
         if tmp_file.is_file():
-            logging.debug("'%s' exists in '%s'!", file_str, path_str)
             return True
 
         logging.warning("%s' does not exist in '%s'!", file_str, path_str)
@@ -137,50 +128,38 @@ def main(parser):
     # We check for this argument first, that way if verbose level is changed
     #   to "DEBUG", we can see those verbose messages.
     if args.verbose_level != parser.get_default('verbose_level'):
-        logging.debug(fmt, 'Fount', '-v/--verbose')
         logging.debug(fmt, 'verbose', args.verbose_level)
-        logging.info("Changing verbosity from '%s' to '%s'!",
-                     logging.getLevelName(logging.getLogger()
-                                          .getEffectiveLevel()),
-                     args.verbose_level)
         logging.getLogger().setLevel(args.verbose_level)
 
     try:
         if args.prefix != parser.get_default('prefix'):
-            logging.debug(fmt, 'Fount', '--prefix', )
             logging.debug(fmt, 'prefix', args.prefix)
             raise NotImplementedError('--prefix')
 
         if args.repo_prefix != parser.get_default('repo_prefix'):
-            logging.debug(fmt, 'Fount', '-rp/--repo-prefix')
             logging.debug(fmt, 'repo_prefix', args.verbose_level)
             raise NotImplementedError('-rp/--repo-prefix')
 
         if args.update_repo != parser.get_default('update_repo'):
-            logging.debug(fmt, 'Found', '-u/--update-repo')
             logging.debug(fmt, 'update_repo', args.update_repo)
             update_repos(args.repo_prefix, (_ALL_REPOS
                                             if not args.update_repo
                                             else args.update_repo))
 
         if args.list:
-            logging.debug(fmt, 'Found', '-l/--list')
             list_repos()
 
         default_src = parser.get_default('ffmpeg_src')
         src_is_default = (args.ffmpeg_src == default_src)
         if (not src_is_default and not args.compile):
-            logging.debug(fmt, 'Found', '-src/--ffmpeg-src')
             logging.info('Source for ffmpeg was specified, but not compiling')
         elif (not src_is_default and args.compile):
-            logging.debug(fmt, 'Found', '-src/--ffmpeg-src')
             logging.debug(fmt, 'ffmpeg_src', args.ffmpeg_src)
         elif (src_is_default and args.compile):
             logging.info('Directory containing the source for ffmpeg was not '
                          + "specified.  Using: '%s'", default_src)
 
         if args.compile:
-            logging.debug(fmt, 'Found', '--compile')
             if not file_exists('configure', args.ffmpeg_src):
                 logging.error(
                     "Can't locate the ffmpeg configure file in '%s'!",
@@ -189,13 +168,8 @@ def main(parser):
 
         if args.compile_lib:
             compile_libs(args.compile_lib, args.repo_prefix, args.prefix)
-            
-
-        if args.no_download:
-            logging.debug(fmt, 'Found', '-no/--no-download')
 
         if args.download:
-            logging.debug(fmt, 'Found', '-d/--download')
             logging.debug(fmt, 'download', args.download)
             download_repos(args.download, args.repo_prefix, args.no_download)
 
@@ -205,7 +179,6 @@ def main(parser):
         logging.error("'%s' has not yet been implemented.", emsg)
 
 def _setup_parser():
-    logging.debug('Setting up parser...')
     parser = (argparse.ArgumentParser(
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
         description="Does the dirty work so you don't have too"))
@@ -285,7 +258,6 @@ def _setup_parser():
                         metavar='dir',
                         dest='ffmpeg_src')
 
-    logging.debug('Finished setting up arguments!')
     return parser
 
 if __name__ == '__main__':
