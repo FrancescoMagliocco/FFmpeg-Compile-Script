@@ -72,7 +72,6 @@ class Options:
 
             opt_kwargs[k] = v
 
-        tmp_fmt = '%-7s: %s'
         cls._options.append(cls._Option(name=name,
                                         aliases=opt_kwargs['aliases'],
                                         kwarg=opt_kwargs['kwarg'],
