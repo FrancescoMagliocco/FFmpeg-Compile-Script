@@ -89,13 +89,25 @@ class LibMP3Lame(RepoBase):
 
     def get_config(self, *args, **kwargs):
         command_str = 'configure '
-        for arg in args:
-            logging.debug('%-3s: %s', 'arg', arg)
-            command_str += '--{0.name:s} '.format(Options.get_arg(arg))
-        print(max(len(k) for k, v in kwargs.items()))
-#        fmt = '%-{0:d}s: %s'.format(max(len(v.name) for v in kwargs))
-#        for k, v in kwargs.items():
-#            logging.debug(k, v)
+        if args:
+            for arg in args:
+                logging.debug('%-3s: %s', 'arg', arg)
+                command_str += '--{0.name:s} '.format(Options.get_arg(arg))
+
+        if kwargs:
+            fmt = '%-{0:d}s: %s'.format(max(len(k) for k in kwargs))
+            for k, v in kwargs.items():
+                logging.debug(fmt, k, v)
+                tmp_kwarg = Options.get_kwarg(k)
+                if tmp_kwarg.values and v not in tmp_kwarg.values:
+                    logging.error("'%s' is not a valid value for '%s'", v, k)
+                    logging.error("Valid values are: %s", tmp_kwarg.values)
+                    sys.exit(1)
+
+                command_str += '--{0.name:s}={1:s} '.format(tmp_kwarg, v)
+
+        command_str += ('--enable-shared --disable-static --enable-nasm '
+                        + "--disable-rpath --disable-gtktest --with-pic='pic'")
 
         return command_str
 
