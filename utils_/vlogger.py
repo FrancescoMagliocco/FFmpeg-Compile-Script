@@ -1,7 +1,5 @@
 # vim: se fenc=utf8 :
 
-"""Verbose Logger"""
-
 import logging
 from enum import Enum
 
@@ -12,7 +10,6 @@ __maintainer__ = "Francesco Magliocco (aka Cmptr)"
 __status__ = "Development"
 
 class VColors(Enum):
-    """Colors for Verbose Logger"""
     _CLR_SEQ = '\033[38;5;'
     _FMT = '{0:s}{1:d}m[{0:s}{2:d}m{3:<7s}{0:s}{1:d}m]\t'
     CRITICAL = _FMT.format(_CLR_SEQ, 255, 88, 'CRITICAL')
@@ -25,7 +22,6 @@ class VColors(Enum):
 
     @classmethod
     def has_name(cls, name):
-        """Checks enum for name"""
         return any(name == item.name for item in cls)
 
 _LEVEL_TO_FMT = {
@@ -48,7 +44,6 @@ _LEVEL_TO_FMT = {
 
 # https://stackoverflow.com/a/384125
 class VFormatter(logging.Formatter):
-    """Logging Formatter Class"""
     def __init__(self, msg, use_color=True):
         logging.Formatter.__init__(self, msg)
         self.use_color = use_color
