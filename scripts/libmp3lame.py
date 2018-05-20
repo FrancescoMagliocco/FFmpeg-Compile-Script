@@ -57,8 +57,8 @@ class LibMP3Lame(RepoBase):
                      'largefile', 'nasm', 'rpath', 'cpml', 'gtktest', 'efence',
                      'analyzer-hooks', 'decoder', 'frontend', 'mp3x', 'mp3rtp',
                      'dynamic-frontends'):
-            Options.add_option('disable-{0:s}'.format(feat))
-            Options.add_option('enable-{0:s}'.format(feat),
+            Options.add_option(f'disable-{feat:s}')
+            Options.add_option(f'enable-{feat:s}',
                                kwarg=True,
                                values=(None, 'yes', 'no'))
 
@@ -82,7 +82,7 @@ class LibMP3Lame(RepoBase):
         Options.add_option('without-libiconv-prefix')
 
         for prfx in ('gtk', 'gtk-exec'):
-            Options.add_option('with-{0:s}-prefix'.format(prfx), kwarg=True)
+            Options.add_option(f'with-{prfx:s}-prefix', kwarg=True)
 
         Options.add_option(
             'with-fileio', kwarg=True, values=('lame', 'sndfile'))
@@ -92,10 +92,11 @@ class LibMP3Lame(RepoBase):
         if args:
             for arg in args:
                 logging.debug('%-3s: %s', 'arg', arg)
-                command_str += '--{0.name:s} '.format(Options.get_arg(arg))
+                command_str += f'--{Options.get_arg(arg).name:s} '
 
         if kwargs:
-            fmt = '%-{0:d}s: %s'.format(max(len(k) for k in kwargs))
+#            fmt = '%-{0:d}s: %s'.format(max(len(k) for k in kwargs))
+            fmt = f'%-{max(len(k) for k in kwargs):d}s: %s'
             for k, v in kwargs.items():
                 logging.debug(fmt, k, v)
                 tmp_kwarg = Options.get_kwarg(k)
