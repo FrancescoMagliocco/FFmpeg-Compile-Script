@@ -30,9 +30,9 @@ implemented at some point in time.
 
 ### Requirements
 Just to run **FFScript** you will need [Python][python-site]
-[3.6+][python-down].  Any version lower than than **3.6** including any version
+[3.6+][python-dl].  Any version lower than than **3.6** including any version
 of __2.\*__ will not work as they do not have 
-**Literal String Interpolation**[<sup><kbd>PEP 498</kbd></sup>][python-pep498].
+**Literal String Interpolation**[<sup>\[PEP 498\]</sup>][python-pep498].
 
 For detailed information, you should read [FFmpeg's][ffmpeg-site]
 [wiki][ffmpeg-wiki], specifically the [Compilation Guide][ffmpeg-comp] section.
