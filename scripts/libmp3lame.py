@@ -105,7 +105,7 @@ class LibMP3Lame(RepoBase):
                     logging.error("Valid values are: %s", tmp_kwarg.values)
                     sys.exit(1)
 
-                command_str += '--{0.name:s}={1:s} '.format(tmp_kwarg, v)
+                command_str += f'--{tmp_kwarg.name:s}={v:s} '
 
         command_str += ('--enable-shared --disable-static --enable-nasm '
                         + "--disable-rpath --disable-gtktest --with-pic='pic'")
