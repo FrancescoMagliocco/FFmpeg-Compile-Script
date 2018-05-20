@@ -13,4 +13,3 @@ GPAC_REPO_URL: str = "https://Github.com/gpac/gpac.git"
 def download_gpac():
     command: str = "git clone https://Github.com/gpac/gpac.git ../repos/gpac"
     os.system(command)
-
