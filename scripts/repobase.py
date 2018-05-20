@@ -173,21 +173,9 @@ class RepoBase(ABC):
                  switch='Not specified'):
         super().__init__()
         self.name = name
-        self.__repo_tool = repo_tool
-        self.__repo_url = repo_url
-        self.__switch = switch
-
-    @property
-    def repo_tool(self):
-        return self.__repo_tool
-
-    @property
-    def repo_url(self):
-        return self.__repo_url
-
-    @property
-    def switch(self):
-        return self.__switch
+        self.repo_tool = repo_tool
+        self.repo_url = repo_url
+        self.switch = switch
 
     @staticmethod
     def _to_abspath(path_str):
