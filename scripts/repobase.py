@@ -173,33 +173,25 @@ class RepoBase(ABC):
                  switch='Not specified'):
         super().__init__()
         self.name = name
-        self.repo_tool = repo_tool
-        self.repo_url = repo_url
-        self.switch = switch
+        self.__repo_tool = repo_tool
+        self.__repo_url = repo_url
+        self.__switch = switch
 
-#    @staticmethod
-#    def _get_for(source, value):
-#        tmp_name = repo(eval(source))
-        # _TODO: The '%s' may break if argument  is not of type 'str'
-#        logging.debug("Checking if '%s' is in '%s'...", value, tmp_name)
-#        if value not in source:
-#            logging.error("'%s' is not in '%s'!", value, tmp_name)
-            # NOTE: May go about this a different way.
-#            raise KeyError
+    @property
+    def repo_tool(self):
+        return self.__repo_tool
 
-#        indx = source.index(value)
-#        logging.debug("'%s' is located at index %d in %s.",
-#                      value,
-#                      indx,
-#                      tmp_name)
-#        return indx
+    @property
+    def repo_url(self):
+        return self.__repo_url
+
+    @property
+    def switch(self):
+        return self.__switch
 
     @staticmethod
     def _to_abspath(path_str):
-        logging.debug("Checking if '%s' is an absolute path...", path_str)
-        if os.path.isabs(path_str):
-            logging.debug("'%s' is an absolute path!", path_str)
-        else:
+        if not os.path.isabs(path_str):
             logging.warning("'%s' is not an absolute path!", path_str)
             logging.debug("Getting absolute path for '%s'...", path_str)
             path_str = os.path.abspath(path_str)
@@ -209,10 +201,8 @@ class RepoBase(ABC):
 
     def _is_dir(self, path_str):
         path_str = self._to_abspath(path_str)
-        logging.debug("Checking if '%s' is a directory...", path_str)
         tmp_path = Path(path_str)
         if tmp_path.is_dir():
-            logging.debug("'%s' is a directory!", tmp_path)
             return True
 
         logging.warning("'%s' is not a directory!", tmp_path)
@@ -226,7 +216,6 @@ class RepoBase(ABC):
     def get_repo_download(self):
         raise NotImplementedError("'get_repo_download()' Not Implemented!")
 
-    # Gets the update command for the corresponding repository type.
     def get_update_commands(self):
         logging.info("Updating repository '%s' ...", self.name)
         return self._REPOTOOL_TO_UPDATE_CMD[self.repo_tool]
