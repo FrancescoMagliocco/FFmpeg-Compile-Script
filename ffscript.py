@@ -16,8 +16,7 @@ import sys
 from utils_ import vlogger
 def _setup_logger(level):
     hndlr = logging.StreamHandler(sys.stdout)
-    fmt = ('%(levelname)s%(module)s%(message)s{0:s}'
-           .format(vlogger.VColors.NORMAL.value))
+    fmt = f'%(levelname)s%(module)s%(message)s{vlogger.VColors.NORMAL.value:s}'
     hndlr.setFormatter(vlogger.VFormatter(fmt))
 
     logging.basicConfig(level=level, format=fmt, handlers=[hndlr])
@@ -58,9 +57,7 @@ def update_repos(repo_prefix, repo_list):
 
         repo = _ALL_REPOS[repo_str]
         for i in repo.get_update_commands():
-            command_str = ('{0:s} {1:s}/{2:s}'.format(i,
-                                                      repo_prefix.rstrip('/'),
-                                                      repo.name))
+            command_str = f"{i:s} {repo_prefix.rstrip('/'):s}/{repo.name:s}"
             logging.debug('Running: %s', command_str)
             os.system(command_str)
 
@@ -83,19 +80,17 @@ def download_repos(repo_list, repo_prefix, no_download):
             logging.warning("'%s' is not a complete/usable repo!", repo_str)
             continue
 
-        command_str = ('{0:s} {1:s} {2:s}/{3:s}'.format(repo.repo_tool.value,
-                                                        repo.repo_url,
-                                                        repo_prefix,
-                                                        repo.name))
+        command_str = ('{0.repo_tool.value:s} {0.repo_url:s} {1}/{0.name:s}'
+                       .format(repo, repo_prefix))
 
         logging.debug('Running: %s', command_str)
         if not no_download:
-            print("Downloading repo '{0:s}'...".format(repo_str))
+            print(f"Downloading repo '{repo_str:s}'...")
             os.system(command_str)
-            print("Finished download repo '{0:s}'!".format(repo_str))
+            print(f"Finished download repo '{repo_str:s}'!")
         else:
-            print("Repo '{0:s}' was not actually downloaded ".format(repo_str)
-                  + 'because -no/--no-downloaded was specified.')
+            print(f"Repo '{repo_str:s}' was not actually downloaded because "
+                  + '-no/--no-downloaded was specified.')
 
 def compile_libs(lib_list, repo_prefix, ff_prefix):
     for lib_str in lib_list:
@@ -111,7 +106,7 @@ def file_exists(file_str, path_str='.'):
     path_str = path_str.rstrip('/')
     tmp_path = Path(path_str)
     if tmp_path.is_dir():
-        tmp_file = Path('{0:s}/{1:s}'.format(path_str, file_str))
+        tmp_file = Path(f'{path_str:s}/{file_str:s}')
         if tmp_file.is_file():
             return True
 
