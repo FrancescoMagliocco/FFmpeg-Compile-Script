@@ -32,11 +32,12 @@ from pathlib import Path
 from scripts import libmp3lame, libx264
 from scripts.repobase import RepoTool
 
-
 NA = -1
 UND = NA
 UNKNOWN = 'unknown'
 NOT_DEFINED = 'not defined'
+
+_need_gpl = False
 
 _ALL_REPOS = {
     'libmp3lame': libmp3lame.LibMP3Lame(),
@@ -96,13 +97,40 @@ def download_repos(repo_list, repo_prefix, no_download):
             print(f"Finished download repo '{repo_str:s}'!")
         else:
             print(f"Repo '{repo_str:s}' was not actually downloaded because "
-                  + '-no/--no-downloaded was specified.')
+                  '-no/--no-downloaded was specified.')
 
 def compile_libs(lib_list, repo_prefix, ff_prefix):
+    cd_path = Path.cwd()
+    logging.debug(f'Current directory is {cd_path}.')
     for lib_str in lib_list:
         lib_str = lib_str.lower()
         if not is_repo(lib_str):
             continue
+
+        lib = _ALL_REPOS[lib_str]
+        logging.debug(f'Configuring {lib.name}')
+        tmp_path = Path(os.path.join(os.path.dirname(__file__),
+                                     repo_prefix,
+                                     lib.name))
+
+        try:
+            logging.debug(f'Resolving {tmp_path}')
+            abs_path = tmp_path.resolve(True)
+        except FileNotFoundError as e:
+            logging.error(f'Failed to resolve {tmp_path}')
+            logging.error(e)
+            sys.exit(5)
+        except RuntimeError as e:
+            logging.critical('Infinite loop!')
+            logging.critical(e)
+            sys.exit(2)
+
+        os.chdir(abs_path)
+        command_str = lib.get_config(prefix=ff_prefix)
+        logging.debug(command_str)
+        os.system(f'./{command_str}')
+        os.chdir(cd_path)
+
 
 def file_exists(file_str, path_str='.'):
     file_str = file_str.strip('/')
@@ -119,6 +147,14 @@ def file_exists(file_str, path_str='.'):
     logging.warning("Directory '%s' does not exist!", path_str)
     return False
 
+def _to_abspath(path_str):
+    if not os.path.isabs(path_str):
+        logging.warning("'%s' is not an absolute path!", path_str)
+        path_str = os.path.abspath(path_str)
+        logging.debug('absolute path: %s', path_str)
+
+    return path_str
+
 def main(parser):
     args = parser.parse_args()
     fmt = '%-12s: %s'
@@ -130,13 +166,15 @@ def main(parser):
         logging.getLogger().setLevel(args.verbose_level)
 
     try:
-        if args.prefix != parser.get_default('prefix'):
+        if (args.prefix != parser.get_default('prefix')
+                or not os.path.isabs(args.prefix)):
             logging.debug(fmt, 'prefix', args.prefix)
-            raise NotImplementedError('--prefix')
+            args.prefix = _to_abspath(args.prefix)
 
-        if args.repo_prefix != parser.get_default('repo_prefix'):
+        if (args.repo_prefix != parser.get_default('repo_prefix')
+                or not os.path.isabs(args.repo_prefix)):
             logging.debug(fmt, 'repo_prefix', args.verbose_level)
-            raise NotImplementedError('-rp/--repo-prefix')
+            args.repo_prefix = _to_abspath(args.repo_prefix)
 
         if args.update_repo != parser.get_default('update_repo'):
             logging.debug(fmt, 'update_repo', args.update_repo)
@@ -156,7 +194,7 @@ def main(parser):
             logging.debug(fmt, 'ffmpeg_src', args.ffmpeg_src)
         elif (src_is_default and args.compile):
             logging.info('Directory containing the source for ffmpeg was not '
-                         + "specified.  Using: '%s'", default_src)
+                         "specified.  Using: '%s'", default_src)
 
         if args.compile:
             if not file_exists('configure', args.ffmpeg_src):
@@ -183,14 +221,14 @@ def _setup_parser():
         description="Does the dirty work so you don't have too"))
 
     parser.add_argument('--prefix',
-                        default='./ffbuild',
+                        default=os.path.abspath('./ffbuild'),
                         help='Location to install ffmpeg.',
                         metavar='prfx',
                         dest='prefix')
 
     parser.add_argument('-rp',
                         '--repo-prefix',
-                        default='./repos',
+                        default=os.path.abspath('./repos'),
                         help='Location for repos to be downloaded to.',
                         metavar='rprfx',
                         dest='repo_prefix')
@@ -219,9 +257,9 @@ def _setup_parser():
                         nargs='*',
                         default=['All'],
                         help=('Update specified repositories.  If no '
-                              + 'arguments are given, all repositories that '
-                              + 'have already been downloaded, will be '
-                              + 'updated.'),
+                              'arguments are given, all repositories that '
+                              'have already been downloaded, will be '
+                              'updated.'),
                         metavar='repos',
                         dest='update_repo')
 
@@ -251,9 +289,9 @@ def _setup_parser():
 
     parser.add_argument('-src',
                         '--ffmpeg-src',
-                        default='./',
+                        default=os.path.abspath('./'),
                         help=('FFmpeg source directory, where ./configure is '
-                              + 'located.'),
+                              'located.'),
                         metavar='dir',
                         dest='ffmpeg_src')
 
