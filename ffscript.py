@@ -26,9 +26,12 @@ _setup_logger(logging.DEBUG
               if __status__.lower().startswith('dev')
               else logging.WARNING)
 
+sys.path.append(os.path.join(os.path.dirname(__file__), 'scripts'))
+
 from pathlib import Path
 from scripts import libmp3lame
 from scripts.repobase import RepoTool
+
 
 NA = -1
 UND = NA
@@ -44,7 +47,7 @@ def list_repos():
 def is_repo(repo_str):
     repo_str = repo_str.lower()
     if repo_str not in _ALL_REPOS:
-        logging.warning("'%s' is not a valid repo!", repo_str)
+        logging.warning('%r is not a valid repo!', repo_str)
         return False
 
     return True
@@ -98,9 +101,6 @@ def compile_libs(lib_list, repo_prefix, ff_prefix):
         if not is_repo(lib_str):
             continue
 
-        lib = _ALL_REPOS[lib_str]
-        logging.debug(lib.get_config(prefix=ff_prefix))
-
 def file_exists(file_str, path_str='.'):
     file_str = file_str.strip('/')
     path_str = path_str.rstrip('/')
@@ -144,6 +144,7 @@ def main(parser):
         if args.list:
             list_repos()
 
+        # TODO: Do something with this...
         default_src = parser.get_default('ffmpeg_src')
         src_is_default = (args.ffmpeg_src == default_src)
         if (not src_is_default and not args.compile):

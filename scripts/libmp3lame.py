@@ -1,5 +1,4 @@
 # vim: se fenc=utf8 :
-"""library mp3 lame"""
 
 __author__ = "Francesco Magliocco (aka Cmptr)"
 __license__ = "GPLv3"
@@ -11,7 +10,7 @@ import logging
 import os.path
 import sys
 
-sys.path.append(os.path.join(os.path.dirname(__file__), '.'))
+#sys.path.append(os.path.join(os.path.dirname(__file__), '.'))
 from repobase import RepoTool, RepoBase, Options
 
 class LibMP3Lame(RepoBase):
@@ -51,7 +50,6 @@ class LibMP3Lame(RepoBase):
         Options.add_option('host', kwarg=True, values=('x86_64-w64-mingw32-'))
         Options.add_option('disable-option-checking')
 
-        # TODO: This will need testing..
         for feat in ('silent-rules', 'maintainer-mode', 'dependency-tracking',
                      'shared', 'static', 'fast-install', 'libtool-lock',
                      'largefile', 'nasm', 'rpath', 'cpml', 'gtktest', 'efence',
@@ -87,6 +85,8 @@ class LibMP3Lame(RepoBase):
         Options.add_option(
             'with-fileio', kwarg=True, values=('lame', 'sndfile'))
 
+    # NOTE: If this is able to become an abstract method, move into its
+    #   baseclass.
     def get_config(self, *args, **kwargs):
         command_str = 'configure '
         if args:
@@ -95,7 +95,6 @@ class LibMP3Lame(RepoBase):
                 command_str += f'--{Options.get_arg(arg).name:s} '
 
         if kwargs:
-#            fmt = '%-{0:d}s: %s'.format(max(len(k) for k in kwargs))
             fmt = f'%-{max(len(k) for k in kwargs):d}s: %s'
             for k, v in kwargs.items():
                 logging.debug(fmt, k, v)
