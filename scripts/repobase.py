@@ -93,48 +93,139 @@ class Options:
         return None
 
     @classmethod
-    def get_option(cls, opt):
-        opt = cls._get_opt(opt)
-        if opt:
-            return opt
+    def get_option(cls, option):
+        """Returns an instance of Option option
 
-        logging.error("'%s' is not a valid option!", opt)
-        sys.exit(1)
+            Arguments, required:
+                option: Option that is present in dict cls._options.
+                    Do not include any leading dashes (-) or underscores (_).
+
+                    Can either be the key (Name of option with '-' replaced
+                    with '_'.
+
+                    Can be the name of the option as it would be used on the
+                    command line.
+
+                    Could be an aliase (If any) of an option.
+
+                    Can be the name or aliase (If any) of an argument (Same as
+                    the option name)
+
+                    Can be the name or aliase (If any) of a keyword (Same as
+                    the option name)
+
+            If opt is invalid, an error is thrown and script exits with error
+                code 10.
+        """
+        option = cls._get_opt(option)
+        if option:
+            return option
+
+        logging.error("'%s' is not a valid option!", option)
+        sys.exit(10)
 
     @classmethod
     def has_arg(cls, arg):
+        """Checks for argument arg
+
+            Arguments, required:
+                arg: argument that is present in dict cls._options.
+                    Do not include any leading dashes (-) or underscores (_).
+
+                    arg can only be the name of an Option (Or aliase) that is
+                        not a keyword argument except for if the arg.values
+                        contains 'None' in it's tuple.
+
+            Returns True if all conditions are met, otherwise False.
+        """
         tmp_opt = cls._get_opt(arg)
         return tmp_opt and (not tmp_opt.kwarg or None in tmp_opt.values)
 
     @classmethod
     def get_arg(cls, arg):
+        """Returns an instance of the Option based on arg.
+
+            Arguments, required:
+                arg: argument that is present in dict cls._options.
+                    Do no include any leading dashes (-) or underscores (_).
+
+                    See has_arg()
+
+            If arg is invalid, an error is thrown and script exits with error
+                code 11.
+        """
         tmp_opt = None if not cls.has_arg(arg) else cls._get_opt(arg)
         if tmp_opt:
             return tmp_opt
 
         logging.error("'%s' is not a valid argument!", arg)
-        sys.exit(1)
+        sys.exit(11)
 
     @classmethod
     def has_kwarg(cls, kwarg):
+        """Checks for keyword argument kwarg
+
+            Arguments, required:
+                kwarg: keyword argument that is present in dict cls._options.
+                    Do not include any leading dashes (-) or underscores (_).
+
+                    kwarg can only be the name of an Option (Or aliase) that is
+                        keyword argument.
+
+            Returns True if all conditions are met, otherwise False.
+        """
         tmp_opt = cls._get_opt(kwarg)
         return tmp_opt and tmp_opt.kwarg
 
     @classmethod
     def get_kwarg(cls, kwarg):
+        """Returns an instance of the Option based on karg.
+
+            Arguments, required:
+                karg: keyword argument that is present in dict cls._options.
+                    Do no include any leading dashes (-) or underscores (_).
+
+                    See has_kwarg()
+
+            If kwarg is invalid, an error is thrown and script exits with error
+                code 12.
+        """
         tmp_opt = None if not cls.has_kwarg(kwarg) else cls._get_opt(kwarg)
         if tmp_opt:
             return tmp_opt
 
         logging.error("'%s' is not a valid keyword argument!", kwarg)
-        sys.exit(1)
+        sys.exit(12)
 
     @classmethod
     def has_option(cls, option):
+        """Checks for Option option
+
+            Arguments, required:
+                option: Option that is present in dict cls._options.
+                    Do not include any leading dashes (-) or underscores (_).
+
+                    Can either be the key (Name of option with '-' replaced
+                    with '_'.
+
+                    Can be the name of the option as it would be used on the
+                    command line.
+
+                    Could be an aliase (If any) of an option.
+
+                    Can be the name or aliase (If any) of an argument (Same as
+                    the option name)
+
+                    Can be the name or aliase (If any) of a keyword (Same as
+                    the option name)
+
+            Returns True if all conditions are met, otherwise False.
+        """
         return cls._is_opt(option)
 
     @classmethod
     def has_values(cls, kwarg):
+        """Checks if kwarg has any values."""
         tmp_opt = cls._get_opt(kwarg)
         return tmp_opt and tmp_opt.values
 
