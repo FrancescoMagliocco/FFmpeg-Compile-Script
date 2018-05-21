@@ -46,8 +46,5 @@ class Libx264(RepoBase):
         for v in ('host', 'cross-prefix', 'sysroot'):
             Options.add_option(v, kwarg=True)
 
-    def get_config(self, *args, **kwargs):
-        pass
-
     def get_repo_download(self):
         pass
