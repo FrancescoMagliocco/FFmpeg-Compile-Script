@@ -20,7 +20,6 @@ def _setup_logger(level):
     hndlr.setFormatter(vlogger.VFormatter(fmt))
 
     logging.basicConfig(level=level, format=fmt, handlers=[hndlr])
-    logging.debug('Logger setup!')
 
 _setup_logger(logging.DEBUG
               if __status__.lower().startswith('dev')
@@ -51,7 +50,7 @@ def list_repos():
 def is_repo(repo_str):
     repo_str = repo_str.lower()
     if repo_str not in _ALL_REPOS:
-        logging.warning('%r is not a valid repo!', repo_str)
+        logging.warning(f'{repo_str!r} is not a valid repo!')
         return False
 
     return True
@@ -84,19 +83,19 @@ def download_repos(repo_list, repo_prefix, no_download):
         logging.debug('%-10s: %s', 'repo_url', repo.repo_url)
 
         if (repo.repo_url == UNKNOWN or repo.repo_tool == RepoTool.UND):
-            logging.warning("'%s' is not a complete/usable repo!", repo_str)
+            logging.warning(f'{repo_str!r} is not a complete/usable repo!')
             continue
 
         command_str = ('{0.repo_tool.value:s} {0.repo_url:s} {1}/{0.name:s}'
                        .format(repo, repo_prefix))
 
-        logging.debug('Running: %s', command_str)
+        logging.debug(f'Running: {command_str:s}')
         if not no_download:
-            print(f"Downloading repo '{repo_str:s}'...")
+            print(f'Downloading repo {repo_str!r}...')
             os.system(command_str)
-            print(f"Finished download repo '{repo_str:s}'!")
+            print(f'Finished download repo {repo_str!r}')
         else:
-            print(f"Repo '{repo_str:s}' was not actually downloaded because "
+            print(f'Repo {repo_str!r} was not actually downloaded because '
                   '-no/--no-downloaded was specified.')
 
 def compile_libs(lib_list, repo_prefix, ff_prefix):
@@ -113,22 +112,9 @@ def compile_libs(lib_list, repo_prefix, ff_prefix):
                                      repo_prefix,
                                      lib.name))
 
-        try:
-            logging.debug(f'Resolving {tmp_path}')
-            abs_path = tmp_path.resolve(True)
-        except FileNotFoundError as e:
-            logging.error(f'Failed to resolve {tmp_path}')
-            logging.error(e)
-            sys.exit(5)
-        except RuntimeError as e:
-            logging.critical('Infinite loop!')
-            logging.critical(e)
-            sys.exit(2)
-
-        os.chdir(abs_path)
         command_str = lib.get_config(prefix=ff_prefix)
         logging.debug(command_str)
-        os.system(f'./{command_str}')
+        os.system(f'./{command_str:s}')
         os.chdir(cd_path)
 
 
@@ -141,17 +127,17 @@ def file_exists(file_str, path_str='.'):
         if tmp_file.is_file():
             return True
 
-        logging.warning("%s' does not exist in '%s'!", file_str, path_str)
+        logging.warning(f'{file_str!r} does not exist in {path_str!r}')
         return False
 
-    logging.warning("Directory '%s' does not exist!", path_str)
+    logging.warning(f'Directory {path_str!r} does not exist')
     return False
 
 def _to_abspath(path_str):
     if not os.path.isabs(path_str):
-        logging.warning("'%s' is not an absolute path!", path_str)
+        logging.warning(f'{path_str!r} is not an absolute path')
         path_str = os.path.abspath(path_str)
-        logging.debug('absolute path: %s', path_str)
+        logging.debug(f'absolute path: {path_str:s}')
 
     return path_str
 
@@ -211,9 +197,7 @@ def main(parser):
             download_repos(args.download, args.repo_prefix, args.no_download)
 
     except NotImplementedError as emsg:
-        # TODO: Check if this throws another exception.  Using 'str.format()',
-        #   with '{0:s}' resulted in an exception.
-        logging.error("'%s' has not yet been implemented.", emsg)
+        logging.error(f'{emsg!r} has not yet been implemented')
 
 def _setup_parser():
     parser = (argparse.ArgumentParser(
