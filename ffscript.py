@@ -29,7 +29,7 @@ _setup_logger(logging.DEBUG
 sys.path.append(os.path.join(os.path.dirname(__file__), 'scripts'))
 
 from pathlib import Path
-from scripts import libmp3lame
+from scripts import libmp3lame, libx264
 from scripts.repobase import RepoTool
 
 
@@ -38,7 +38,10 @@ UND = NA
 UNKNOWN = 'unknown'
 NOT_DEFINED = 'not defined'
 
-_ALL_REPOS = {'libmp3lame': libmp3lame.LibMP3Lame()}
+_ALL_REPOS = {
+    'libmp3lame': libmp3lame.LibMP3Lame(),
+    'libx264': libx264.Libx264()
+    }
 
 def list_repos():
     for k in _ALL_REPOS:
