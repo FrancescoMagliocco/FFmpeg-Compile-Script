@@ -257,11 +257,13 @@ class RepoBase(ABC):
 
     def __init__(self,
                  name,
+                 config='',
                  repo_tool=RepoTool.UND,
                  repo_url='Not specified',
                  switch='Not specified'):
         super().__init__()
         self.name = name
+        self.config = config
         self.repo_tool = repo_tool
         self.repo_url = repo_url
         self.switch = switch
@@ -285,9 +287,26 @@ class RepoBase(ABC):
         logging.warning("'%s' is not a directory!", tmp_path)
         return False
 
-    @abstractmethod
     def get_config(self, *args, **kwargs):
-        raise NotImplementedError("'get_config()' Not Implemented!")
+        command_str = self.config
+        if args:
+            for arg in args:
+                logging.debug('%-3s: %s', 'arg', arg)
+                command_str += f'--{Options.get_arg(arg).name:s} '
+
+        if kwargs:
+            fmt = f'%-{max(len(k) for k in kwargs):d}s: %s'
+            for k, v in kwargs.items():
+                logging.debug(fmt, k, v)
+                tmp_kwarg = Options.get_kwarg(k)
+                if tmp_kwarg.values and v not in tmp_kwarg.values:
+                    logging.error("'%s' is not a valid value for '%s'", v, k)
+                    logging.error("Valid values are: %s", tmp_kwarg.values)
+                    sys.exit(1)
+
+                command_str += f'--{tmp_kwarg.name:s}={v:s} '
+
+        return command_str
 
     @abstractmethod
     def get_repo_download(self):

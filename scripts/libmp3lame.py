@@ -18,6 +18,9 @@ class LibMP3Lame(RepoBase):
 
     def __init__(self):
         super().__init__('libmp3lame',
+                         'configure --enable-shared --disable-static '
+                         '--enable-nasm --disable-rpath --disable-gtktest '
+                         "--with-pic='pic' ",
                          RepoTool.SVN_TOOL,
                          'https://svn.code.sf.net/p/lame/svn/trunk/lame',
                          '--enable-libmp3lame')
@@ -84,32 +87,6 @@ class LibMP3Lame(RepoBase):
 
         Options.add_option(
             'with-fileio', kwarg=True, values=('lame', 'sndfile'))
-
-    # NOTE: If this is able to become an abstract method, move into its
-    #   baseclass.
-    def get_config(self, *args, **kwargs):
-        command_str = 'configure '
-        if args:
-            for arg in args:
-                logging.debug('%-3s: %s', 'arg', arg)
-                command_str += f'--{Options.get_arg(arg).name:s} '
-
-        if kwargs:
-            fmt = f'%-{max(len(k) for k in kwargs):d}s: %s'
-            for k, v in kwargs.items():
-                logging.debug(fmt, k, v)
-                tmp_kwarg = Options.get_kwarg(k)
-                if tmp_kwarg.values and v not in tmp_kwarg.values:
-                    logging.error("'%s' is not a valid value for '%s'", v, k)
-                    logging.error("Valid values are: %s", tmp_kwarg.values)
-                    sys.exit(1)
-
-                command_str += f'--{tmp_kwarg.name:s}={v:s} '
-
-        command_str += ('--enable-shared --disable-static --enable-nasm '
-                        + "--disable-rpath --disable-gtktest --with-pic='pic'")
-
-        return command_str
 
     def get_repo_download(self):
         raise NotImplementedError()
