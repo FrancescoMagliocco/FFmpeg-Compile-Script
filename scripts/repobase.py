@@ -52,13 +52,11 @@ class Options:
                         logging.warning(
                             "'Values' was specified..  But none were given..")
 
-                    # 'k' is 'kwarg'
                     opt_kwargs[k] = True
                     continue
                 else:
                     logging.info("Keyword 'values' was not given.  Aassuming "
                                  + "'kwarg' is to be 'False'")
-                    # 'k' is 'kwarg'
                     opt_kwargs[k] = False
                     continue
             elif k == 'kwarg':
@@ -104,6 +102,11 @@ class Options:
         sys.exit(1)
 
     @classmethod
+    def has_arg(cls, arg):
+        tmp_opt = cls._get_opt(arg)
+        return tmp_opt and (not tmp_opt.kwarg or None in tmp_opt.values)
+
+    @classmethod
     def get_arg(cls, arg):
         tmp_opt = None if not cls.has_arg(arg) else cls._get_opt(arg)
         if tmp_opt:
@@ -111,6 +114,11 @@ class Options:
 
         logging.error("'%s' is not a valid argument!", arg)
         sys.exit(1)
+
+    @classmethod
+    def has_kwarg(cls, kwarg):
+        tmp_opt = cls._get_opt(kwarg)
+        return tmp_opt and tmp_opt.kwarg
 
     @classmethod
     def get_kwarg(cls, kwarg):
@@ -124,16 +132,6 @@ class Options:
     @classmethod
     def has_option(cls, option):
         return cls._is_opt(option)
-
-    @classmethod
-    def has_arg(cls, arg):
-        tmp_opt = cls._get_opt(arg)
-        return tmp_opt and (not tmp_opt.kwarg or None in tmp_opt.values)
-
-    @classmethod
-    def has_kwarg(cls, kwarg):
-        tmp_opt = cls._get_opt(kwarg)
-        return tmp_opt and tmp_opt.kwarg
 
     @classmethod
     def has_values(cls, kwarg):
